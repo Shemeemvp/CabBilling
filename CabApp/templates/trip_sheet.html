@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet"> 
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'assets/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}">
+    
+    <!-- Box icon -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/boxicons/css/boxicons.css' %}">
+
+    <!-- Template Stylesheet -->
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer" ></script>
+    <title>Trip Sheet</title>
+</head>
+<body>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;900&display=swap');
+
+    *, body {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    html, body {
+        height: 100%;
+        background-color: #152733;
+        overflow-x: hidden;
+    }
+
+
+    .form-holder {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          /* min-height: 100vh; */
+    }
+
+    .form-holder .form-content {
+        position: relative;
+        text-align: center;
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-align-items: center;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .form-content .form-items {
+        border: 3px solid #fff;
+        padding: 30px;
+        display: inline-block;
+        width: 100%;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        text-align: left;
+        -webkit-transition: all 0.4s ease;
+        transition: all 0.4s ease;
+    }
+
+    .form-content h3 {
+        color: #fff;
+        text-align: left;
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .form-content h3.form-title {
+        margin-bottom: 30px;
+    }
+
+    .form-content p {
+        color: #fff;
+        text-align: left;
+        font-size: 17px;
+        font-weight: 300;
+        line-height: 20px;
+        margin-bottom: 30px;
+    }
+
+
+    .form-content label, .was-validated .form-check-input:invalid~.form-check-label, .was-validated .form-check-input:valid~.form-check-label{
+        color: #fff;
+    }
+
+    .form-content input[type=text], .form-content input[type=password], .form-content input[type=date], .form-content input[type=time], .form-content input[type=number], .form-content input[type=email], .form-content select {
+        width: 100%;
+        padding: 9px 20px;
+        text-align: left;
+        border: 0;
+        outline: 0;
+        border-radius: 6px;
+        background-color: #fff;
+        font-size: 15px;
+        font-weight: 300;
+        color: #8D8D8D;
+        -webkit-transition: all 0.3s ease;
+        transition: all 0.3s ease;
+        margin-top: 16px;
+    }
+
+
+    .btn-primary{
+        background-color: #6C757D;
+        outline: none;
+        border: 0px;
+        box-shadow: none;
+    }
+
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active{
+        background-color: #495056;
+        outline: none !important;
+        border: none !important;
+        box-shadow: none;
+    }
+
+    .form-content textarea {
+        position: static !important;
+        width: 100%;
+        padding: 8px 20px;
+        border-radius: 6px;
+        text-align: left;
+        background-color: #fff;
+        border: 0;
+        font-size: 15px;
+        font-weight: 300;
+        color: #8D8D8D;
+        outline: none;
+        resize: none;
+        height: 120px;
+        -webkit-transition: none;
+        transition: none;
+        margin-bottom: 14px;
+    }
+
+    .form-content textarea:hover, .form-content textarea:focus {
+        border: 0;
+        background-color: #ebeff8;
+        color: #8D8D8D;
+    }
+
+    .mv-up{
+        margin-top: -9px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .invalid-feedback{
+        color: #ff606e;
+    }
+
+    .valid-feedback{
+      color: #2acc80;
+    }
+
+
+    /*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+#header {
+  position: relative;
+  z-index: 997;
+  transition: all 0.5s;
+  padding: 16px 0;
+  /* background: #003e27; */
+  background:#222B31 !important;
+  border-bottom:4px solid #C6AA58 !important;
+}
+
+#header .logo h1 {
+  font-size: 24px;
+  margin: 0;
+  padding: 10px 0;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-family: "Poppins", sans-serif;
+}
+
+#header .logo h1 a, #header .logo h1 a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+#header .logo h1 a span, #header .logo h1 a:hover span {
+  color: #fdc134;
+}
+
+#header .logo img {
+  padding: 0;
+  margin: 0;
+  max-height: 40px;
+}
+
+/*--------------------------------------------------------------
+# Navigation Menu
+--------------------------------------------------------------*/
+/**
+* Desktop Navigation 
+*/
+.navbar {
+  padding: 0;
+}
+
+.navbar ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  list-style: none;
+  align-items: center;
+}
+
+.navbar li {
+  position: relative;
+}
+
+.navbar a {
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: 600;
+  /* color: #fff; */
+  color: #a3bfc6;
+  white-space: nowrap;
+  position: relative;
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.hover{
+  display:block;
+  position:absolute;
+  width:0%;
+  height:100%;
+  top:0px;
+  left:0px;
+  background:#C6AA58 !important;
+  z-index:0;
+  opacity:0;
+}
+
+.navbar a i {
+  font-size: 12px;
+  line-height: 0;
+  margin-left: 5px;
+}
+
+.navbar a:hover, .navbar .active, .navbar li:hover > a {
+  color: #fff;
+}
+
+.navbar .loginBtn {
+  background: #003e27 !important;
+  font-weight: bold;
+  color: #fff !important;
+  padding: 4px 25px 6px 25px;
+  margin-left: 30px;
+  border-radius: 50px;
+  border: 2px solid #C6AA58 !important;
+}
+
+.navbar .loginBtn:hover {
+  background: #C6AA58 !important;
+  color: #fff;
+}
+
+.navbar .dropdown ul {
+  display: block;
+  position: absolute;
+  left: 14px;
+  top: calc(100% + 30px);
+  margin: 0;
+  padding: 10px 0;
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  background: #fff;
+  box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
+  transition: 0.3s;
+  border-radius: 4px;
+}
+
+.navbar .dropdown ul li {
+  min-width: 200px;
+}
+
+.navbar .dropdown ul a {
+  padding: 10px 20px;
+  font-size: 14px;
+  text-transform: none;
+  font-weight: 500;
+  color: #3e6f9b;
+}
+
+.navbar .dropdown ul a i {
+  font-size: 12px;
+}
+
+.navbar .dropdown ul a:hover, .navbar .dropdown ul .active:hover, .navbar .dropdown ul li:hover > a {
+  color: #fff;
+}
+
+.navbar .dropdown:hover > ul {
+  opacity: 1;
+  top: 100%;
+  visibility: visible;
+}
+
+.navbar .dropdown .dropdown ul {
+  top: 0;
+  left: calc(100% - 30px);
+  visibility: hidden;
+}
+
+.navbar .dropdown .dropdown:hover > ul {
+  opacity: 1;
+  top: 0;
+  left: 100%;
+  visibility: visible;
+}
+  </style>
+    <!-- ======= Header ======= -->
+    <header id="header">
+      <div class="container d-flex align-items-center justify-content-between">
+  
+        <div class="logo">
+          <h1><a href="#">CAB Billing</a></h1>
+  
+        </div>
+  
+        <nav id="navbar" class="navbar">
+          <ul>
+            <!-- <li><a class="nav-link scrollto active" href="#hero">Home</a></li> -->
+            <li><a class="nav-link scrollto" href="#about">About</a><span class="hover"></span></li>
+            <li><a class="nav-link scrollto" href="#planAndPricing">Plan & Pricing</a><span class="hover"></span></li>
+            <li><a class="nav-link scrollto" href="#FAQs">FAQs</a><span class="hover"></span></li>
+            <li><a class="nav-link" href="">Blog</a><span class="hover"></span></li>
+            <li><a class="nav-link scrollto" href="#contact">Contact Us</a><span class="hover"></span></li>
+            
+            
+            <li><a class="loginBtn" href="">Login</a></li>
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav><!-- .navbar -->
+  
+      </div>
+    </header><!-- End Header -->
+
+
+      <div class="form-body my-4">
+        <div class="row">
+            <div class="form-holder">
+                <div class="form-content">
+                    <div class="form-items mb-5">
+                        <h3>Enter Trip Details</h3>
+                        <p>Fill in the data below.</p>
+                        <form class="requires-validation" novalidate>
+                            <div class="row gx-2">
+                              <div class="col-sm-6">
+                                <input class="form-control" type="text" name="name" placeholder="Trip No." required>
+                                <label for="">Trip No.</label>
+                              </div>
+                              <div class="col-sm-6">
+                                <input class="form-control" type="date" name="name" value="{% now 'Y-m-d' %}" required>
+                                <label for="">Date </label>
+                              </div>
+                            </div>
+                              
+                              
+                              <div class="col-md-12">
+                                <input class="form-control" type="text" name="name" placeholder="Vehicle No." required>
+                                <label for="">Vehicle No.</label>
+                              </div>
+                              <div class="col-md-12">
+                                <input class="form-control" type="text" name="name" placeholder="Diver Name" required>
+                                <label for="">Driver Name</label>
+                              </div>
+      
+                              <div class="col-md-12">
+                                <input class="form-control" type="text" name="name" placeholder="Guest Name" required>
+                                <label for="">Guest Name</label>
+                              </div>
+      
+                              <div class="row gx-2">
+                                <div class="col-sm-6">
+                                  <input class="form-control" type="text" name="name" placeholder="Starting Place" required>
+                                  <label for="">Starting Place</label>
+                                </div>
+                                <div class="col-sm-6">
+                                  <input class="form-control" type="time" name="name" required>
+                                  <label for="">Time</label>
+                                </div>
+                              </div>
+      
+                              <div class="row gx-2">
+                                <div class="col-sm-6">
+                                  <input class="form-control" type="text" name="name" placeholder="Destination" required>
+                                  <label for="">Destination</label>
+                                </div>
+                                <div class="col-sm-6">
+                                  <input class="form-control" type="time" name="name" required>
+                                  <label for="">Time of Arrival</label>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <input class="form-control" type="number" name="name" placeholder="Kilometers" required>
+                                <label for="">Kilometers</label>
+                              </div>
+                              <div class="col-12">
+                                <input class="form-control" type="number" name="name" placeholder="Toll" required>
+                                <label for="">Toll</label>
+                              </div>
+                              <div class="col-12">
+                                <input class="form-control" type="number" name="name" placeholder="Parking" required>
+                                <label for="">Parking</label>
+                              </div>
+                              <div class="col-12">
+                                <input class="form-control" type="number" name="name" placeholder="Entrance" required>
+                                <label for="">Entrance</label>
+                              </div>
+                              <div class="col-12">
+                                <input class="form-control" type="number" name="name" placeholder="Guide Fee" required>
+                                <label for="">Guide Fee</label>
+                              </div>                        <div class="col-12">
+                                <input class="form-control" type="number" name="name" placeholder="Advance" required>
+                                <label for="">Advance</label>
+                              </div>
+                              <div class="col-12">
+                                <input class="form-control" type="number" name="name" placeholder="Debit" required>
+                                <label for="">Debit</label>
+                              </div>
+                              <div class="col-12">
+                                <input class="form-control" type="number" name="name" placeholder="Balance" required>
+                                <label for="">Balance</label>
+                              </div>
+      
+      
+                              
+      
+      
+                              <div class="form-check my-2 mt-4">
+                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                                <label class="form-check-label">I confirm that all data are correct</label>
+                                <div class="invalid-feedback">Please confirm that the entered data are all correct!</div>
+                              </div>
+                    
+      
+                              <div class="form-button mt-3">
+                                  <button id="submit" type="button" class="btn btn-primary">Save</button>
+                                  <button id="submit" type="button" class="btn btn-primary">End Trip</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
+
+    
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="{% static 'assets/lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+      <script>
+        $( "li" ).hover(
+          function() {
+              $(this).find("span").stop().animate({
+              width:"100%",
+              opacity:"1",
+            }, 400, function () {
+            })
+          }, function() {
+              $(this).find("span").stop().animate({
+              width:"0%",
+              opacity:"0",
+            }, 400, function () {
+            })
+          }
+        );
+      </script>
+  
+      {%if messages%} {%for message in messages%} {%if message.tags == "success"%}
+      <script>
+        swal({
+          position: "top-end",
+          icon: "success",
+          title: "{{message}}",
+        });
+      </script>
+      {%elif message.tags == "warning"%}
+      <script>
+        swal({
+          position: "top-end",
+          icon: "warning",
+          title: "{{message}}",
+        });
+      </script>
+      {%elif message.tags == "error"%}
+      <script>
+        swal({
+          position: "top-end",
+          icon: "error",
+          title: "{{message}}",
+        });
+      </script>
+      {%else%}
+      <script>
+        swal({
+          position: "top-end",
+          icon: "info",
+          title: "{{message}}",
+        });
+      </script>
+      {%endif%} {%endfor%} {%endif%}
+</body>
+</html>
