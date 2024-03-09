@@ -487,119 +487,40 @@
   </header>
   <!-- End Header -->
 
-      <div class="form-body my-4">
-        <div class="row">
-            <div class="form-holder">
-                <div class="form-content">
-                    <div class="form-items mb-5">
-                        <h3>Enter Trip Details</h3>
-                        <p>Fill in the data below.</p>
-                        <div class="last_ride d-flex justify-content-end">
-                          <button class="btn btn-secondary btn-sm">Get Last Ride</button>
-                        </div>
-                        <form action="{% url 'endCurrentTrip' %}" method="post" class="requires-validation">
-                          {% csrf_token %}
-                            <div class="row gx-2">
-                              <div class="col-sm-6">
-                                <input class="form-control" type="text" name="trip_number" placeholder="{{tripNo}}" required>
-                                <label for="">Trip No.*</label>
-                              </div>
-                              <div class="col-sm-6">
-                                <input class="form-control" type="date" name="trip_date" value="{% now 'Y-m-d' %}" required>
-                                <label for="">Date*</label>
-                              </div>
-                            </div>
-                              
-                              
-                              <div class="col-md-12">
-                                <input class="form-control text-uppercase" type="text" name="vehicle_number" onblur="checkVehicleNum(this)" placeholder="Vehicle No." required>
-                                <div class="text-danger" id="vehicleNumErr"></div>
-                                <label for="">Vehicle No.*</label>
-                              </div>
-                              <div class="col-md-12">
-                                <input class="form-control" type="text" name="driver_name" value="{{driver.full_name}}" placeholder="Diver Name" required>
-                                <label for="">Driver Name*</label>
-                              </div>
-      
-                              <div class="col-md-12">
-                                <input class="form-control" type="text" name="guest_name" placeholder="Guest Name" required>
-                                <label for="">Guest Name*</label>
-                              </div>
-      
-                              <div class="row gx-2">
-                                <div class="col-sm-6">
-                                  <input class="form-control" type="text" name="starting_place" placeholder="Starting Place" required>
-                                  <label for="">Starting Place*</label>
-                                </div>
-                                <div class="col-sm-6">
-                                  <input class="form-control" type="time" name="starting_time" required>
-                                  <label for="">Time</label>
-                                </div>
-                              </div>
-      
-                              <div class="row gx-2">
-                                <div class="col-sm-6">
-                                  <input class="form-control" type="text" name="destination" placeholder="Destination" required>
-                                  <label for="">Destination</label>
-                                </div>
-                                <div class="col-sm-6">
-                                  <input class="form-control" type="time" name="time_of_arrival" required>
-                                  <label for="">Time of Arrival</label>
-                                </div>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="kilometer" value="0.0" placeholder="Kilometers" required>
-                                <label for="">Kilometers</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="toll" value="0.0" placeholder="Toll" required>
-                                <label for="">Toll</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="parking" value="0.0" placeholder="Parking" required>
-                                <label for="">Parking</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="entrance" value="0.0" placeholder="Entrance" required>
-                                <label for="">Entrance</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="guide_fee" value="0.0" placeholder="Guide Fee" required>
-                                <label for="">Guide Fee</label>
-                              </div>                        <div class="col-12">
-                                <input class="form-control" type="number" name="advance" value="0.0" placeholder="Advance" required>
-                                <label for="">Advance</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="debit" value="0.0" placeholder="Debit" required>
-                                <label for="">Debit</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="balance" value="0.0" placeholder="Balance" required>
-                                <label for="">Balance</label>
-                              </div>
-      
-      
-                              
-      
-      
-                              <!-- <div class="form-check my-2 mt-4">
-                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                                <label class="form-check-label">I confirm that all data are correct</label>
-                                <div class="invalid-feedback">Please confirm that the entered data are all correct!</div>
-                              </div> -->
-                    
-      
-                              <div class="form-button d-flex justify-content-center mt-3">
-                                  <!-- <button id="save" type="button" class="btn btn-primary">Save</button> -->
-                                  <button id="endTrip" type="submit" class="btn btn-primary">End Trip</button>
-                              </div>
-                          </form>
-                      </div>
-                  </div>
-              </div>
-          </div>
+  <section class="vh-100 gradient-custom">
+    <div class="container-fluid py-5">
+      <div class="row">
+        <div class="col-12 table-responsive">
+            <table class="table table-secondary table-hover">
+                <thead>
+                  <tr>
+                    <th class="fw-bold text-uppercase text-center" scope="col">Trip#</th>
+                    <th class="fw-bold text-uppercase text-center" scope="col">Driver</th>
+                    <th class="fw-bold text-uppercase text-center" scope="col">Guest</th>
+                    <th class="fw-bold text-uppercase text-center" scope="col">Kilometers</th>
+                    <th class="fw-bold text-uppercase text-center" scope="col">Charge(Debit)</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for t in trips %}
+                    <tr>
+                      <th class="text-center" scope="row">{{t.trip_no}}</th>
+                      <td class="text-center">{{t.driver_name}}</td>
+                      <td class="text-center">{{t.guest}}</td>
+                      <td class="text-center">{{t.kilometers}}</td>
+                      <td class="text-center">{{t.debit}}</td>
+                      <td class="text-center">
+                        <button class="btn btn-secondary btn-sm" onclick="window.location.href=`{% url 'viewTscData' t.id %}`">VIEW</button>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
       </div>
+    </div>
+  </section>
 
 
 
@@ -641,15 +562,6 @@
     })
   })
 
-  function checkVehicleNum(element) {
-    var v_number = element.value.toUpperCase();
-    var v_numregexp = /^[A-Z]{2}[ -][0-9]{1,2} [A-Z]{1,2} [0-9]{4}$/;
-    if (v_number.match(v_numregexp)) {
-        document.getElementById('vehicleNumErr').innerHTML = '';
-    } else {
-        document.getElementById('vehicleNumErr').innerHTML = 'Invalid format, Ex: "XX 1 X 1111", "XX 11 XX 1111"';
-    }
-}
 
 </script>
   

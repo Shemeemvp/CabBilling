@@ -47,38 +47,49 @@
         height: 100%;
         background-color: #152733;
     }
+    .eye-icon {
+      position: absolute;
+      right: 10px;
+      top: 30%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
 </style>
   <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-          <div class="card bg-transparent text-white my-5" style="border-radius: 1rem; border: 3px solid #fff;">
+          <div class="card bg-transparent text-white my-5 mt-0" style="border-radius: 1rem; border: 3px solid #fff;">
             <div class="card-body p-4 py-5">
   
-              <div class="mb-md-5 pb-3">
+              <div class="mb-md-3 pb-3">
   
                 <h2 class="text-uppercase text-center mb-4">Create an account</h2>
   
-                <form>
-
-                  <div class="form-outline mb-4">
-                    <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
-                    <label class="form-label text-left" for="form3Example1cg">Full Name</label>
+                <form action="{% url 'registerUser' %}" method="post" class="form" onsubmit="return validateForm()">
+                  {% csrf_token %}
+                  <div class="form-outline mb-3">
+                    <input type="text" id="fullName" name="full_name" class="form-control form-control-lg" required/>
+                    <label class="form-label text-left" for="fullName">Full Name</label>
                   </div>
 
-                  <div class="form-outline mb-4">
-                    <input type="email" id="form3Example3cg" class="form-control form-control-lg" />
-                    <label class="form-label text-left" for="form3Example3cg">User Name</label>
+                  <div class="form-outline mb-3">
+                    <input type="text" id="userName" name="user_name" class="form-control form-control-lg" required/>
+                    <div class="text-danger" id="userNameErr"></div>
+                    <label class="form-label text-left" for="userName">User Name</label>
                   </div>
 
-                  <div class="form-outline mb-4">
-                    <input type="tel" id="form3Example4cg" class="form-control form-control-lg" />
-                    <label class="form-label text-left" for="form3Example4cg">Mobile</label>
+                  <div class="form-outline mb-3">
+                    <input type="tel" id="mobile" name="mobile" onchange="checkPhone(this)" class="form-control form-control-lg" required/>
+                    <div class="text-danger" id="warnphone"></div>
+                    <label class="form-label text-left" for="mobile">Mobile</label>
                   </div>
 
-                  <div class="form-outline mb-4">
-                    <input type="password" id="form3Example4cdg" class="form-control form-control-lg" />
-                    <label class="form-label text-left" for="form3Example4cdg">Password</label>
+                  <div class="form-outline mb-3 position-relative">
+                    <input type="password" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" name="password" class="form-control form-control-lg" required/>
+                    <i class="fa fa-eye eye-icon" style="color: #152733;" onclick="togglePasswordVisibility()"></i>
+                    <label class="form-label text-left" for="password">Password</label>
+                    <div class="text-danger" style="font-size: 0.85rem; width: max-content;" id="passErr"></div>
                   </div>
 
                   <div class="d-flex justify-content-center"><button class="btn btn-outline-light px-5" type="submit">Register</button></div>
@@ -101,7 +112,110 @@
     
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
       <script src="{% static 'assets/lib/owlcarousel/owl.carousel.min.js' %}"></script>
-      {% block scripts %}{% endblock %}
+
+      <script>
+        function checkUserPhone(phone){
+          $('#warnphone').text('')
+            var phoneNo = phone;
+            if (phoneNo != ""){
+                $.ajax({
+                    type : 'POST',
+                    url:"{% url 'checkPhoneNumber' %}",
+                    data:{
+                        'phone' : phoneNo,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    
+                    success: function(response) {
+                        if(response.is_exists){
+                            alert(response.message)
+                            $('#warnphone').text('Phone Number exists.')
+                        }else{
+                          $('#warnphone').text('')
+                        }
+                    },         
+                });
+            }
+        }
+
+        function checkUsername(username){
+          $('#userNameErr').text('')
+            var usr = username;
+            if (usr != ""){
+                $.ajax({
+                    type : 'POST',
+                    url:"{% url 'checkUserName' %}",
+                    data:{
+                        username : usr,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    
+                    success: function(response) {
+                        if(response.is_exists){
+                            alert(response.message)
+                            $('#userNameErr').text('User name exists.')
+                        }else{
+                          $('#userNameErr').text('')
+                        }
+                    },         
+                });
+            }
+        }
+
+
+        function checkPhone(element) {
+          var phoneinput = element.value;
+          var phoneregexp = /^\d{10}$/;
+
+          if (phoneinput.match(phoneregexp)) {
+              document.getElementById('warnphone').innerHTML = '';
+              checkUserPhone(phoneinput)
+          } else {
+              if (phoneinput.length > 10){
+                  alert('Number should be 10 digit.')
+                  element.value = phoneinput.substring(0, 10);
+                  return
+              }
+              document.getElementById('warnphone').innerHTML = 'Please provide a valid Phone Number';
+              alert('Please provide a valid Phone Number')
+          }
+      }
+
+      $(document).ready(function(){
+        $('#userName').on('blur',function(){
+          if($("#userName").val().trim() != ""){
+            checkUsername($("#userName").val().trim());
+          }
+        })
+      })
+
+      function togglePasswordVisibility(){
+        if($('#password').attr('type') == 'text'){
+          $('#password').attr('type','password')
+        }else{
+          $('#password').attr('type','text')
+        }
+      }
+
+      function validateForm(){
+        var name = $('#fullName').val().trim();
+        var Mob = $('#mobile').val().trim();
+
+        if(name == ""){
+          alert('Please enter a valid name.!')
+          return false;
+        }
+        
+        if(Mob.length != 10){
+          console.log(Mob)
+          console.log(Mob.length)
+            alert('Mobile Number should be 10 digits.!')
+            return false;
+        }
+
+        return true;
+      }
+    </script>
   
       {%if messages%} {%for message in messages%} {%if message.tags == "success"%}
       <script>

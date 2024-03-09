@@ -460,6 +460,88 @@
 .navbar-mobile .dropdown > .dropdown-active {
   display: block;
 }
+
+
+/* SLIP VIEW STYLINGS */
+
+    /* p {
+        font-size: 1.2em;
+    } */
+    .address{
+        display: flex;
+        flex-direction: column;
+    }
+    .address p,.footer p{
+        font-size: 1rem;
+        margin: 0;
+    }
+    .slip-container{
+        width: 210mm;
+        margin: 2rem auto;
+        padding: 2rem;
+        /* box-shadow: rgba(60, 64, 67, 0.5) 0px 1px 2px 0px, rgba(60, 64, 67, 0.35) 0px 2px 6px 2px; */
+    }
+    .divider{
+        margin: 1rem 0;
+        border-bottom: 3px dotted black;
+    }
+    .trns-id p,.datetime p{
+        font-size: 0.85rem;
+        margin: 0;
+    }
+    .table-responsive {
+        max-height:100vh;
+    }
+    .table-responsive::-webkit-scrollbar {
+        display: none;
+    }
+
+    .equal-length-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%; /* Make the container fill the height of the column */
+        /* margin-left: 2vh;
+        margin-right: 2vh; */
+    }
+
+    .equal-length-item {
+        flex: 1;
+        text-align: center;
+    }
+    .equal-length-item hr{
+      width: 60%;
+      border-bottom: 1px solid black;
+      position: relative;
+      left: 20%;
+    }
+
+
+    @media print{
+        body{
+            visibility: hidden !important; /* hide everything in body when in print mode*/
+        }
+
+        #printslip{
+            margin-left: 2vh;
+            margin-right: 2vh;
+        }
+
+        .printContainer {
+            visibility: visible !important; /* Override the rule above to only show the printables*/
+            position: absolute;
+            z-index: 99999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: large;
+        } 
+    }
+
+    /* .trip_details p{
+      font-weight: bold;
+    } */
   </style>
 
   <!-- ======= Header ======= -->
@@ -487,119 +569,168 @@
   </header>
   <!-- End Header -->
 
-      <div class="form-body my-4">
-        <div class="row">
-            <div class="form-holder">
-                <div class="form-content">
-                    <div class="form-items mb-5">
-                        <h3>Enter Trip Details</h3>
-                        <p>Fill in the data below.</p>
-                        <div class="last_ride d-flex justify-content-end">
-                          <button class="btn btn-secondary btn-sm">Get Last Ride</button>
-                        </div>
-                        <form action="{% url 'endCurrentTrip' %}" method="post" class="requires-validation">
-                          {% csrf_token %}
-                            <div class="row gx-2">
-                              <div class="col-sm-6">
-                                <input class="form-control" type="text" name="trip_number" placeholder="{{tripNo}}" required>
-                                <label for="">Trip No.*</label>
-                              </div>
-                              <div class="col-sm-6">
-                                <input class="form-control" type="date" name="trip_date" value="{% now 'Y-m-d' %}" required>
-                                <label for="">Date*</label>
-                              </div>
-                            </div>
-                              
-                              
-                              <div class="col-md-12">
-                                <input class="form-control text-uppercase" type="text" name="vehicle_number" onblur="checkVehicleNum(this)" placeholder="Vehicle No." required>
-                                <div class="text-danger" id="vehicleNumErr"></div>
-                                <label for="">Vehicle No.*</label>
-                              </div>
-                              <div class="col-md-12">
-                                <input class="form-control" type="text" name="driver_name" value="{{driver.full_name}}" placeholder="Diver Name" required>
-                                <label for="">Driver Name*</label>
-                              </div>
-      
-                              <div class="col-md-12">
-                                <input class="form-control" type="text" name="guest_name" placeholder="Guest Name" required>
-                                <label for="">Guest Name*</label>
-                              </div>
-      
-                              <div class="row gx-2">
-                                <div class="col-sm-6">
-                                  <input class="form-control" type="text" name="starting_place" placeholder="Starting Place" required>
-                                  <label for="">Starting Place*</label>
-                                </div>
-                                <div class="col-sm-6">
-                                  <input class="form-control" type="time" name="starting_time" required>
-                                  <label for="">Time</label>
-                                </div>
-                              </div>
-      
-                              <div class="row gx-2">
-                                <div class="col-sm-6">
-                                  <input class="form-control" type="text" name="destination" placeholder="Destination" required>
-                                  <label for="">Destination</label>
-                                </div>
-                                <div class="col-sm-6">
-                                  <input class="form-control" type="time" name="time_of_arrival" required>
-                                  <label for="">Time of Arrival</label>
-                                </div>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="kilometer" value="0.0" placeholder="Kilometers" required>
-                                <label for="">Kilometers</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="toll" value="0.0" placeholder="Toll" required>
-                                <label for="">Toll</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="parking" value="0.0" placeholder="Parking" required>
-                                <label for="">Parking</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="entrance" value="0.0" placeholder="Entrance" required>
-                                <label for="">Entrance</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="guide_fee" value="0.0" placeholder="Guide Fee" required>
-                                <label for="">Guide Fee</label>
-                              </div>                        <div class="col-12">
-                                <input class="form-control" type="number" name="advance" value="0.0" placeholder="Advance" required>
-                                <label for="">Advance</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="debit" value="0.0" placeholder="Debit" required>
-                                <label for="">Debit</label>
-                              </div>
-                              <div class="col-12">
-                                <input class="form-control" type="number" name="balance" value="0.0" placeholder="Balance" required>
-                                <label for="">Balance</label>
-                              </div>
-      
-      
-                              
-      
-      
-                              <!-- <div class="form-check my-2 mt-4">
-                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                                <label class="form-check-label">I confirm that all data are correct</label>
-                                <div class="invalid-feedback">Please confirm that the entered data are all correct!</div>
-                              </div> -->
-                    
-      
-                              <div class="form-button d-flex justify-content-center mt-3">
-                                  <!-- <button id="save" type="button" class="btn btn-primary">Save</button> -->
-                                  <button id="endTrip" type="submit" class="btn btn-primary">End Trip</button>
-                              </div>
-                          </form>
+  <section class="vh-100 gradient-custom">
+    <div class="container-fluid py-5">
+      <div class="btns d-flex justify-content-end">
+        <button class="btn btn-sm btn-secondary" id="templatePrintButton" onclick="printSection('printTripSheet')"><i class="fas fa-print me-1"></i> PRINT</button>
+        <button class="btn btn-sm btn-secondary ms-1" onclick="window.location.href=`{% url 'allTrips' %}`">Close</button>
+      </div>
+      <div class="row">
+        <div class="trip_sheet" id="printTripSheet" style="overflow-x: auto;">
+          <div class="slip-container bg-light" id="slip_container">
+              <div class="slip">
+                <div class="row sheet_header">
+                  <div class="logo col-4 d-flex align-items-center">
+                    <h4>LOGO</h4>
+                  </div>
+                  <div class="company_head col-4">
+                    <h5 class="fw-bold text-center">ABC CABS</h5>
+                    <div class="address text-center">
+                        <p>xyz street</p>
+                        <p>State, Country</p>
+                        <p>+91 9090909090</p>
+                    </div>
+                  </div>
+                  <div class="col-4"></div>
+                </div>
+                <hr>
+                  <!-- <div class="divider w-50"></div> -->
+                  <h4 class="text-center">Trip Sheet for Contract Carriages</h4>
+                  <hr style="width: 50%; position: relative; left: 25%;">
+                  <div class="trip_details">
+                    <div class="row">
+                      <div class="col-3">
+                        <h5>Trip No.</h5>
                       </div>
+                      <div class="col-3">
+                        {{trip.trip_no}}
+                      </div>
+
+                      <div class="col-3">
+                        <h5>Date</h5>
+                      </div>
+                      <div class="col-3">
+                        {{trip.trip_date}}
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-3">
+                        <p>Vehicle No.</p>
+                      </div>
+                      <div class="col-3">
+                        {{trip.vehicle_no}}
+                      </div>
+
+                      <div class="col-3">
+                        <p>Driver Name</p>
+                      </div>
+                      <div class="col-3">
+                        {{trip.driver_name}}
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+                      <div class="col-3">
+                        <p>Guest Name</p>
+                      </div>
+                      <div class="col-3">
+                        {{trip.guest}}
+                      </div>
+
+                      <div class="col-3">
+                        <p>Advance</p>
+                      </div>
+                      <div class="col-3">
+                        <span>&#8377; </span>{{trip.advance}}
+                      </div>
+
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="equal-length-container" style="color: black; font-weight: bold;">
+                      <div class="equal-length-item" style=" text-align: center;">
+                          Starting Place
+                          <hr>
+                      </div>
+                      <div class="equal-length-item ml-2"  style=" text-align:center;">
+                          Time
+                          <hr>
+                      </div>
+                      <div class="equal-length-item"  style=" text-align: center; ">
+                          Destination
+                          <hr>
+                      </div>
+                      <div class="equal-length-item"  style=" text-align: center; ">
+                          Time of Arrival
+                          <hr>
+                      </div>
+                      <div class="equal-length-item"  style=" text-align: center; ">
+                          Kilometers
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="equal-length-container" style="color: black; font-size: small; word-wrap: break-word; margin-bottom: 1vh;">
+                      <div class="equal-length-item" style="text-align: center;">
+                          {{trip.starting_place}}
+                      </div>
+                      <div class="equal-length-item" style="text-align: center; ">
+                          {{trip.starting_time}}
+                      </div>
+                      <div class="equal-length-item" style="text-align: center; ">
+                          {{trip.destination}}
+                      </div>
+                      <div class="equal-length-item" id="tax{{ forloop.counter }}">
+                          {{trip.time_of_arrival}}
+                      </div>
+                      <div class="equal-length-item" id="tax{{ forloop.counter }}">
+                          {{trip.kilometers}}
+                      </div>
+                  </div>
+
+  
+                  <div class="subtot mt-5">
+                      <div class="subtot-item d-flex justify-content-between">
+                          <span>Entrance Fees</span>
+                          <span><span>&#8377; </span>{{trip.entrance}}</span>
+                      </div>
+                      <div class="subtot-item d-flex justify-content-between">
+                          <span>Parking</span>
+                          <span><span>&#8377; </span>{{trip.parking}}</span>
+                      </div>
+                      <div class="subtot-item d-flex justify-content-between">
+                          <span>TOLL</span>
+                          <span><span>&#8377; </span>{{trip.toll}}</span>
+                      </div>
+                      <div class="subtot-item d-flex justify-content-between">
+                          <span>Guide Fees</span>
+                          <span><span>&#8377; </span>{{trip.guide_fee}}</span>
+                      </div>
+                  </div>
+                  <hr>
+                  <div class="debit fw-bold d-flex justify-content-between">
+                      <span><strong>DEBIT</strong></span>
+                      <span><strong><span>&#8377; </span>{{trip.debit}}</strong></span>
+                  </div>
+                  <div class="balance fw-bold d-flex justify-content-between">
+                    <span><strong>BALANCE</strong></span>
+                    <span><strong><span>&#8377; </span>{{trip.balance}}</strong></span>
+                </div>
+                  <div class="divider"></div>
+                  
+                  <div class="qr d-flex justify-content-center">
+                    <img src="/media/images/trip{{trip.id}}.png" style="width: 100px;" alt="code">
+                  </div>
+                  <div class="footer mt-4 text-center">
+                      <p>Thank you for choosing us.!</p>
                   </div>
               </div>
           </div>
+        </div>
       </div>
+    </div>
+  </section>
 
 
 
@@ -641,15 +772,23 @@
     })
   })
 
-  function checkVehicleNum(element) {
-    var v_number = element.value.toUpperCase();
-    var v_numregexp = /^[A-Z]{2}[ -][0-9]{1,2} [A-Z]{1,2} [0-9]{4}$/;
-    if (v_number.match(v_numregexp)) {
-        document.getElementById('vehicleNumErr').innerHTML = '';
-    } else {
-        document.getElementById('vehicleNumErr').innerHTML = 'Invalid format, Ex: "XX 1 X 1111", "XX 11 XX 1111"';
+  function printSection(sectionId) {
+        var printContents = document.getElementById(sectionId).innerHTML;
+        var originalContents = document.body.innerHTML;
+    
+        // document.body.innerHTML = printContents;
+    
+        // window.print();
+    
+        // document.body.innerHTML = originalContents;
+        var $printerDiv = $('<div class="printContainer"></div>');
+        $printerDiv.html(printContents); 
+        $('body').append($printerDiv).addClass("printingContent"); 
+        window.print(); 
+        $printerDiv.remove();
+        $('body').removeClass("printingContent");
     }
-}
+
 
 </script>
   
