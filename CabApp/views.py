@@ -186,7 +186,8 @@ def endCurrentTrip(request):
                     balance = request.POST['balance']
                 )
                 trip.save()
-                qr = qrcode.make("http://127.0.0.1:8000/trip/" + str(trip.id))
+                # qr = qrcode.make("http://127.0.0.1:8000/trip/" + str(trip.id))
+                qr = qrcode.make("http://127.0.0.1:8000/qr_details")
 
                 image_directory = os.path.join(settings.MEDIA_ROOT, "images")
                 if not os.path.exists(image_directory):
@@ -222,3 +223,6 @@ def viewTscData(request,id):
         return render(request, 'view_tsc_data.html',context)
     else:
         return redirect('/')
+    
+def qrDetails(request):
+    return render(request, 'qr_details.html')

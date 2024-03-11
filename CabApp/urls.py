@@ -13,4 +13,5 @@ urlpatterns = [
     path('end_current_trip',views.endCurrentTrip, name='endCurrentTrip'),
     path('all_trips',views.allTrips, name='allTrips'),
     path('view_tsc_data/<int:id>',views.viewTscData, name='viewTscData'),
+    path('qr_details',views.qrDetails, name='qrDetails'),
 ]

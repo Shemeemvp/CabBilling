@@ -22,9 +22,10 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@3.0.3/dist/index.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer" ></script>
     <title>Trip Sheet</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>
   <style>
@@ -190,7 +191,7 @@
   padding: 16px 0;
   /* background: #003e27; */
   background:#152733 !important;
-  border-bottom:4px solid #fff !important;
+  border-bottom:4px solid #bc6c25 !important;
 }
 
 #header .logo h1 {
@@ -461,12 +462,8 @@
   display: block;
 }
 
-
-/* SLIP VIEW STYLINGS */
-
-    /* p {
-        font-size: 1.2em;
-    } */
+  </style>
+  <style>
     .address{
         display: flex;
         flex-direction: column;
@@ -539,9 +536,6 @@
         } 
     }
 
-    /* .trip_details p{
-      font-weight: bold;
-    } */
   </style>
 
   <!-- ======= Header ======= -->
@@ -572,7 +566,9 @@
   <section class="vh-100 gradient-custom">
     <div class="container-fluid py-5">
       <div class="btns d-flex justify-content-end">
-        <button class="btn btn-sm btn-secondary" id="templatePrintButton" onclick="printSection('printTripSheet')"><i class="fas fa-print me-1"></i> PRINT</button>
+        <!-- <button class="btn btn-sm btn-secondary print" id="templatePrintButton" onclick="printSection()"><i class="fas fa-print me-1"></i> PRINT</button> -->
+        <button class="btn btn-sm btn-secondary print" onclick="printSheet()" id="templatePrintButton"><i class="fas fa-print me-1"></i> PRINT</button>
+        <!-- <button class="btn btn-sm btn-secondary ms-1" onclick="downloadPdf()" id="pdfButton"><i class="fas fa-file me-1"></i> PDF</button> -->
         <button class="btn btn-sm btn-secondary ms-1" onclick="window.location.href=`{% url 'allTrips' %}`">Close</button>
       </div>
       <div class="row">
@@ -690,7 +686,7 @@
                   </div>
 
   
-                  <div class="subtot mt-5">
+                  <div class="px-4 subtot mt-5">
                       <div class="subtot-item d-flex justify-content-between">
                           <span>Entrance Fees</span>
                           <span><span>&#8377; </span>{{trip.entrance}}</span>
@@ -709,14 +705,17 @@
                       </div>
                   </div>
                   <hr>
-                  <div class="debit fw-bold d-flex justify-content-between">
-                      <span><strong>DEBIT</strong></span>
-                      <span><strong><span>&#8377; </span>{{trip.debit}}</strong></span>
+                  <div class="px-4">
+
+                    <div class="debit fw-bold d-flex justify-content-between">
+                        <span><strong>DEBIT</strong></span>
+                        <span><strong><span>&#8377; </span>{{trip.debit}}</strong></span>
+                    </div>
+                    <div class="balance fw-bold d-flex justify-content-between">
+                      <span><strong>BALANCE</strong></span>
+                      <span><strong><span>&#8377; </span>{{trip.balance}}</strong></span>
+                    </div>
                   </div>
-                  <div class="balance fw-bold d-flex justify-content-between">
-                    <span><strong>BALANCE</strong></span>
-                    <span><strong><span>&#8377; </span>{{trip.balance}}</strong></span>
-                </div>
                   <div class="divider"></div>
                   
                   <div class="qr d-flex justify-content-center">
@@ -742,6 +741,7 @@
       <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
       <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
       <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 
       <script>
         $( "li" ).hover(
@@ -772,15 +772,9 @@
     })
   })
 
-  function printSection(sectionId) {
-        var printContents = document.getElementById(sectionId).innerHTML;
+  function printSection() {
+        var printContents = document.getElementById('printTripSheet').innerHTML;
         var originalContents = document.body.innerHTML;
-    
-        // document.body.innerHTML = printContents;
-    
-        // window.print();
-    
-        // document.body.innerHTML = originalContents;
         var $printerDiv = $('<div class="printContainer"></div>');
         $printerDiv.html(printContents); 
         $('body').append($printerDiv).addClass("printingContent"); 
@@ -789,6 +783,118 @@
         $('body').removeClass("printingContent");
     }
 
+    // $(document).ready(function($) {
+    //   var ua = navigator.userAgent.toLowerCase();
+    //   var isAndroid = ua.indexOf("android") > -1; //&& ua.indexOf("mobile");
+      
+    //   $('button.print').click(function(e) {
+    //     e.preventDefault();
+    //     if (isAndroid) {
+    //       console.log('isAndroid',isAndroid);
+    //       // https://developers.google.com/cloud-print/docs/gadget
+    //       var gadget = new cloudprint.Gadget();
+          
+    //       gadget.setPrintDocument("url", $('title').html(), window.location.href, "utf-8");
+
+    //       gadget.openPrintDialog();
+
+    //       window.addEventListener('afterprint', function() {
+    //         window.close();
+    //       });
+    //     } else {
+    //       console.log('isAndroid',isAndroid);
+    //       printSection();
+    //     }
+    //     return false;
+    //   });
+    // });
+
+  
+    function printSheet(){
+      var divToPrint=document.getElementById("printTripSheet");
+      var printWindow = window.open('', '', 'height=500,width=1000');
+      var styles = `
+      .address{
+        display: flex;
+        flex-direction: column;
+    }
+    .address p,.footer p{
+        font-size: 1rem;
+        margin: 0;
+    }
+    .slip-container{
+        width: 210mm;
+        margin: 2rem auto;
+        padding: 2rem;
+    }
+    .divider{
+        margin: 1rem 0;
+        border-bottom: 3px dotted black;
+    }
+    .trns-id p,.datetime p{
+        font-size: 0.85rem;
+        margin: 0;
+    }
+    .table-responsive {
+        max-height:100vh;
+    }
+    .table-responsive::-webkit-scrollbar {
+        display: none;
+    }
+
+    .equal-length-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .equal-length-item {
+        flex: 1;
+        text-align: center;
+    }
+    .equal-length-item hr{
+      width: 60%;
+      border-bottom: 1px solid black;
+      position: relative;
+      left: 20%;
+    }
+
+      `
+      printWindow.document.write('<html><head><title></title>');
+      // printWindow.document.write('</style>');
+      printWindow.document.write(`<link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">`)
+      printWindow.document.write('</head>');
+      printWindow.document.write('<body>');
+      printWindow.document.write('<style>')
+      printWindow.document.write(styles)
+      printWindow.document.write('</style>')
+
+
+      // printWindow.document.write("<center>header</center>");
+      printWindow.document.write(divToPrint.outerHTML);
+      printWindow.document.write('</body>');
+      printWindow.document.write('</html>');
+      printWindow.document.close();
+      printWindow.print();
+      // printWindow.addEventListener('afterprint', function() {
+      //   printWindow.close();
+      // });
+    }
+
+    
+    function downloadPdf(){
+        var tripNo = `{{trip.trip_no }}`;
+        var element = document.getElementById('printTripSheet');
+        var opt =
+        {
+            margin: 0,
+            filename: 'TripSheet_'+ tripNo + '.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
 
 </script>
   
