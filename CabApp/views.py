@@ -225,4 +225,4 @@ def viewTscData(request,id):
         return redirect('/')
     
 def qrDetails(request):
-    return render(request, 'qr_details.html')
+    return render(request, 'qr_landing.html')
