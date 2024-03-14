@@ -30,4 +30,6 @@ class TSC_Form(models.Model):
     balance = models.FloatField(default = 0.0, null = True, blank = True)
     bill_qr = models.CharField(max_length=500, default='',null=True,blank=True)
 
-
+class Customer_Feedbacks(models.Model):
+    full_name = models.CharField(max_length = 150, null = True, blank = True)
+    feedback = models.TextField()

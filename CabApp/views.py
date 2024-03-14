@@ -205,7 +205,7 @@ def endCurrentTrip(request):
         return redirect('/')
     
 def allTrips(request):
-    if request.user.is_authenticated and request.user.is_staff:
+    if request.user.is_authenticated:
         trips = TSC_Form.objects.all().order_by('-id')
         context = {
             'trips': trips,
@@ -215,7 +215,7 @@ def allTrips(request):
         return redirect('/')
     
 def viewTscData(request,id):
-    if request.user.is_authenticated and request.user.is_staff:
+    if request.user.is_authenticated:
         tripData = TSC_Form.objects.get(id = id)
         context = {
             'trip': tripData,
@@ -226,3 +226,76 @@ def viewTscData(request,id):
     
 def qrDetails(request):
     return render(request, 'qr_landing.html')
+
+def saveCustomerFeedback(request):
+    name = request.GET['full_name']
+    feedback = request.GET['feedback']
+    Customer_Feedbacks.objects.create(full_name = name, feedback = feedback)
+    messages.success(request, 'Thank you for your response')
+    return redirect(qrDetails)
+
+def getLastRideDetails(request):
+    if request.user.is_authenticated:
+        usr = User.objects.get(id = request.user.id)
+        try:
+            driver = Driver.objects.get(user = usr)
+        except:
+            driver = None
+
+        trp = TSC_Form.objects.filter(user = usr).last()
+        context = {
+            'user':usr, 'driver':driver, 'trip':trp
+        }
+        print(trp)
+
+        if not trp:
+            messages.info(request, 'No Previous ride details exists.')
+            return redirect(tripSheetPage)
+        else:
+            return render(request, 'previous_trip.html', context)
+    else:
+        return redirect('/')
+    
+def updateRide(request, id):
+    if request.user.is_authenticated:
+        try:
+            if request.method == 'POST':
+                usr = User.objects.get(id = request.user.id)
+                try:
+                    driver = Driver.objects.get(user = usr)
+                except:
+                    driver = None
+
+                trip = TSC_Form.objects.get(id = id)
+                trp_no = request.POST['trip_number']
+
+                if trip.trip_no != trp_no and TSC_Form.objects.filter(trip_no__iexact = trp_no).exists():
+                    res = f'<script>alert("Trip No. `{trp_no}` already exists.!");window.history.back();</script>'
+                    return HttpResponse(res)
+                else:
+                    trip.trip_no = trp_no
+                    trip.trip_date = request.POST['trip_date']
+                    trip.driver_name = request.POST['driver_name']
+                    trip.guest = request.POST['guest_name']
+                    trip.vehicle_no = request.POST['vehicle_number']
+                    trip.starting_place = request.POST['starting_place']
+                    trip.starting_time = request.POST['starting_time']
+                    trip.destination = request.POST['destination']
+                    trip.time_of_arrival = request.POST['time_of_arrival']
+                    trip.kilometers = request.POST['kilometer']
+                    trip.toll = request.POST['toll']
+                    trip.parking = request.POST['parking']
+                    trip.entrance = request.POST['entrance']
+                    trip.guide_fee = request.POST['guide_fee']
+                    trip.advance = request.POST['advance']
+                    trip.debit = request.POST['debit']
+                    trip.balance = request.POST['balance']
+                    trip.save()
+
+                    messages.success(request, "Trip Updated successfully")
+                    return redirect(tripSheetPage)
+        except Exception as e:
+            print(e)
+            return redirect(tripSheetPage)
+    else:
+        return redirect('/')

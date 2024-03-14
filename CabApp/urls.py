@@ -14,4 +14,7 @@ urlpatterns = [
     path('all_trips',views.allTrips, name='allTrips'),
     path('view_tsc_data/<int:id>',views.viewTscData, name='viewTscData'),
     path('qr_details',views.qrDetails, name='qrDetails'),
+    path('customer_feedback',views.saveCustomerFeedback, name='saveCustomerFeedback'),
+    path('get_last_ride_details',views.getLastRideDetails, name='getLastRideDetails'),
+    path('update_ride/<int:id>',views.updateRide, name='updateRide'),
 ]

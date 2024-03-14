@@ -467,16 +467,14 @@
     <div class="container d-flex align-items-center justify-content-between">
 
       <div class="logo">
-        <h1><a href="#">CAB Billing</a></h1>
+        <h1><a href="#">MILAYNA CABS</a></h1>
 
       </div>
 
       <nav id="navbar" class="navbar">
         <ul>
           <li><a class="nav-link" href="{% url 'tripSheetPage' %}"><i class="fas fa-plus"></i> New Trip</a><span class="hover"></span></li>
-          {% if request.user.is_staff %}
           <li><a class="nav-link" href="{% url 'allTrips' %}"><i class="fas fa-road"></i> View Trips</a><span class="hover"></span></li>
-          {% endif %}
           <li><a class="nav-link" href="{% url 'userLogout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a><span class="hover"></span></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
@@ -495,13 +493,13 @@
                         <h3>Enter Trip Details</h3>
                         <p>Fill in the data below.</p>
                         <div class="last_ride d-flex justify-content-end">
-                          <button class="btn btn-secondary btn-sm">Get Last Ride</button>
+                          <button class="btn btn-secondary btn-sm" onclick="window.location.href=`{% url 'getLastRideDetails' %}`">Get Last Ride</button>
                         </div>
                         <form action="{% url 'endCurrentTrip' %}" method="post" class="requires-validation">
                           {% csrf_token %}
                             <div class="row gx-2">
                               <div class="col-sm-6">
-                                <input class="form-control" type="text" name="trip_number" placeholder="{{tripNo}}" required>
+                                <input class="form-control" type="text" name="trip_number" value="{{tripNo}}" placeholder="{{tripNo}}" required>
                                 <label for="">Trip No.*</label>
                               </div>
                               <div class="col-sm-6">
