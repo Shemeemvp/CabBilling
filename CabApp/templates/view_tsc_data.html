@@ -704,13 +704,17 @@
                           <span>Guide Fees</span>
                           <span><span>&#8377; </span>{{trip.guide_fee}}</span>
                       </div>
+                      <div class="subtot-item d-flex justify-content-between">
+                        <span>Other Charges</span>
+                        <span><span>&#8377; </span>{{trip.other_charges}}</span>
+                    </div>
                   </div>
                   <hr>
                   <div class="px-4">
 
                     <div class="debit fw-bold d-flex justify-content-between">
-                        <span><strong>DEBIT</strong></span>
-                        <span><strong><span>&#8377; </span>{{trip.debit}}</strong></span>
+                        <span><strong>TOTAL</strong></span>
+                        <span><strong><span>&#8377; </span>{{trip.total_trip_expense}}</strong></span>
                     </div>
                     <div class="balance fw-bold d-flex justify-content-between">
                       <span><strong>BALANCE</strong></span>

@@ -508,12 +508,26 @@
                               </div>
                             </div>
                               
-                              
+                            <div class="col-md-12">
+                              <input class="form-control" type="text" name="vehicle_name" placeholder="Vehicle Name" required>
+                              <label for="">Vehicle Name*</label>
+                            </div>
                               <div class="col-md-12">
                                 <input class="form-control text-uppercase" type="text" name="vehicle_number" onblur="checkVehicleNum(this)" placeholder="Vehicle No." required>
                                 <div class="text-danger" id="vehicleNumErr"></div>
                                 <label for="">Vehicle No.*</label>
                               </div>
+                              
+                              <div class="col-md-12">
+                                <input class="form-control" type="number" name="fixed_charge" id="fixedCharge" min="0" step="any" placeholder="Fixed charge upto 100 KM" onchange="calcTotalExpense()" required>
+                                <label for="">Fixed Charge*</label>
+                              </div>
+
+                              <div class="col-md-12">
+                                <input class="form-control" type="number" name="extra_charge" id="extraCharge" min="0" step="any" placeholder="Extra charge per Kilo Meter" onchange="calcTotalExpense()" required>
+                                <label for="">Extra Running Charge*</label>
+                              </div>
+
                               <div class="col-md-12">
                                 <input class="form-control" type="text" name="driver_name" value="{{driver.full_name}}" placeholder="Diver Name" required>
                                 <label for="">Driver Name*</label>
@@ -522,6 +536,17 @@
                               <div class="col-md-12">
                                 <input class="form-control" type="text" name="guest_name" placeholder="Guest Name" required>
                                 <label for="">Guest Name*</label>
+                              </div>
+
+                              <div class="row gx-2">
+                                <div class="col-12 col-sm-6">
+                                  <input class="form-control" type="number" name="starting_kilometer" id="startKilometer" placeholder="0.0" required>
+                                  <label for="">Starting Kilometer</label>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                  <input class="form-control" type="number" name="end_kilometer" id="endKilometer" placeholder="0.0" required>
+                                  <label for="">Ending Kilometer</label>
+                                </div>
                               </div>
       
                               <div class="row gx-2">
@@ -546,34 +571,76 @@
                                 </div>
                               </div>
                               <div class="col-12">
-                                <input class="form-control" type="number" name="kilometer" value="0.0" placeholder="Kilometers" required>
+                                <input class="form-control" type="date" name="trip_end_date" value="">
+                                <label for="">Trip End Date</label>
+                              </div>
+                              <div class="col-12">
+                                <input class="form-control" type="number" name="kilometer" value="0.0" id="totalKilometer" placeholder="Kilometers" readonly>
                                 <label for="">Kilometers</label>
                               </div>
                               <div class="col-12">
-                                <input class="form-control" type="number" name="toll" value="0.0" placeholder="Toll" required>
+                                <input class="form-control toll" type="number" name="toll[]" value="0.0" placeholder="Toll" onchange="calcTotalExpense()" required>
                                 <label for="">Toll</label>
                               </div>
                               <div class="col-12">
-                                <input class="form-control" type="number" name="parking" value="0.0" placeholder="Parking" required>
+                                <input class="form-control parking" type="number" name="parking[]" value="0.0" placeholder="Parking" onchange="calcTotalExpense()" required>
                                 <label for="">Parking</label>
                               </div>
                               <div class="col-12">
-                                <input class="form-control" type="number" name="entrance" value="0.0" placeholder="Entrance" required>
+                                <input class="form-control entrance" type="number" name="entrance[]" value="0.0" placeholder="Entrance" onchange="calcTotalExpense()" required>
                                 <label for="">Entrance</label>
                               </div>
+
                               <div class="col-12">
-                                <input class="form-control" type="number" name="guide_fee" value="0.0" placeholder="Guide Fee" required>
+                                <hr class="text-white">
+                                <input class="form-control" type="text" name="guide_place[]" placeholder="Guide Place..">
+                                <input class="form-control guide_fee" type="number" name="guide_fee[]" value="0.0" placeholder="Guide Fee" onchange="calcTotalExpense()" required>
                                 <label for="">Guide Fee</label>
-                              </div>                        <div class="col-12">
-                                <input class="form-control" type="number" name="advance" value="0.0" placeholder="Advance" required>
+                                <!-- <hr class="text-white"> -->
+                              </div>
+
+                              <div class="col-12">
+                                <hr class="text-white">
+                                <input class="form-control" type="text" name="other_charge[]" placeholder="Other charge description..">
+                                <input class="form-control other_charge" type="number" name="other_charge_amount[]" value="0.0" placeholder="Other charge amount." onchange="calcTotalExpense()" required>
+                                <label for="">Other Charge</label>
+                                <!-- <hr class="text-white"> -->
+                              </div>
+
+                              <div class="another_exp" id="anotherExpenses"></div>
+                              <div class="add_exp mt-3">
+                                <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="toggleNewExpense('add')"><i class="fa fa-plus"></i> Another Expense</span>
+                                <span class="text-white" style="cursor: pointer; display: none;" id="removeExpense" onclick="toggleNewExpense('remove')"><i class="fa fa-trash"></i> Remove</span>
+                              </div>
+
+                              <div class="new_expense mt-1" id="newExpense" style="display: none;">
+                                <div class="col-12 d-flex align-items-center">
+                                  <select name="" class="form-control mt-0" id="newExpenseCategory">
+                                    <option value="">Choose an expense</option>
+                                    <option value="Parking">Parking</option>
+                                    <option value="Toll">Toll</option>
+                                    <option value="Guide Fee">Guide Fee</option>
+                                    <option value="Other Charge">Other Charge</option>
+                                  </select>
+                                  <button type="button" class="btn btn-outline-secondary ms-1" onclick="addNewExpense()">ADD</button>
+                                </div>
+                              </div>
+                              <hr class="text-white">
+                              <div class="col-12">
+                                <input class="form-control" type="number" id="totalTripExpense" name="total" value="0.0" placeholder="Total Trip Expense" readonly>
+                                <label for=""><b>Total Charge</b></label>
+                              </div>
+
+                              <div class="col-12">
+                                <input class="form-control" type="number" name="advance" value="0.0" id="advanceAmount" placeholder="Advance" onchange="rewriteBalance()" required>
                                 <label for="">Advance</label>
                               </div>
-                              <div class="col-12">
+                              <!-- <div class="col-12">
                                 <input class="form-control" type="number" name="debit" value="0.0" placeholder="Debit" required>
                                 <label for="">Debit</label>
-                              </div>
+                              </div> -->
                               <div class="col-12">
-                                <input class="form-control" type="number" name="balance" value="0.0" placeholder="Balance" required>
+                                <input class="form-control" type="number" name="balance" value="0.0" id="balanceAmount" placeholder="Balance" readonly>
                                 <label for="">Balance</label>
                               </div>
       
@@ -640,14 +707,197 @@
   })
 
   function checkVehicleNum(element) {
-    var v_number = element.value.toUpperCase();
-    var v_numregexp = /^[A-Z]{2}[ -][0-9]{1,2} [A-Z]{1,2} [0-9]{4}$/;
-    if (v_number.match(v_numregexp)) {
-        document.getElementById('vehicleNumErr').innerHTML = '';
-    } else {
-        document.getElementById('vehicleNumErr').innerHTML = 'Invalid format, Ex: "XX 1 X 1111", "XX 11 XX 1111"';
+      var v_number = element.value.toUpperCase();
+      var v_numregexp = /^[A-Z]{2}[ -][0-9]{1,2} [A-Z]{1,2} [0-9]{4}$/;
+      if (v_number.match(v_numregexp)) {
+          document.getElementById('vehicleNumErr').innerHTML = '';
+      } else {
+          document.getElementById('vehicleNumErr').innerHTML = 'Invalid format, Ex: "XX 1 X 1111", "XX 11 XX 1111"';
+      }
+  }
+  
+  function toggleNewExpense(action){
+    if(action == 'add'){
+      $('#newExpense').show()
+      $('#addExpense').hide()
+      $('#removeExpense').show()
     }
-}
+
+    if(action == 'remove'){
+      $('#newExpense').hide()
+      $('#addExpense').show()
+      $('#removeExpense').hide()
+    }
+  }
+
+  function refreshAddExpense(){
+    $('#newExpense').hide();
+    $('#newExpenseCategory').val('');
+    $('#addExpense').show()
+    $('#removeExpense').hide()
+  }
+
+  function addNewExpense(){
+    var category = $('#newExpenseCategory').val();
+    var section = $('#anotherExpenses');
+    if(category == 'Parking'){
+      var element = 
+      `
+      <div class="col-12">
+        <input class="form-control parking" type="number" name="parking[]" placeholder="0.0" onchange="calcTotalExpense()" required>
+        <label for="">Parking</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+      refreshAddExpense()
+    }else if(category == 'Toll'){
+      var element =
+      `
+      <div class="col-12">
+        <input class="form-control toll" type="number" name="toll[]" placeholder="0.0" onchange="calcTotalExpense()" required>
+        <label for="">Toll</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+      refreshAddExpense()
+    }else if(category == 'Guide Fee'){
+      var element =
+      `
+      <div class="col-12">
+        <hr class="text-white">
+        <input class="form-control" type="text" name="guide_place[]" placeholder="Guide Place..">
+        <input class="form-control guide_fee" type="number" name="guide_fee[]" placeholder="0.0" onchange="calcTotalExpense()" required>
+        <label for="">Guide Fee</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+      refreshAddExpense()
+    }else if(category == 'Other Charge'){
+      var element =
+      `
+      <div class="col-12">
+        <hr class="text-white">
+        <input class="form-control" type="text" name="other_charge[]" placeholder="Other charge description..">
+        <input class="form-control other_charge" type="number" name="other_charge_amount[]" placeholder="0.0" onchange="calcTotalExpense()" required>
+        <label for="">Other Charge</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+      refreshAddExpense()
+    }else{
+      alert('Please choose an expense type.!')
+    }
+  }
+
+  function removeNewExpense(element){
+    $(element).parent().remove();
+    calcTotalExpense();
+  }
+
+  function calcTripCharge(){
+    var totTripCharge = 0
+    var totKm = 0
+    var extraKm = 0
+    var fxCharge = parseFloat($('#fixedCharge').val() || 0)
+    var exCharge = parseFloat($('#extraCharge').val() || 0)
+    var startKm = parseFloat($('#startKilometer').val() || 0)
+    var endKm = parseFloat($('#endKilometer').val() || 0)
+    
+    totKm = endKm - startKm
+    if(totKm > 0){
+      if(totKm > 100){
+        extraKm = totKm -100
+      }
+  
+      totTripCharge += fxCharge
+      if(extraKm != 0){
+        totTripCharge += parseFloat(extraKm * exCharge)
+      }
+  
+      return totTripCharge
+    }
+    return 0
+  }
+
+  function calcTotalExpense(){
+    var tripCharge = calcTripCharge()
+    var totToll = 0
+    var totParking = 0
+    var totEntrance = 0
+    var totGuideFee = 0
+    var totOtherCharge = 0
+    
+    $('input.toll').each(function () {
+      totToll += parseFloat($(this).val() || 0);
+    });
+
+    $('input.parking').each(function () {
+      totParking += parseFloat($(this).val() || 0);
+    });
+
+    $('input.entrance').each(function () {
+      totEntrance += parseFloat($(this).val() || 0);
+    });
+
+    $('input.guide_fee').each(function () {
+      totGuideFee += parseFloat($(this).val() || 0);
+    });
+
+    $('input.other_charge').each(function () {
+      totOtherCharge += parseFloat($(this).val() || 0);
+    });
+
+    var total = parseFloat(tripCharge) + parseFloat(totToll) + parseFloat(totParking) + parseFloat(totEntrance) + parseFloat(totGuideFee) + parseFloat(totOtherCharge)
+    $('#totalTripExpense').val(total)
+    rewriteBalance();
+
+  }
+
+  $('#endKilometer').change(function(){
+    var startKm = parseFloat($('#startKilometer').val() || 0)
+    var endKm = parseFloat($(this).val() || 0)
+    if(endKm != ""){
+      if(endKm < startKm){
+        alert('Ending kilometer should be greater than starting kilometer.!')
+        $(this).val("")
+      }
+    }
+    rewriteKM();
+    calcTotalExpense();
+  })
+  $('#startKilometer').change(function(){
+    var startKm = parseFloat($(this).val() || 0)
+    var endKm = parseFloat($('#endKilometer').val() || 0)
+    if(startKm != "" && endKm !=""){
+      if(startKm > endKm){
+        alert('Starting kilometer should be less than End kilometer.!')
+        $(this).val("")
+      }
+    }
+    rewriteKM();
+    calcTotalExpense();
+  })
+
+  function rewriteKM(){
+    var totKm = 0
+    if($('#endKilometer').val() != ""){
+      totKm = parseFloat($('#endKilometer').val() || 0) - parseFloat($('#startKilometer').val() || 0)
+      if (!(totKm < 0)) {
+        $('#totalKilometer').val(totKm);
+      }
+    }
+
+  }
+
+  function rewriteBalance(){
+    var adv = parseFloat($('#advanceAmount').val() || 0)
+    var tot = parseFloat($('#totalTripExpense').val() || 0)
+  
+    $('#balanceAmount').val(tot - adv)
+
+  }
+
+
 
 </script>
   

@@ -9,6 +9,7 @@ import qrcode
 from django.conf import settings
 import os
 from django.core.files import File
+from datetime import date
 
 # Create your views here.
 
@@ -164,6 +165,59 @@ def endCurrentTrip(request):
                 res = f'<script>alert("Trip No. `{trp_no}` already exists.!");window.history.back();</script>'
                 return HttpResponse(res)
             else:
+                tollAmt = 0
+                parkingAmt = 0
+                entranceAmt = 0
+                guideAmt = 0
+                otherAmt = 0
+
+                toll = request.POST.getlist('toll[]')
+                parking = request.POST.getlist('parking[]')
+                entrance = request.POST.getlist('entrance[]')
+                guide_fee = request.POST.getlist('guide_fee[]')
+                guide_place = request.POST.getlist('guide_place[]')
+                other_charge = request.POST.getlist('other_charge_amount[]')
+                other_charge_desc = request.POST.getlist('other_charge[]')
+                
+                print(guide_fee, guide_place)
+                guide_fee_mapped = zip(guide_fee, guide_place)
+                guide_fee_list = list(guide_fee_mapped)
+
+                print(other_charge, other_charge_desc)
+                other_charge_mapped = zip(other_charge, other_charge_desc)
+                other_charge_list = list(other_charge_mapped)
+
+                for t in toll:
+                    try:
+                        tollAmt += float(t)
+                    except:
+                        pass
+
+                for p in parking:
+                    try:
+                        parkingAmt += float(p)
+                    except:
+                        pass
+                
+                for e in entrance:
+                    try:
+                        entranceAmt += float(e)
+                    except:
+                        pass
+
+                for g in guide_fee:
+                    try:
+                        guideAmt += float(g)
+                    except:
+                        pass
+
+                for o in other_charge:
+                    try:
+                        otherAmt += float(o)
+                    except:
+                        pass
+
+
                 trip = TSC_Form(
                     user = usr,
                     driver = driver,
@@ -172,20 +226,43 @@ def endCurrentTrip(request):
                     driver_name = request.POST['driver_name'],
                     guest = request.POST['guest_name'],
                     vehicle_no = request.POST['vehicle_number'],
+                    vehicle_name = request.POST['vehicle_name'],
+                    fixed_charge = request.POST['fixed_charge'],
+                    extra_charge = request.POST['extra_charge'],
+                    starting_km = request.POST['starting_kilometer'],
+                    ending_km = request.POST['end_kilometer'],
+                    trip_end_date = None if request.POST['trip_end_date'] == "" else request.POST['trip_end_date'],
                     starting_place = request.POST['starting_place'],
                     starting_time = request.POST['starting_time'],
                     destination = request.POST['destination'],
                     time_of_arrival = request.POST['time_of_arrival'],
                     kilometers = request.POST['kilometer'],
-                    toll = request.POST['toll'],
-                    parking = request.POST['parking'],
-                    entrance = request.POST['entrance'],
-                    guide_fee = request.POST['guide_fee'],
+                    toll = tollAmt,
+                    parking = parkingAmt,
+                    entrance = entranceAmt,
+                    guide_fee = guideAmt,
+                    other_charges = otherAmt,
+                    total_trip_expense = request.POST['total'],
                     advance = request.POST['advance'],
-                    debit = request.POST['debit'],
                     balance = request.POST['balance']
                 )
                 trip.save()
+
+                for item in toll:
+                    TSC_Expenses.objects.create(Trip = trip, exp_type = 'Toll', exp_desc = None, exp_amount = item, exp_date = date.today())
+
+                for item in parking:
+                    TSC_Expenses.objects.create(Trip = trip, exp_type = 'Parking', exp_desc = None, exp_amount = item, exp_date = date.today())
+                
+                for item in entrance:
+                    TSC_Expenses.objects.create(Trip = trip, exp_type = 'Entrance', exp_desc = None, exp_amount = item, exp_date = date.today())
+
+                for item in guide_fee_list:
+                    TSC_Expenses.objects.create(Trip = trip, exp_type = 'Guide Fee', exp_desc = item[1], exp_amount = item[0], exp_date = date.today())
+
+                for item in other_charge_list:
+                    TSC_Expenses.objects.create(Trip = trip, exp_type = 'Other Charge', exp_desc = item[1], exp_amount = item[0], exp_date = date.today())
+
                 # qr = qrcode.make("http://127.0.0.1:8000/trip/" + str(trip.id))
                 qr = qrcode.make("http://127.0.0.1:8000/qr_details")
 
