@@ -216,7 +216,13 @@
 #header .logo img {
   padding: 0;
   margin: 0;
-  max-height: 40px;
+  max-height: 50px;
+}
+.logo_img {
+  background: white;
+  border-radius: 50%;
+  padding: 5px 8px;
+  margin-right: 7px;
 }
 
 /*--------------------------------------------------------------
@@ -466,7 +472,10 @@
   <header id="header">
     <div class="container d-flex align-items-center justify-content-between">
 
-      <div class="logo">
+      <div class="logo d-flex align-items-center">
+        <div class="logo_img">
+          <img src="/static/assets/images/logo_3.png" alt="">
+        </div>
         <h1><a href="#">MILAYNA CABS</a></h1>
 
       </div>
@@ -503,7 +512,7 @@
                                 <label for="">Trip No.*</label>
                               </div>
                               <div class="col-sm-6">
-                                <input class="form-control" type="date" name="trip_date" value="{% now 'Y-m-d' %}" required>
+                                <input class="form-control" type="date" name="trip_date" id="startDate" onchange="countTripDays()" value="{% now 'Y-m-d' %}" required>
                                 <label for="">Date*</label>
                               </div>
                             </div>
@@ -571,8 +580,12 @@
                                 </div>
                               </div>
                               <div class="col-12">
-                                <input class="form-control" type="date" name="trip_end_date" value="">
+                                <input class="form-control" type="date" name="trip_end_date" onchange="countTripDays()" id="endDate" value="{% now 'Y-m-d' %}">
                                 <label for="">Trip End Date</label>
+                              </div>
+                              <div class="col-12">
+                                <input class="form-control" id="tripDays" type="number" name="" readonly>
+                                <label for="">Trip Days</label>
                               </div>
                               <div class="col-12">
                                 <input class="form-control" type="number" name="kilometer" value="0.0" id="totalKilometer" placeholder="Kilometers" readonly>
@@ -582,9 +595,17 @@
                                 <input class="form-control toll" type="number" name="toll[]" value="0.0" placeholder="Toll" onchange="calcTotalExpense()" required>
                                 <label for="">Toll</label>
                               </div>
+                              <div class="add_toll" id="addAnotherToll"></div>
+                              <div class="mt-1">
+                                <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewToll()"><i class="fa fa-plus"></i> Toll</span>
+                              </div>
                               <div class="col-12">
                                 <input class="form-control parking" type="number" name="parking[]" value="0.0" placeholder="Parking" onchange="calcTotalExpense()" required>
                                 <label for="">Parking</label>
+                              </div>
+                              <div class="add_parking" id="addAnotherParking"></div>
+                              <div class="mt-1">
+                                <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewParking()"><i class="fa fa-plus"></i> Parking</span>
                               </div>
                               <div class="col-12">
                                 <input class="form-control entrance" type="number" name="entrance[]" value="0.0" placeholder="Entrance" onchange="calcTotalExpense()" required>
@@ -598,6 +619,10 @@
                                 <label for="">Guide Fee</label>
                                 <!-- <hr class="text-white"> -->
                               </div>
+                              <div class="add_guide_fee" id="addAnotherGuideFee"></div>
+                              <div class="mt-1">
+                                <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewGuideFee()"><i class="fa fa-plus"></i> Guide Fee</span>
+                              </div>
 
                               <div class="col-12">
                                 <hr class="text-white">
@@ -606,12 +631,16 @@
                                 <label for="">Other Charge</label>
                                 <!-- <hr class="text-white"> -->
                               </div>
+                              <div class="add_other_charge" id="addAnotherOtherCharge"></div>
+                              <div class="mt-1">
+                                <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewOtherCharge()"><i class="fa fa-plus"></i> Other Charge</span>
+                              </div>
 
-                              <div class="another_exp" id="anotherExpenses"></div>
+                              <!-- <div class="another_exp" id="anotherExpenses"></div>
                               <div class="add_exp mt-3">
                                 <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="toggleNewExpense('add')"><i class="fa fa-plus"></i> Another Expense</span>
                                 <span class="text-white" style="cursor: pointer; display: none;" id="removeExpense" onclick="toggleNewExpense('remove')"><i class="fa fa-trash"></i> Remove</span>
-                              </div>
+                              </div> -->
 
                               <div class="new_expense mt-1" id="newExpense" style="display: none;">
                                 <div class="col-12 d-flex align-items-center">
@@ -657,7 +686,7 @@
       
                               <div class="form-button d-flex justify-content-center mt-3">
                                   <!-- <button id="save" type="button" class="btn btn-primary">Save</button> -->
-                                  <button id="endTrip" type="submit" class="btn btn-primary">End Trip</button>
+                                  <button id="endTrip" type="submit" class="btn btn-primary">Save Trip</button>
                               </div>
                           </form>
                       </div>
@@ -789,6 +818,58 @@
     }
   }
 
+  function addNewToll(){
+    var section = $('#addAnotherToll')
+    var element =
+      `
+      <div class="col-12">
+        <input class="form-control toll" type="number" name="toll[]" placeholder="0.0" onchange="calcTotalExpense()" required>
+        <label for="">Toll</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+  }
+
+  function addNewParking(){
+    var section = $('#addAnotherParking')
+    var element =
+      `
+      <div class="col-12">
+        <input class="form-control parking" type="number" name="parking[]" placeholder="0.0" onchange="calcTotalExpense()" required>
+        <label for="">Parking</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+  }
+
+  function addNewGuideFee(){
+    var section = $('#addAnotherGuideFee')
+    var element =
+      `
+      <div class="col-12">
+        <hr class="text-white">
+        <input class="form-control" type="text" name="guide_place[]" placeholder="Guide Place..">
+        <input class="form-control guide_fee" type="number" name="guide_fee[]" placeholder="0.0" onchange="calcTotalExpense()" required>
+        <label for="">Guide Fee</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+  }
+
+  function addNewOtherCharge(){
+    var section = $('#addAnotherOtherCharge')
+    var element =
+      `
+      <div class="col-12">
+        <hr class="text-white">
+        <input class="form-control" type="text" name="other_charge[]" placeholder="Other charge description..">
+        <input class="form-control other_charge" type="number" name="other_charge_amount[]" placeholder="0.0" onchange="calcTotalExpense()" required>
+        <label for="">Other Charge</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+  }
+
   function removeNewExpense(element){
     $(element).parent().remove();
     calcTotalExpense();
@@ -897,7 +978,45 @@
 
   }
 
+  $(document).ready(function(){
+    var strt = $('#startDate').val();
+    var end = $('#endDate').val();
+    $('#startDate').prop('max',end)
+    $('#endDate').prop('min',strt)
+    var date1 = new Date($('#startDate').val());
+    var date2 = new Date($('#endDate').val());
 
+    var diff = date2 - date1
+
+    diffInDays = diff / (1000 * 60 * 60 * 24);
+    $('#tripDays').val(diffInDays + 1)
+
+  });
+
+  function countTripDays(){
+    var date1 = new Date($('#startDate').val());
+    var date2 = new Date($('#endDate').val());
+
+    var diff = date2 - date1
+
+    diffInDays = diff / (1000 * 60 * 60 * 24);
+    $('#tripDays').val(diffInDays + 1)
+  }
+
+  $(document).ready(function(){
+      var date1 = "";
+      $('#startDate').on('change',function(){
+          date1 = $(this).val()
+          $('#endDate').prop('min',date1)
+      })
+  });
+  $(document).ready(function(){
+      var date2 = "";
+      $('#endDate').on('change',function(){
+          date2 = $(this).val()
+          $('#startDate').prop('max',date2)
+      })
+  });
 
 </script>
   

@@ -217,7 +217,13 @@
 #header .logo img {
   padding: 0;
   margin: 0;
-  max-height: 40px;
+  max-height: 50px;
+}
+.logo_img {
+  background: white;
+  border-radius: 50%;
+  padding: 5px 8px;
+  margin-right: 7px;
 }
 
 /*--------------------------------------------------------------
@@ -542,7 +548,10 @@
   <header id="header">
     <div class="container d-flex align-items-center justify-content-between">
 
-      <div class="logo">
+      <div class="logo d-flex align-items-center">
+        <div class="logo_img">
+          <img src="/static/assets/images/logo_3.png" alt="">
+        </div>
         <h1><a href="#">MILAYNA CABS</a></h1>
 
       </div>
@@ -576,7 +585,7 @@
                 <div class="row sheet_header">
                   <div class="logo col-2 d-flex align-items-center">
                     <!-- <img src="{% static 'assets/images/logo_1.png' %}" style="width: 100%;" alt="Milayna CAB"> -->
-                    <img src="{% static 'assets/images/logo_2.png' %}" style="width: 100%;" alt="Milayna CAB">
+                    <img src="{% static 'assets/images/logo_3.png' %}" style="width: 100%;" alt="Milayna CAB">
                     <!-- <h4>LOGO</h4> -->
                   </div>
                   <div class="company_head col-8">
