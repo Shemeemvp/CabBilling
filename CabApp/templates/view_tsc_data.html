@@ -542,7 +542,393 @@
         } 
     }
 
+    .trip_breakdown{
+      font-size: 0.8rem;
+    }
+
+    .guide_places, .other_charges{
+      font-size: 0.8rem;
+    }
+
   </style>
+
+<style>
+  .trip_sheet2 .address{
+      display: flex;
+      flex-direction: column;
+  }
+  .trip_sheet2 .address p, .trip_sheet2 .footer p{
+      font-size: 1rem;
+      margin: 0;
+  }
+  .trip_sheet2 .slip-container{
+      width: 100%;
+      margin: 2rem auto;
+      padding: 2rem;
+      /* box-shadow: rgba(60, 64, 67, 0.5) 0px 1px 2px 0px, rgba(60, 64, 67, 0.35) 0px 2px 6px 2px; */
+  }
+  .divider{
+      margin: 1rem 0;
+      border-bottom: 3px dotted black;
+  }
+
+  .equal-length-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%; /* Make the container fill the height of the column */
+      /* margin-left: 2vh;
+      margin-right: 2vh; */
+  }
+
+  .equal-length-item {
+      flex: 1;
+      text-align: center;
+  }
+  .equal-length-item hr{
+    width: 60%;
+    border-bottom: 1px solid black;
+    position: relative;
+    left: 20%;
+  }
+
+  .trip_breakdown{
+    font-size: 0.8rem;
+  }
+
+  .guide_places, .other_charges{
+    font-size: 0.8rem;
+  }
+
+  @media screen and (min-width: 1000px) {
+    .trip_sheet2 .slip-container{
+        width: 70%;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+  }
+
+  @media screen and (max-width: 920px) {
+    .trip_sheet2 .address p, .trip_sheet2 .footer p{
+        font-size: 1rem !important;
+    }
+    .company_head h5{
+      font-size: 1.2rem !important;
+    }
+    .trip_sheet2 .slip-container{
+        width: 100%;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+    .trip_sheet2 .head2{
+      font-size: 1.2rem;
+    }
+    .trip_sheet2 .trip_details h5{
+      font-size: 1rem;
+    }
+
+    .trip_sheet2 .trip_details {
+      font-size: 1rem;
+    }
+    .divider{
+        margin: 1rem 0;
+        border-bottom: 3px dotted black;
+    }
+    .equal-length-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%; /* Make the container fill the height of the column */
+        /* margin-left: 2vh;
+        margin-right: 2vh; */
+    }
+
+    .equal-length-item {
+      font-size: 1.1rem;
+        flex: 1;
+        text-align: center;
+    }
+    .equal-length-item hr{
+      width: 60%;
+      border-bottom: 1px solid black;
+      position: relative;
+      left: 20%;
+    }
+    .trip_sheet2 .subtot {
+      padding: 0 !important;
+    }
+    .trip_sheet2 .subtot-item{
+      font-size: 1.15rem;
+    }
+    .trip_breakdown{
+      font-size: 0.8rem;
+    }
+    .trip_sheet2 .grand_tot{
+      padding: 0 !important;
+      font-size: 1.2rem;
+    }
+    .guide_places, .other_charges{
+      font-size: 0.8rem;
+    }
+  }
+
+  @media screen and (max-width: 820px) {
+    .trip_sheet2 .address p, .trip_sheet2 .footer p{
+        font-size: 1rem !important;
+    }
+    .company_head h5{
+      font-size: 1.2rem !important;
+    }
+    .trip_sheet2 .slip-container{
+        width: 100%;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+    .trip_sheet2 .head2{
+      font-size: 1.2rem;
+    }
+    .trip_sheet2 .trip_details h5{
+      font-size: 1rem;
+    }
+
+    .trip_sheet2 .trip_details {
+      font-size: 1rem;
+    }
+    .divider{
+        margin: 1rem 0;
+        border-bottom: 3px dotted black;
+    }
+    .equal-length-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%; /* Make the container fill the height of the column */
+        /* margin-left: 2vh;
+        margin-right: 2vh; */
+    }
+
+    .equal-length-item {
+      font-size: 1rem;
+        flex: 1;
+        text-align: center;
+    }
+    .equal-length-item hr{
+      width: 60%;
+      border-bottom: 1px solid black;
+      position: relative;
+      left: 20%;
+    }
+    .trip_sheet2 .subtot {
+      padding: 0 !important;
+    }
+    .trip_sheet2 .subtot-item{
+      font-size: 1rem;
+    }
+    .trip_breakdown{
+      font-size: 0.7rem;
+    }
+    .trip_sheet2 .grand_tot{
+      padding: 0 !important;
+      font-size: 1rem;
+    }
+    .guide_places, .other_charges{
+      font-size: 0.7rem;
+    }
+  }
+
+  @media screen and (max-width: 540px) {
+    .trip_sheet2 .address p, .trip_sheet2 .footer p{
+        font-size: 0.9rem !important;
+    }
+    .company_head h5{
+      font-size: 1.1rem !important;
+    }
+    .trip_sheet2 .slip-container{
+        width: 100%;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+    .trip_sheet2 .head2{
+      font-size: 1.1rem;
+    }
+    .trip_sheet2 .trip_details h5{
+      font-size: 0.95rem;
+    }
+
+    .trip_sheet2 .trip_details {
+      font-size: 0.8rem;
+    }
+    .divider{
+        margin: 1rem 0;
+        border-bottom: 3px dotted black;
+    }
+    .equal-length-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%; /* Make the container fill the height of the column */
+        /* margin-left: 2vh;
+        margin-right: 2vh; */
+    }
+
+    .equal-length-item {
+      font-size: 0.84rem;
+        flex: 1;
+        text-align: center;
+    }
+    .equal-length-item hr{
+      width: 60%;
+      border-bottom: 1px solid black;
+      position: relative;
+      left: 20%;
+    }
+    .trip_sheet2 .subtot {
+      padding: 0 !important;
+    }
+    .trip_sheet2 .subtot-item{
+      font-size: 0.85rem;
+    }
+    .trip_breakdown{
+      font-size: 0.65rem;
+    }
+    .trip_sheet2 .grand_tot{
+      padding: 0 !important;
+      font-size: 0.95rem;
+    }
+    .guide_places, .other_charges{
+      font-size: 0.65rem;
+    }
+  }
+
+  @media screen and (max-width: 430px) {
+    .trip_sheet2 .address p, .trip_sheet2 .footer p{
+        font-size: 0.7rem !important;
+    }
+    .company_head h5{
+      font-size: 0.9rem !important;
+    }
+    .trip_sheet2 .slip-container{
+        width: 100%;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+    .trip_sheet2 .head2{
+      font-size: 1rem;
+    }
+    .trip_sheet2 .trip_details h5{
+      font-size: 0.6rem;
+    }
+
+    .trip_sheet2 .trip_details {
+      font-size: 0.6rem;
+    }
+    .divider{
+        margin: 1rem 0;
+        border-bottom: 3px dotted black;
+    }
+    .equal-length-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%; /* Make the container fill the height of the column */
+        /* margin-left: 2vh;
+        margin-right: 2vh; */
+    }
+
+    .equal-length-item {
+      font-size: 0.6rem;
+        flex: 1;
+        text-align: center;
+    }
+    .equal-length-item hr{
+      width: 60%;
+      border-bottom: 1px solid black;
+      position: relative;
+      left: 20%;
+    }
+    .trip_sheet2 .subtot {
+      padding: 0 !important;
+    }
+    .trip_sheet2 .subtot-item{
+      font-size: 0.6rem;
+    }
+    .trip_breakdown{
+      font-size: 0.5rem;
+    }
+    .trip_sheet2 .grand_tot{
+      padding: 0 !important;
+      font-size: 0.8rem;
+    }
+    .guide_places, .other_charges{
+      font-size: 0.5rem;
+    }
+  }
+
+  @media screen and (max-width: 300px) {
+    .trip_sheet2 .address p, .trip_sheet2 .footer p{
+        font-size: 0.7rem !important;
+    }
+    .company_head h5{
+      font-size: 0.9rem !important;
+    }
+    .trip_sheet2 .slip-container{
+        width: 100%;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+    .trip_sheet2 .head2{
+      font-size: 1rem;
+    }
+    .trip_sheet2 .trip_details h5{
+      font-size: 0.6rem;
+    }
+
+    .trip_sheet2 .trip_details {
+      font-size: 0.6rem;
+    }
+    .divider{
+        margin: 1rem 0;
+        border-bottom: 3px dotted black;
+    }
+    .equal-length-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%; /* Make the container fill the height of the column */
+        /* margin-left: 2vh;
+        margin-right: 2vh; */
+    }
+
+    .equal-length-item {
+      font-size: 0.5rem;
+        flex: 1;
+        text-align: center;
+    }
+    .equal-length-item hr{
+      width: 60%;
+      border-bottom: 1px solid black;
+      position: relative;
+      left: 20%;
+    }
+    .trip_sheet2 .subtot {
+      padding: 0 !important;
+    }
+    .trip_sheet2 .subtot-item{
+      font-size: 0.6rem;
+    }
+    .trip_breakdown{
+      font-size: 0.5rem;
+    }
+    .trip_sheet2 .grand_tot{
+      padding: 0 !important;
+      font-size: 0.8rem;
+    }
+    .guide_places, .other_charges{
+      font-size: 0.5rem;
+    }
+  }
+
+</style>
 
   <!-- ======= Header ======= -->
   <header id="header">
@@ -579,7 +965,7 @@
         <button class="btn btn-sm btn-secondary ms-1" onclick="window.location.href=`{% url 'allTrips' %}`">Close</button>
       </div>
       <div class="row">
-        <div class="trip_sheet" id="printTripSheet" style="overflow-x: auto;">
+        <div class="trip_sheet" id="printTripSheet" style="overflow-x: auto; display: none;">
           <div class="slip-container bg-white" id="slip_container">
               <div class="slip">
                 <div class="row sheet_header">
@@ -698,6 +1084,14 @@
   
                   <div class="px-4 subtot mt-5">
                       <div class="subtot-item d-flex justify-content-between">
+                          <div>
+                            <span>Trip Charge</span>
+                            <br>
+                            <span class="trip_breakdown">(&#8377; {{trip.fixed_charge}} as fixed charge upto 100KM and &#8377; {{trip.extra_charge}} extra charge per KM)</span>
+                          </div>
+                          <span><span>&#8377; </span>{{trip.trip_charge}}</span>
+                      </div>
+                      <div class="subtot-item d-flex justify-content-between">
                           <span>Entrance Fees</span>
                           <span><span>&#8377; </span>{{trip.entrance}}</span>
                       </div>
@@ -713,10 +1107,30 @@
                           <span>Guide Fees</span>
                           <span><span>&#8377; </span>{{trip.guide_fee}}</span>
                       </div>
+                      {% if trip.guide_fee != 0 %}
+                      <div class="guide_places w-100">
+                        {% for i in guide_exp %}
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>{{i.exp_desc}}</span>
+                          <span>&#8377; {{i.exp_amount}}</span>
+                        </span>
+                        {% endfor %}
+                      </div>
+                      {% endif %}
                       <div class="subtot-item d-flex justify-content-between">
                         <span>Other Charges</span>
                         <span><span>&#8377; </span>{{trip.other_charges}}</span>
                     </div>
+                    {% if trip.other_charges != 0 %}
+                      <div class="other_charges w-100">
+                        {% for i in other_charges %}
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>{{i.exp_desc}}</span>
+                          <span>&#8377; {{i.exp_amount}}</span>
+                        </span>
+                        {% endfor %}
+                      </div>
+                      {% endif %}
                   </div>
                   <hr>
                   <div class="px-4">
@@ -741,6 +1155,206 @@
               </div>
           </div>
         </div>
+
+
+
+        <!-- Bill Responsive -- w/o scroll for mobile view -->
+
+        <div class="trip_sheet2" id="printTripSheetNoScroll">
+          <div class="slip-container bg-white" id="slip_container">
+              <div class="slip">
+                <div class="row sheet_header">
+                  <div class="logo col-2 d-flex align-items-center">
+                    <!-- <img src="{% static 'assets/images/logo_1.png' %}" style="width: 100%;" alt="Milayna CAB"> -->
+                    <img src="{% static 'assets/images/logo_3.png' %}" style="width: 100%;" alt="Milayna CAB">
+                    <!-- <h4>LOGO</h4> -->
+                  </div>
+                  <div class="company_head col-8">
+                    <h5 class="fw-bold text-center">MILAYNA CABS</h5>
+                    <div class="address text-center">
+                        <p>Nechoor</p>
+                        <p>Ernakulam - 686664</p>
+                        <p>milaynacab@gmail.com</p>
+                        <p>+91 80861 47845, +91 9400056444</p>
+                    </div>
+                  </div>
+                  <div class="col-2"></div>
+                </div>
+                <hr>
+                  <!-- <div class="divider w-50"></div> -->
+                  <h4 class="text-center head2">Trip Sheet for Contract Carriages</h4>
+                  <hr style="width: 50%; position: relative; left: 25%;">
+                  <div class="trip_details">
+                    <div class="row">
+                      <div class="col-3">
+                        <h5>Trip No.</h5>
+                      </div>
+                      <div class="col-3">
+                        {{trip.trip_no}}
+                      </div>
+
+                      <div class="col-3">
+                        <h5>Date</h5>
+                      </div>
+                      <div class="col-3">
+                        {{trip.trip_date}}
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-3">
+                        <p>Vehicle No.</p>
+                      </div>
+                      <div class="col-3">
+                        {{trip.vehicle_no}}
+                      </div>
+
+                      <div class="col-3">
+                        <p>Driver Name</p>
+                      </div>
+                      <div class="col-3">
+                        {{trip.driver_name}}
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+                      <div class="col-3">
+                        <p>Guest Name</p>
+                      </div>
+                      <div class="col-3">
+                        {{trip.guest}}
+                      </div>
+
+                      <div class="col-3">
+                        <p>Advance</p>
+                      </div>
+                      <div class="col-3">
+                        <span>&#8377; </span>{{trip.advance}}
+                      </div>
+
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="equal-length-container" style="color: black; font-weight: bold;">
+                      <div class="equal-length-item" style=" text-align: center;">
+                          Starting Place
+                          <hr>
+                      </div>
+                      <div class="equal-length-item ml-2"  style=" text-align:center;">
+                          Time
+                          <hr>
+                      </div>
+                      <div class="equal-length-item"  style=" text-align: center; ">
+                          Destination
+                          <hr>
+                      </div>
+                      <div class="equal-length-item"  style=" text-align: center; ">
+                          Time of Arrival
+                          <hr>
+                      </div>
+                      <div class="equal-length-item"  style=" text-align: center; ">
+                          Kilometers
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="equal-length-container" style="color: black; font-size: small; word-wrap: break-word; margin-bottom: 1vh;">
+                      <div class="equal-length-item" style="text-align: center;">
+                          {{trip.starting_place}}
+                      </div>
+                      <div class="equal-length-item" style="text-align: center; ">
+                          {{trip.starting_time}}
+                      </div>
+                      <div class="equal-length-item" style="text-align: center; ">
+                          {{trip.destination}}
+                      </div>
+                      <div class="equal-length-item" id="tax{{ forloop.counter }}">
+                          {{trip.time_of_arrival}}
+                      </div>
+                      <div class="equal-length-item" id="tax{{ forloop.counter }}">
+                          {{trip.kilometers}}
+                      </div>
+                  </div>
+
+  
+                  <div class="px-4 subtot mt-5">
+                      <div class="subtot-item d-flex justify-content-between">
+                          <div>
+                            <span>Trip Charge</span>
+                            <br>
+                            <span class="trip_breakdown">(&#8377; {{trip.fixed_charge}} as fixed charge upto 100KM and &#8377; {{trip.extra_charge}} extra charge per KM)</span>
+                          </div>
+                          <span class="d-flex"><span>&#8377; </span>{{trip.trip_charge}}</span>
+                      </div>
+                      <div class="subtot-item d-flex justify-content-between">
+                          <span>Entrance Fees</span>
+                          <span><span>&#8377; </span>{{trip.entrance}}</span>
+                      </div>
+                      <div class="subtot-item d-flex justify-content-between">
+                          <span>Parking</span>
+                          <span><span>&#8377; </span>{{trip.parking}}</span>
+                      </div>
+                      <div class="subtot-item d-flex justify-content-between">
+                          <span>TOLL</span>
+                          <span><span>&#8377; </span>{{trip.toll}}</span>
+                      </div>
+                      <div class="subtot-item d-flex justify-content-between">
+                          <div>
+                            <span>Guide Fees</span>
+                          </div>
+                          <span><span>&#8377; </span>{{trip.guide_fee}}</span>
+                      </div>
+                      {% if trip.guide_fee != 0 %}
+                      <div class="guide_places w-100">
+                        {% for i in guide_exp %}
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>{{i.exp_desc}}</span>
+                          <span>&#8377; {{i.exp_amount}}</span>
+                        </span>
+                        {% endfor %}
+                      </div>
+                      {% endif %}
+                      <div class="subtot-item d-flex justify-content-between">
+                        <div>
+                          <span>Other Charges</span>
+                        </div>
+                        <span><span>&#8377; </span>{{trip.other_charges}}</span>
+                    </div>
+                    {% if trip.other_charges != 0 %}
+                      <div class="other_charges w-100">
+                        {% for i in other_charges %}
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>{{i.exp_desc}}</span>
+                          <span>&#8377; {{i.exp_amount}}</span>
+                        </span>
+                        {% endfor %}
+                      </div>
+                      {% endif %}
+                  </div>
+                  <hr>
+                  <div class="px-4 grand_tot">
+
+                    <div class="debit fw-bold d-flex justify-content-between">
+                        <span><strong>TOTAL</strong></span>
+                        <span><strong><span>&#8377; </span>{{trip.total_trip_expense}}</strong></span>
+                    </div>
+                    <div class="balance fw-bold d-flex justify-content-between">
+                      <span><strong>BALANCE</strong></span>
+                      <span><strong><span>&#8377; </span>{{trip.balance}}</strong></span>
+                    </div>
+                  </div>
+                  <div class="divider"></div>
+                  
+                  <div class="qr d-flex justify-content-center">
+                    <img src="/media/images/trip{{trip.id}}.png" style="width: 100px;" alt="code">
+                  </div>
+                  <div class="footer mt-4 text-center">
+                      <p>Thank you for choosing us.!</p>
+                  </div>
+              </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -758,7 +1372,7 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 
       <script>
-        $( "li" ).hover(
+        $( "#navbar ul li" ).hover(
           function() {
               $(this).find("span").stop().animate({
               width:"100%",
@@ -825,53 +1439,58 @@
 
   
     function printSheet(){
+      $('#printTripSheet').show()
       var divToPrint=document.getElementById("printTripSheet");
-      var printWindow = window.open('', '', 'height=500,width=1000');
+      var printWindow = window.open('', '', 'height=700,width=1000');
       var styles = `
       .address{
-        display: flex;
-        flex-direction: column;
-    }
-    .address p,.footer p{
-        font-size: 1rem;
-        margin: 0;
-    }
-    .slip-container{
-        width: 210mm;
-        margin: 2rem auto;
-        padding: 2rem;
-    }
-    .divider{
-        margin: 1rem 0;
-        border-bottom: 3px dotted black;
-    }
-    .trns-id p,.datetime p{
-        font-size: 0.85rem;
-        margin: 0;
-    }
-    .table-responsive {
-        max-height:100vh;
-    }
-    .table-responsive::-webkit-scrollbar {
-        display: none;
-    }
+          display: flex;
+          flex-direction: column;
+      }
+      .address p,.footer p{
+          font-size: 1rem;
+          margin: 0;
+      }
+      .slip-container{
+          width: 210mm;
+          margin: 2rem auto;
+          padding: 2rem;
+      }
+      .divider{
+          margin: 1rem 0;
+          border-bottom: 3px dotted black;
+      }
+      .trns-id p,.datetime p{
+          font-size: 0.85rem;
+          margin: 0;
+      }
+      .table-responsive {
+          max-height:100vh;
+      }
+      .table-responsive::-webkit-scrollbar {
+          display: none;
+      }
 
-    .equal-length-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+      .equal-length-container {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+      }
 
-    .equal-length-item {
-        flex: 1;
-        text-align: center;
-    }
-    .equal-length-item hr{
-      width: 60%;
-      border-bottom: 1px solid black;
-      position: relative;
-      left: 20%;
-    }
+      .equal-length-item {
+          flex: 1;
+          text-align: center;
+      }
+      .equal-length-item hr{
+        width: 60%;
+        border-bottom: 1px solid black;
+        position: relative;
+        left: 20%;
+      }
+
+      .guide_places, .other_charges{
+        font-size: 0.8rem;
+      }
 
       `
       printWindow.document.write('<html><head><title></title>');
@@ -893,10 +1512,12 @@
       // printWindow.addEventListener('afterprint', function() {
       //   printWindow.close();
       // });
+      $('#printTripSheet').hide()
     }
 
     
     function downloadPdf(){
+      $('#printTripSheet').show()
       var tripNo = `{{trip.trip_no }}`;
       var element = document.getElementById('printTripSheet');
       var opt =
@@ -907,7 +1528,9 @@
           html2canvas: { scale: 2 },
           jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
       };
-      html2pdf().set(opt).from(element).save();
+      html2pdf().set(opt).from(element).save().then(function(){
+        $('#printTripSheet').hide()
+      });
     }
 
 </script>

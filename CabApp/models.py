@@ -33,6 +33,7 @@ class TSC_Form(models.Model):
     guide_fee = models.FloatField(default = 0.0, null = True, blank = True)
     other_charges = models.FloatField(default = 0.0, null = True, blank = True)
     advance = models.FloatField(default = 0.0, null = True, blank = True)
+    trip_charge = models.FloatField(default = 0.0, null = True, blank = True)
     total_trip_expense = models.FloatField(default = 0.0, null = True, blank = True)
     # debit = models.FloatField(default = 0.0, null = True, blank = True)
     balance = models.FloatField(default = 0.0, null = True, blank = True)
