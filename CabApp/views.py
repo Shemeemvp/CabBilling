@@ -305,6 +305,17 @@ def allTrips(request):
     else:
         return redirect('/')
     
+def feedbacks(request):
+    if request.user.is_authenticated:
+        usr = User.objects.get(id = request.user.id)
+        fb = Customer_Feedbacks.objects.all()
+        context = {
+            'feedbacks': fb,
+        }
+        return render(request, 'feedbacks.html',context)
+    else:
+        return redirect('/')
+    
 def viewTscData(request,id):
     if request.user.is_authenticated:
         tripData = TSC_Form.objects.get(id = id)

@@ -24,7 +24,7 @@
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer" ></script>
-    <title>Trip Sheet</title>
+    <title>Feedbacks</title>
 </head>
 <body>
   <style>
@@ -466,6 +466,33 @@
 .navbar-mobile .dropdown > .dropdown-active {
   display: block;
 }
+.comments{
+  max-height: 100px !important;
+  overflow-y: auto;
+  display: block;
+}
+/* .comments {
+  scrollbar-width: thin;
+  scrollbar-color: gray white;
+} */
+.comments::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+.comments::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+.comments::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+.comments::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
   </style>
 
   <!-- ======= Header ======= -->
@@ -499,28 +526,20 @@
     <div class="container-fluid py-5">
       <div class="row">
         <div class="col-12 table-responsive">
-            <table class="table table-secondary table-hover">
+            <table class="table table-secondary table-hover feedback-table">
                 <thead>
                   <tr>
-                    <th class="fw-bold text-uppercase text-center" scope="col">Trip#</th>
-                    <th class="fw-bold text-uppercase text-center" scope="col">Driver</th>
-                    <th class="fw-bold text-uppercase text-center" scope="col">Guest</th>
-                    <th class="fw-bold text-uppercase text-center" scope="col">Kilometers</th>
-                    <th class="fw-bold text-uppercase text-center" scope="col">Charge(Debit)</th>
-                    <th></th>
+                    <th class="fw-bold text-uppercase text-center col-1" scope="col">#</th>
+                    <th class="fw-bold text-uppercase text-center col-3" scope="col">Guest</th>
+                    <th class="fw-bold text-uppercase text-center col-8" scope="col">Comments</th>
                   </tr>
                 </thead>
                 <tbody class="table-group-divider">
-                    {% for t in trips %}
+                    {% for i in feedbacks %}
                     <tr>
-                      <th class="text-center" scope="row">{{t.trip_no}}</th>
-                      <td class="text-center">{{t.driver_name}}</td>
-                      <td class="text-center">{{t.guest}}</td>
-                      <td class="text-center">{{t.kilometers}}</td>
-                      <td class="text-center">{{t.total_trip_expense}}</td>
-                      <td class="text-center">
-                        <button class="btn btn-secondary btn-sm" onclick="window.location.href=`{% url 'viewTscData' t.id %}`">VIEW</button>
-                      </td>
+                      <th class="text-center" scope="row">{{forloop.counter}}</th>
+                      <td class="text-center">{{i.full_name}}</td>
+                      <td class="text-center comments">{{i.feedback}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -17,4 +17,5 @@ urlpatterns = [
     path('customer_feedback',views.saveCustomerFeedback, name='saveCustomerFeedback'),
     path('get_last_ride_details',views.getLastRideDetails, name='getLastRideDetails'),
     path('update_ride/<int:id>',views.updateRide, name='updateRide'),
+    path('feedbacks',views.feedbacks, name='feedbacks'),
 ]
