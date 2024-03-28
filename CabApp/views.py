@@ -273,7 +273,7 @@ def endCurrentTrip(request):
                 TSC_Expenses.objects.create(Trip = trip, exp_type = 'Other Charge', exp_desc = item[1], exp_amount = item[0], exp_date = date.today())
 
             # qr = qrcode.make("http://127.0.0.1:8000/trip/" + str(trip.id))
-            qr = qrcode.make("http://127.0.0.1:8000/qr_details")
+            qr = qrcode.make("http://renesoftware.com/qr_details")
 
             image_directory = os.path.join(settings.MEDIA_ROOT, "images")
             if not os.path.exists(image_directory):

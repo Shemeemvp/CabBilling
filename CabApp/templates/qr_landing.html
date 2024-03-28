@@ -33,6 +33,9 @@
         margin: 0;
         /* max-height: 60px; */
       }
+      .services_top{
+        margin-top: -50px;
+      }
       .logo_img {
         background: white;
         border-radius: 50%;
@@ -48,6 +51,9 @@
         .head_content{
           padding: 0rem 3rem !important;
         }
+        .services_top{
+          margin-top: -40px !important;
+        }
       }
 
       @media screen and (max-width: 768px){
@@ -56,6 +62,9 @@
         }
         .head_content{
           padding: 0rem 3rem !important;
+        }
+        .services_top{
+          margin-top: -35px !important;
         }
       }
       @media screen and (max-width: 540px){
@@ -67,13 +76,22 @@
           padding: 0 8px;
         }
         .head_content{
-          padding: 0rem 2.7rem !important;
+          padding: 0rem 2.9rem !important;
         }
         .slide-one-item .owl-nav .owl-prev{
           left: 7px !important;
         }
         .slide-one-item .owl-nav .owl-next{
           right: 7px !important;
+        }
+        .services_top{
+          margin-top: -18px !important;
+        }
+        .services_top{
+          margin-top: -30px !important;
+        }
+        .slide-one-item .owl-nav .owl-prev, .slide-one-item .owl-nav .owl-next {
+          font-size: 3rem !important;
         }
       }
 
@@ -83,7 +101,7 @@
           /* padding: 0 1.7rem; */
         }
         .head_content{
-          padding: 0rem 2.3rem !important;
+          padding: 0rem 3.75rem !important;
         }
         .slide-one-item .owl-nav .owl-prev{
           left: 10px !important;
@@ -91,16 +109,22 @@
         .slide-one-item .owl-nav .owl-next{
           right: 10px !important;
         }
+        .services_top{
+          margin-top: -18px !important;
+        }
+        .slide-one-item .owl-nav .owl-prev, .slide-one-item .owl-nav .owl-next {
+          font-size: 2.5rem !important;
+        }
       }
 
 
       @media screen and (max-width: 300px){
         .site-section-cover p {
-          font-size: 0.9rem !important;
+          font-size: 0.8rem !important;
           /* padding: 0 2rem; */
         }
         .head_content{
-          padding: 0rem 2.6rem !important;
+          padding: 0rem 2.8rem !important;
         }
         .slide-one-item .owl-nav .owl-prev{
           left: 10px;
@@ -108,8 +132,54 @@
         .slide-one-item .owl-nav .owl-next{
           right: 10px;
         }
+
+        .site-section-cover h1 {
+          font-size: 1rem;
+        }
+
+        .head_content span{
+          font-size: 1rem;
+        }
+        .logo_img{
+          width: 80px;
+          height: 80px;
+        }
+        .services_top{
+          margin-top: -10px !important;
+        }
+        .slide-one-item .owl-nav .owl-prev, .slide-one-item .owl-nav .owl-next {
+          font-size: 2rem !important;
+        }
       }
-      
+
+      .scrollwh {
+        position: fixed;
+        left: 1rem;
+        bottom: -30%;
+        /* box-shadow: 0 4px 12px hsla(0, 0%, 20%, .1); */
+        display: inline-flex;
+        padding: .27rem;
+        z-index: 1000;
+        opacity: .8;
+        transition: .4s;
+
+      }
+
+      .scrollwh:hover {
+        opacity: 1;
+      }
+      .scrollwh__icon {
+        font-size: 1.9rem;
+        color: #06ba24;
+      }
+      /* Show Scroll Up*/
+      .show-scroll {
+        bottom: 6% !important;
+      }
+
+      .brand{
+        font-family: cursive;
+      }
     </style>
   
   <div class="site-wrap"  id="home-section">
@@ -173,8 +243,9 @@
               <!-- <div class="logo w-100 d-flex justify-content-center">
                 <img src="/static/assets/images/logo_3.png" style="width: 110px;" alt="">
               </div> -->
-              <h1 class="font-weight-bold">MILAYNA Cab Service</h1>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel minima quasi quisquam, alias doloremque magni.</p>
+              <h1 class="font-weight-bold"><span class="brand">MILAYNA</span> Cab Service</h1>
+              <span class="font-weight-bold text-white h5">Your Trusted Travel Companion</span>
+              <p>Count on us for reliable transportation solutions tailored to your needs. From quick pickups to long-distance travels, our professional drivers ensure a smooth and enjoyable ride every time.</p>
               <p><a href="tel: +91 80861 47845" class="btn btn-white-outline border-w-2 btn-md text-uppercase">Contact Us</a></p>
             </div>
           </div>
@@ -192,8 +263,29 @@
               <!-- <div class="logo w-100 d-flex justify-content-center">
                 <img src="/static/assets/images/logo_3.png" style="width: 110px;" alt="">
               </div> -->
-              <h1 class="font-weight-bold">MILAYNA Cab Services</h1>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel minima quasi quisquam, alias doloremque magni.</p>    
+              <h1 class="font-weight-bold"><span class="brand">MILAYNA</span> Cab Services</h1>
+              <span class="font-weight-bold text-white h5">Effortless Travel, Exceptional Service</span>
+              <p>Simplify your commuting experience with our efficient cab services. With a fleet of well-maintained vehicles and courteous drivers, we promise stress-free journeys that exceed your expectations.</p>    
+              <p><a href="tel: +91 80861 47845" class="btn btn-white-outline border-w-2 btn-md text-uppercase">Contact Us</a></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="site-section-cover overlay img-bg-section" style="background-image: url('/static/qr_landing/images/hero_3.jpg'); " >
+        <div class="container">
+          <div class="row align-items-center justify-content-center">
+            <div class="col-md-12 col-lg-7 text-center head_content">
+              <div class="logo_img" style="margin: auto;">
+                <img src="/static/assets/images/logo_3.png" alt="">
+              </div>
+              <!-- <div class="logo w-100 d-flex justify-content-center">
+                <img src="/static/assets/images/logo_3.png" style="width: 110px;" alt="">
+              </div> -->
+              <h1 class="font-weight-bold"><span class="brand">MILAYNA</span> Cab Services</h1>
+              <span class="font-weight-bold text-white h5">Journey Beyond Boundaries</span>
+              <p>Explore new horizons with our comprehensive cab services. Wherever your destination may be, our dedicated team is committed to providing safe, convenient, and memorable travel experiences. Book now and embark on your next adventure!</p>    
               <p><a href="tel: +91 80861 47845" class="btn btn-white-outline border-w-2 btn-md text-uppercase">Contact Us</a></p>
             </div>
           </div>
@@ -205,20 +297,20 @@
     </div>
     
     
-    <div class="pb-5" style="position: relative; z-index: 8;">
+    <div class="pb-2" style="position: relative; z-index: 8;">
       <div class="container">
-        <div class="row" style="margin-top: -50px;">
+        <div class="row services_top">
           <div class="col-md-6 col-lg-6 mb-4 mb-lg-0">
-            <img src="/static/qr_landing/images/cab_4.jpeg" alt="Image" class="img-fluid mb-3">
+            <img src="/static/qr_landing/images/cab_4.jpg" alt="Image" class="img-fluid mb-3">
             <h3 class="text-primary h4 mb-2">CABS</h3>
-            <p>Accusantium dignissimos voluptas rem consequatur ratione illo sit quasi.</p>
-            <p><a href="#">Read more</a></p>
+            <p>Enjoy hassle-free transportation with our reliable cab services. From airport transfers to city tours, our fleet of vehicles and professional drivers ensure comfortable rides, prompt pickups, and seamless travel experiences.</p>
+            <!-- <p><a href="#">Read more</a></p> -->
           </div>
           <div class="col-md-6 col-lg-6 mb-4 mb-lg-0">
             <img src="/static/qr_landing/images/hotel_1.jpeg" alt="Image" class="img-fluid mb-3">
             <h3 class="text-primary h4 mb-2">HOTEL BOOKING</h3>
-            <p>Praesentium magnam pariatur quae necessitatibus eligendi voluptate ducimus.</p>
-            <p><a href="#">Read more</a></p>
+            <p>Find your perfect accommodation effortlessly with our convenient hotel booking platform. With a wide range of options to suit every budget and preference, we guarantee a comfortable stay and memorable hospitality at your chosen destination.</p>
+            <!-- <p><a href="#">Read more</a></p> -->
           </div>
           <!-- <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
             <img src="/static/qr_landing/images/img_33.jpg" alt="Image" class="img-fluid mb-3">
@@ -226,6 +318,24 @@
             <p>Accusantium dignissimos voluptas rem consequatur ratione illo sit quasi.</p>
             <p><a href="#">Read more</a></p>
           </div> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-0 pb-4" style="position: relative; z-index: 8;background-color: #dbdbdb4b;" >
+      <div class="container" >
+        <div class="row">
+          <div class="col-12 px-3 py-4">
+            <div class="cntct_top" style="width: fit-content; margin: auto; text-align: center;">
+              <span class="font-weight-bold h3 text-uppercase text-primary">Connect Now</span>
+              <p class="mb-0"><span class="h4 font-weight-bold">Milayna cab</span><br>Nechoor, Ernakulam - 686664 </p>
+              <h6><i class="fa-solid fa-envelope"></i> <a href="mailto:milaynacab@gmail.com" style="color: #939393;">milaynacab@gmail.com</a></h6>
+              <div class="d-flex">
+                <h6 class="mr-3"><i class="fa-solid fa-phone"></i> <a href="tel:+91 80861 47845">+91 80861 47845</a></h6>
+                <h6><i class="fa-solid fa-phone"></i> <a href="tel:+91 80891 95567">+91 80891 95567</a></h6>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -259,7 +369,7 @@
     <div class="site-section" id="about-section">
       <div class="container">
         <div class="row mb-5">
-          <div class="col-lg-6 mb-4">
+          <div class="col-lg-6 mb-2">
             <figure class="block-img-video-1" data-aos="fade">
               <a href="https://vimeo.com/45830194" class="popup-vimeo">
                 <span class="icon"><span class="icon-play"></span></span>
@@ -267,12 +377,16 @@
               </a>
             </figure>
           </div>
-          <div class="col-lg-5 ml-auto">
+          <div class="col-lg-6 ml-auto">
             <h2 class="text-primary mb-4">Welcome to MILAYNA Cabs</h2>
-            <p>Accusantium dignissimos voluptas rem consequatur blanditiis error ratione illo sit quasi ut, praesentium magnam, pariatur quae, necessitatibus</p>
-            <p>Dolor, eligendi voluptate ducimus itaque esse autem perspiciatis sint! Recusandae dolor aliquid inventore sit,</p>
-            <p>Recusandae dolor aliquid inventore sit, maiores quisquam nostrum quaerat dolorum error rerum</p>
-            <p><a href="#">Read More</a></p>
+            <p>Milayna Cabs, established in 2024, is a premier transportation provider serving Kerala, Tamil Nadu, and Karnataka. With a fleet boasting the latest sedan, SUV, and Tempo Travellers models, we ensure comfortable and reliable journeys. Our experienced, courteous drivers uphold our commitment to exceptional service. With over 20 fleets at our disposal, we cater to diverse travel needs with efficiency and professionalism. Milayna Cabs prides itself on punctuality, safety, and customer satisfaction, striving to exceed expectations with every ride. Experience seamless travel experiences with us as we navigate the roads, connecting you to your destination with ease.</p>
+            <!-- <p><a href="#">Read More</a></p> -->
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-12">
+            <p><b class="text-primary">Mission</b>: To provide safe, reliable, and efficient transportation solutions, connecting communities across Kerala, Tamil Nadu, and Karnataka with professionalism and integrity.</p>
+            <p><b class="text-primary">Vision</b>: To be the leading transportation provider, recognized for our commitment to excellence, innovation, and customer satisfaction throughout the region.</p>
           </div>
         </div>
         <div class="row">
@@ -317,12 +431,12 @@
           <div class="col-md-6 col-lg-6 mb-4">
             <span class="icon-taxi d-block mb-3 display-3 text-secondary"></span>
             <h3 class="text-primary h4 mb-2">CAB Service</h3>
-            <p>Accusantium dignissimos voluptas rem consequatur ratione illo sit quasi.</p>
+            <p>Enjoy hassle-free transportation with our reliable cab services. From airport transfers to city tours, our fleet of vehicles and professional drivers ensure comfortable rides, prompt pickups, and seamless travel experiences.</p>
           </div>
           <div class="col-md-6 col-lg-6 mb-4">
             <span class="fas fa-hotel d-block mb-3 display-3 text-secondary"></span>
             <h3 class="text-primary h4 mb-2">HOTEL Bookings</h3>
-            <p>Praesentium magnam pariatur quae necessitatibus eligendi voluptate ducimus.</p>
+            <p>Find your perfect accommodation effortlessly with our convenient hotel booking platform. With a wide range of options to suit every budget and preference, we guarantee a comfortable stay and memorable hospitality at your chosen destination.</p>
           </div>
 
           <!-- <div class="col-md-6 col-lg-4 mb-4">
@@ -411,31 +525,97 @@
           <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
             <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
               <figure>
-                <img src="/static/qr_landing/images/cab_5.jpeg" alt="Image" class="img-fluid">
+                <img src="/static/qr_landing/images/cab_5.jpg" alt="Image" class="img-fluid">
               </figure>
-              <h3 class="font-size-20 text-dark">Toyota</h3>
+              <!-- <h3 class="font-size-20 text-dark">Toyota</h3> -->
               <!-- <span class="d-block font-gray-5 letter-spacing-1 text-uppercase font-size-12 mb-3">Mining Expert</span> -->
-              <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p>
+              <!-- <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p> -->
             </div>
           </div>
           <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
             <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
               <figure>
-                <img src="/static/qr_landing/images/cab_6.jpeg" alt="Image" class="img-fluid">
+                <img src="/static/qr_landing/images/cab_6.jpg" alt="Image" class="img-fluid">
               </figure>
-              <h3 class="font-size-20 text-dark">Toyota</h3>
+              <!-- <h3 class="font-size-20 text-dark">Toyota</h3> -->
               <!-- <span class="d-block font-gray-5 letter-spacing-1 text-uppercase font-size-12 mb-3">Mining Expert</span> -->
-              <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p>
+              <!-- <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p> -->
             </div>
           </div>
           <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
             <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
               <figure>
-                <img src="/static/qr_landing/images/cab_7.jpeg" alt="Image" class="img-fluid">
+                <img src="/static/qr_landing/images/cab_7.jpg" alt="Image" class="img-fluid">
               </figure>
-              <h3 class="font-size-20 text-dark">Toyota</h3>
+              <!-- <h3 class="font-size-20 text-dark">Toyota</h3> -->
               <!-- <span class="d-block font-gray-5 letter-spacing-1 text-uppercase font-size-12 mb-3">Mining Expert</span> -->
-              <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p>
+              <!-- <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p> -->
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/images/cab_8.jpg" alt="Image" class="img-fluid">
+              </figure>
+              <!-- <h3 class="font-size-20 text-dark">Toyota</h3> -->
+              <!-- <span class="d-block font-gray-5 letter-spacing-1 text-uppercase font-size-12 mb-3">Mining Expert</span> -->
+              <!-- <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p> -->
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/images/cab_9.jpg" alt="Image" class="img-fluid">
+              </figure>
+              <!-- <h3 class="font-size-20 text-dark">Toyota</h3> -->
+              <!-- <span class="d-block font-gray-5 letter-spacing-1 text-uppercase font-size-12 mb-3">Mining Expert</span> -->
+              <!-- <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p> -->
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/images/cab_10.jpg" alt="Image" class="img-fluid">
+              </figure>
+              <!-- <h3 class="font-size-20 text-dark">Toyota</h3> -->
+              <!-- <span class="d-block font-gray-5 letter-spacing-1 text-uppercase font-size-12 mb-3">Mining Expert</span> -->
+              <!-- <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p> -->
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/images/cab_14.jpeg" alt="Image" class="img-fluid">
+              </figure>
+              <!-- <h3 class="font-size-20 text-dark">Toyota</h3> -->
+              <!-- <span class="d-block font-gray-5 letter-spacing-1 text-uppercase font-size-12 mb-3">Mining Expert</span> -->
+              <!-- <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p> -->
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/images/cab_12.jpg" alt="Image" class="img-fluid">
+              </figure>
+              <!-- <h3 class="font-size-20 text-dark">Toyota</h3> -->
+              <!-- <span class="d-block font-gray-5 letter-spacing-1 text-uppercase font-size-12 mb-3">Mining Expert</span> -->
+              <!-- <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p> -->
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/images/cab_13.jpg" alt="Image" class="img-fluid">
+              </figure>
+              <!-- <h3 class="font-size-20 text-dark">Toyota</h3> -->
+              <!-- <span class="d-block font-gray-5 letter-spacing-1 text-uppercase font-size-12 mb-3">Mining Expert</span> -->
+              <!-- <p class="px-3 mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, repellat. At, soluta. Repellendus vero, consequuntur!</p> -->
             </div>
           </div>
         </div>
@@ -506,52 +686,52 @@
             <div class="block-testimony-1 text-center">
               
               <blockquote class="mb-4">
-                <p>&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, fugit excepturi sapiente voluptatum nulla odio quaerat quibusdam tempore similique doloremque veritatis et cupiditate, maiores cumque repudiandae explicabo tempora deserunt consequuntur?&rdquo;</p>
+                <p>&ldquo;Choosing Milayna Cab Services was the best decision for my business trip. Their professionalism and attention to detail exceeded my expectations. Seamless booking process and top-notch vehicles. Will definitely use them again!&rdquo;</p>
               </blockquote>
 
               <figure>
                 <img src="/static/qr_landing/images/person_4.jpg" alt="Image" class="img-fluid rounded-circle mx-auto">
               </figure>
-              <h3 class="font-size-20 text-white">Ricky Fisher</h3>
+              <h3 class="font-size-20 text-white">James</h3>
             </div>
           </div>
 
           <div>
             <div class="block-testimony-1 text-center">
               <blockquote class="mb-4">
-                <p>&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, fugit excepturi sapiente voluptatum nulla odio quaerat quibusdam tempore similique doloremque veritatis et cupiditate, maiores cumque repudiandae explicabo tempora deserunt consequuntur?&rdquo;</p>
-              </blockquote>
-
-              <figure>
-                <img src="/static/qr_landing/images/person_2.jpg" alt="Image" class="img-fluid rounded-circle mx-auto">
-              </figure>
-              <h3 class="font-size-20 text-white">Ken Davis</h3>
-            </div>
-          </div>
-
-          <div>
-            <div class="block-testimony-1 text-center">
-              <blockquote class="mb-4">
-                <p>&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, fugit excepturi sapiente voluptatum nulla odio quaerat quibusdam tempore similique doloremque veritatis et cupiditate, maiores cumque repudiandae explicabo tempora deserunt consequuntur?&rdquo;</p>
+                <p>&ldquo;Milayna Cab Services provided exceptional service during my vacation. From airport transfers to sightseeing tours, their friendly drivers and clean vehicles made exploring the city a breeze. Thank you for a wonderful experience!&rdquo;</p>
               </blockquote>
 
               <figure>
                 <img src="/static/qr_landing/images/person_1.jpg" alt="Image" class="img-fluid rounded-circle mx-auto">
               </figure>
-              <h3 class="font-size-20 text-white">Mellisa Griffin</h3>
+              <h3 class="font-size-20 text-white">Emily</h3>
             </div>
           </div>
 
           <div>
             <div class="block-testimony-1 text-center">
               <blockquote class="mb-4">
-                <p>&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, fugit excepturi sapiente voluptatum nulla odio quaerat quibusdam tempore similique doloremque veritatis et cupiditate, maiores cumque repudiandae explicabo tempora deserunt consequuntur?&rdquo;</p>
+                <p>&ldquo;I relied on Milayna Cab Services for my daily commute, and they never disappointed. Their reliable service, affordable rates, and comfortable rides made my journey stress-free. I highly recommend them for all transportation needs.&rdquo;</p>
               </blockquote>
 
               <figure>
                 <img src="/static/qr_landing/images/person_3.jpg" alt="Image" class="img-fluid rounded-circle mx-auto">
               </figure>
-              <h3 class="font-size-20 text-white">Robert Steward</h3>
+              <h3 class="font-size-20 text-white">David</h3>
+            </div>
+          </div>
+
+          <div>
+            <div class="block-testimony-1 text-center">
+              <blockquote class="mb-4">
+                <p>&ldquo;Milayna Cab Services surpassed all my expectations with their efficient service and professionalism. Whether it was a last-minute booking or a scheduled trip, they were always on time and provided a safe and comfortable ride. Truly impressed!&rdquo;</p>
+              </blockquote>
+
+              <figure>
+                <img src="/static/qr_landing/images/person_1.jpg" alt="Image" class="img-fluid rounded-circle mx-auto">
+              </figure>
+              <h3 class="font-size-20 text-white">Jessica</h3>
             </div>
           </div>
 
@@ -561,7 +741,7 @@
       </div>
     </div>
 
-    <div class="site-section" id="blog-section">
+    <!-- <div class="site-section" id="blog-section">
       <div class="container">
         <div class="row">
           <div class="col-12 text-center mb-5">
@@ -593,6 +773,99 @@
 
         </div>
       </div>
+    </div> -->
+
+    <div class="site-section bg-light pt-5" id="gallery-section">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-12">
+            <div class="block-heading-1">
+              <h2>Gallery</h2>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/gallery/g1.jpeg" alt="Image" class="img-fluid">
+              </figure>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/gallery/g2.jpeg" alt="Image" class="img-fluid">
+              </figure>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/gallery/g3.jpeg" alt="Image" class="img-fluid">
+              </figure>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/gallery/g4.jpeg" alt="Image" class="img-fluid">
+              </figure>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/gallery/g5.jpeg" alt="Image" class="img-fluid">
+              </figure>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/gallery/g7.jpeg" alt="Image" class="img-fluid">
+              </figure>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/gallery/g8.jpeg" alt="Image" class="img-fluid">
+              </figure>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/gallery/g9.jpeg" alt="Image" class="img-fluid">
+              </figure>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/gallery/g10.jpeg" alt="Image" class="img-fluid">
+              </figure>
+            </div>
+          </div>
+          
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up">
+            <div class="text-center rounded p-2" style="border: 1px solid #e9ecef;">
+              <figure>
+                <img src="/static/qr_landing/gallery/g6.jpeg" alt="Image" class="img-fluid">
+              </figure>
+            </div>
+          </div>
+
+        </div>
+        
+      </div>
     </div>
 
 
@@ -608,11 +881,15 @@
         </div>
         <div class="row">
           <div class="col-lg-12">
-            <h2 class="text-black">Need to know more on details?<br>Call Us <a href="tel:+91 80861 47845">+91 80861 47845</a></h2>
+            <h2 class="text-black">Need to know more on details?<br>Connect Us</h2>
+            <p class="mb-0"><span class="h4 font-weight-bold">Milayna cab</span><br>Nechoor, Ernakulam - 686664 </p>
+            <h5><i class="fa-solid fa-envelope"></i> <a href="mailto:milaynacab@gmail.com" style="color: #939393;">milaynacab@gmail.com</a></h5>
+            <h5><i class="fa-solid fa-phone"></i> <a href="tel:+91 80861 47845">+91 80861 47845</a></h5>
+            <h5><i class="fa-solid fa-phone"></i> <a href="tel:+91 80891 95567">+91 80891 95567</a></h5>
             <a href="https://wa.me/+919400056444" target="_blank">
               <h4 class="text-black"><i class="fa-brands fa-square-whatsapp text-success"></i> Chat with us on WhatsApp</h4>
             </a>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores, distinctio! Harum quibusdam nisi, illum nulla aspernatur <a href="#">voluptas nam praesentium</a> aut quidem aperiam, quae non tempora recusandae voluptatibus fugit impedit.</p>
+            <p>Contact Us for Any Inquiries or Assistance - Whether you have questions about our services, need help with booking, or want to provide feedback, we're here to assist you. Reach out to us via phone, email, or our online contact form. We look forward to hearing from you!</p>
             <a href="tel:+91 80861 47845" class="btn btn-outline-secondary"><i class="fa-solid fa-phone"></i> CALL NOW</a>
           </div>
         </div>
@@ -648,6 +925,10 @@
         </div>
       </div>
     </div>
+
+    <a href="https://wa.me/+919400056444?text=Hi" target="_blank" class="scrollwh" id="scroll-wh">             
+      <i class='fab fa-whatsapp-square scrollwh__icon' ></i>
+    </a>
 
 
     <footer class="site-footer pb-3">
@@ -724,6 +1005,14 @@
   <script src="/static/qr_landing/js/aos.js"></script>
 
   <script src="/static/qr_landing/js/main.js"></script>
+  <script>
+    const scrollUp = () =>{
+      const scrollWh = document.getElementById('scroll-wh')
+      // When the scroll is higher than 350 viewport height, add the show-scroll class to the a tag with the scrollup class
+      this.scrollY >= 350 ? scrollWh.classList.add('show-scroll'): scrollWh.classList.remove('show-scroll')
+  }
+  window.addEventListener('scroll', scrollUp)
+  </script>
     
   {%if messages%} {%for message in messages%} {%if message.tags == "success"%}
     <script>
