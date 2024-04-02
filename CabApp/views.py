@@ -245,6 +245,8 @@ def endCurrentTrip(request):
                 destination = request.POST['destination'],
                 time_of_arrival = None if request.POST['time_of_arrival'] == "" else request.POST['time_of_arrival'],
                 kilometers = request.POST['kilometer'],
+                trip_days = request.POST['trip_days'],
+                permit = None if request.POST['permit'] == "" else request.POST['permit'],
                 toll = tollAmt,
                 parking = parkingAmt,
                 entrance = entranceAmt,
@@ -452,6 +454,8 @@ def updateRide(request, id):
                 trip.destination = request.POST['destination']
                 trip.time_of_arrival = None if request.POST['time_of_arrival'] == "" else request.POST['time_of_arrival']
                 trip.kilometers = request.POST['kilometer']
+                trip.trip_days = request.POST['trip_days']
+                trip.permit = None if request.POST['permit'] == "" else request.POST['permit']
                 trip.toll = tollAmt
                 trip.parking = parkingAmt
                 trip.entrance = entranceAmt

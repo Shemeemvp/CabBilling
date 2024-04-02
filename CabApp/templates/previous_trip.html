@@ -584,12 +584,16 @@
                                 <label for="">Trip End Date</label>
                               </div>
                               <div class="col-12">
-                                <input class="form-control" id="tripDays" type="number" name="" readonly>
+                                <input class="form-control" id="tripDays" type="number" name="trip_days" value="{{trip.trip_days}}" min="1" step="1" onchange="calcTotalExpense()">
                                 <label for="">Trip Days</label>
                               </div>
                               <div class="col-12">
                                 <input class="form-control" type="number" name="kilometer" value="{{trip.kilometers}}" id="totalKilometer" placeholder="Kilometers" readonly>
                                 <label for="">Kilometers</label>
+                              </div>
+                              <div class="col-12">
+                                <input class="form-control permit" id="permitCharge" type="number" name="permit" value="{{trip.permit}}" placeholder="Permit" onchange="calcTotalExpense()">
+                                <label for="">Permit</label>
                               </div>
                               {% for i in expenses %}
                               {% if i.exp_type == 'Toll' %}
@@ -910,6 +914,8 @@
     var totTripCharge = 0
     var totKm = 0
     var extraKm = 0
+    var extraCharge = 0
+    var tripDays = parseInt($('#tripDays').val()||1)
     var fxCharge = parseFloat($('#fixedCharge').val() || 0)
     var exCharge = parseFloat($('#extraCharge').val() || 0)
     var startKm = parseFloat($('#startKilometer').val() || 0)
@@ -917,14 +923,17 @@
     
     totKm = endKm - startKm
     if(totKm > 0){
-      if(totKm > 100){
-        extraKm = totKm -100
+      totTripCharge = tripDays * fxCharge
+
+      extraKm = totKm - (tripDays * 100)
+      if(extraKm > 0){
+        extraCharge = extraKm * exCharge
       }
   
-      totTripCharge += fxCharge
-      if(extraKm != 0){
-        totTripCharge += parseFloat(extraKm * exCharge)
-      }
+      totTripCharge += extraCharge
+      // if(extraKm != 0){
+      //   totTripCharge += parseFloat(extraKm * exCharge)
+      // }
   
       return totTripCharge
     }
@@ -933,11 +942,14 @@
 
   function calcTotalExpense(){
     var tripCharge = calcTripCharge()
+    var permit = 0
     var totToll = 0
     var totParking = 0
     var totEntrance = 0
     var totGuideFee = 0
     var totOtherCharge = 0
+
+    permit = parseFloat($('#permitCharge').val() || 0);
     
     $('input.toll').each(function () {
       totToll += parseFloat($(this).val() || 0);
@@ -960,7 +972,7 @@
     });
 
     $('#tripCharge').val(parseFloat(tripCharge))
-    var total = parseFloat(tripCharge) + parseFloat(totToll) + parseFloat(totParking) + parseFloat(totEntrance) + parseFloat(totGuideFee) + parseFloat(totOtherCharge)
+    var total = permit + parseFloat(tripCharge) + parseFloat(totToll) + parseFloat(totParking) + parseFloat(totEntrance) + parseFloat(totGuideFee) + parseFloat(totOtherCharge)
     $('#totalTripExpense').val(total)
     rewriteBalance();
 
@@ -1010,20 +1022,20 @@
 
   }
 
-  $(document).ready(function(){
-    var strt = $('#startDate').val();
-    var end = $('#endDate').val();
-    $('#startDate').prop('max',end)
-    $('#endDate').prop('min',strt)
-    var date1 = new Date($('#startDate').val());
-    var date2 = new Date($('#endDate').val());
+  // $(document).ready(function(){
+  //   var strt = $('#startDate').val();
+  //   var end = $('#endDate').val();
+  //   $('#startDate').prop('max',end)
+  //   $('#endDate').prop('min',strt)
+  //   var date1 = new Date($('#startDate').val());
+  //   var date2 = new Date($('#endDate').val());
 
-    var diff = date2 - date1
+  //   var diff = date2 - date1
 
-    diffInDays = diff / (1000 * 60 * 60 * 24);
-    $('#tripDays').val(diffInDays + 1)
+  //   diffInDays = diff / (1000 * 60 * 60 * 24);
+  //   $('#tripDays').val(diffInDays + 1)
 
-  });
+  // });
 
   function countTripDays(){
     var date1 = new Date($('#startDate').val());
@@ -1033,6 +1045,7 @@
 
     diffInDays = diff / (1000 * 60 * 60 * 24);
     $('#tripDays').val(diffInDays + 1)
+    calcTotalExpense();
   }
 
   $(document).ready(function(){
