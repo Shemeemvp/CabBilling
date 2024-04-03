@@ -18,4 +18,5 @@ urlpatterns = [
     path('get_last_ride_details',views.getLastRideDetails, name='getLastRideDetails'),
     path('update_ride/<int:id>',views.updateRide, name='updateRide'),
     path('feedbacks',views.feedbacks, name='feedbacks'),
+    path('delete_bill/<int:id>',views.deleteBill, name='deleteBill'),
 ]

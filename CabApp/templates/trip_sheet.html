@@ -529,8 +529,13 @@
                               </div>
                               
                               <div class="col-md-12">
-                                <input class="form-control" type="number" name="fixed_charge" id="fixedCharge" min="0" step="any" placeholder="Fixed charge upto 100 KM" onchange="calcTotalExpense()" required>
+                                <input class="form-control" type="number" name="fixed_charge" id="fixedCharge" min="0" step="any" placeholder="Fixed charge" onchange="calcTotalExpense()" required>
                                 <label for="">Fixed Charge*</label>
+                              </div>
+
+                              <div class="col-md-12">
+                                <input class="form-control" type="number" name="max_kilometer" id="maxKilometer" min="1" step="any" placeholder="Max. KM Range with Fixed charge" onchange="calcTotalExpense()" required>
+                                <label for="">Max. Kilometer*</label>
                               </div>
 
                               <div class="col-md-12">
@@ -661,7 +666,9 @@
                               </div>
                               <hr class="text-white">
                               <div class="col-12">
-                                <input type="hidden" id="tripCharge" name="trip_charge">
+                                <input type="hidden" id="tripCharge" name="trip_charge" value=0 >
+                                <input type="hidden" id="tripFixedCharge" name="trip_fixed_charge" value=0 >
+                                <input type="hidden" id="tripExtraCharge" name="trip_extra_charge" value=0 >
                                 <input class="form-control" type="number" id="totalTripExpense" name="total" value="0.0" placeholder="Total Trip Expense" readonly>
                                 <label for=""><b>Total Charge</b></label>
                               </div>
@@ -883,6 +890,7 @@
 
   function calcTripCharge(){
     var totTripCharge = 0
+    var tripFxCharge = 0
     var totKm = 0
     var extraKm = 0
     var extraCharge = 0
@@ -891,21 +899,25 @@
     var exCharge = parseFloat($('#extraCharge').val() || 0)
     var startKm = parseFloat($('#startKilometer').val() || 0)
     var endKm = parseFloat($('#endKilometer').val() || 0)
+    var maxKM = parseFloat($('#maxKilometer').val() || 0)
     
     totKm = endKm - startKm
-    if(totKm > 0){
-      totTripCharge = tripDays * fxCharge
+    if(totKm > 0 && fxCharge > 0 && maxKM > 0){
+      tripFxCharge = tripDays * fxCharge
 
-      extraKm = totKm - (tripDays * 100)
+      extraKm = totKm - (tripDays * maxKM)
       if(extraKm > 0){
         extraCharge = extraKm * exCharge
       }
   
-      totTripCharge += extraCharge
+      totTripCharge = tripFxCharge + extraCharge
       // if(extraKm != 0){
       //   totTripCharge += parseFloat(extraKm * exCharge)
       // }
-  
+      console.log(tripFxCharge, extraCharge, totTripCharge)
+      $('#tripFixedCharge').val(tripFxCharge)
+      $('#tripExtraCharge').val(extraCharge)
+      $('#tripCharge').val(parseFloat(totTripCharge))
       return totTripCharge
     }
     return 0
@@ -942,7 +954,6 @@
       totOtherCharge += parseFloat($(this).val() || 0);
     });
     
-    $('#tripCharge').val(parseFloat(tripCharge))
     var total = permit + parseFloat(tripCharge) + parseFloat(totToll) + parseFloat(totParking) + parseFloat(totEntrance) + parseFloat(totGuideFee) + parseFloat(totOtherCharge)
     $('#totalTripExpense').val(total)
     rewriteBalance();

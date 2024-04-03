@@ -236,6 +236,7 @@ def endCurrentTrip(request):
                 vehicle_no = request.POST['vehicle_number'],
                 vehicle_name = request.POST['vehicle_name'],
                 fixed_charge = request.POST['fixed_charge'],
+                max_kilometer = request.POST['max_kilometer'],
                 extra_charge = request.POST['extra_charge'],
                 starting_km = request.POST['starting_kilometer'],
                 ending_km = None if request.POST['end_kilometer'] == "" else request.POST['end_kilometer'],
@@ -252,6 +253,8 @@ def endCurrentTrip(request):
                 entrance = entranceAmt,
                 guide_fee = guideAmt,
                 other_charges = otherAmt,
+                trip_fixed_charge = request.POST['trip_fixed_charge'],
+                trip_extra_charge = request.POST['trip_extra_charge'],
                 trip_charge = 0 if request.POST['trip_charge'] == '' else request.POST['trip_charge'],
                 total_trip_expense = request.POST['total'],
                 advance = None if request.POST['advance'] == "" else request.POST['advance'],
@@ -445,6 +448,7 @@ def updateRide(request, id):
                 trip.vehicle_no = request.POST['vehicle_number']
                 trip.vehicle_name = request.POST['vehicle_name']
                 trip.fixed_charge = request.POST['fixed_charge']
+                trip.max_kilometer = request.POST['max_kilometer']
                 trip.extra_charge = request.POST['extra_charge']
                 trip.starting_km = request.POST['starting_kilometer']
                 trip.ending_km = None if request.POST['end_kilometer'] == "" else request.POST['end_kilometer']
@@ -461,6 +465,8 @@ def updateRide(request, id):
                 trip.entrance = entranceAmt
                 trip.guide_fee = guideAmt
                 trip.other_charges = otherAmt
+                trip.trip_fixed_charge = 0 if request.POST['trip_fixed_charge'] == '' else request.POST['trip_fixed_charge']
+                trip.trip_extra_charge = 0 if request.POST['trip_extra_charge'] == '' else request.POST['trip_extra_charge']
                 trip.trip_charge = 0 if request.POST['trip_charge'] == '' else request.POST['trip_charge']
                 trip.total_trip_expense = request.POST['total']
                 trip.advance = None if request.POST['advance'] == "" else request.POST['advance']
@@ -564,3 +570,14 @@ def getNextTripNumber(trp):
         nxtTRIP = st+ str(trp_num)
 
     return nxtTRIP
+
+def deleteBill(request, id):
+    if request.user.is_authenticated:
+        usr = User.objects.get(id = request.user.id)
+        trip = TSC_Form.objects.get(id = id)
+        tripNo = trip.trip_no
+        trip.delete()
+        messages.success(request, f'{tripNo} deleted successfully.!')
+        return redirect(allTrips)
+    else:
+        return redirect('/')

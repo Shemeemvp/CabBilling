@@ -549,7 +549,7 @@
       font-size: 0.8rem;
     }
 
-    .guide_places, .other_charges{
+    .guide_places, .other_charges, .trip_split{
       font-size: 0.8rem;
     }
 
@@ -599,7 +599,7 @@
     font-size: 0.8rem;
   }
 
-  .guide_places, .other_charges{
+  .guide_places, .other_charges, .trip_split{
     font-size: 0.8rem;
   }
 
@@ -670,7 +670,7 @@
       padding: 0 !important;
       font-size: 1.2rem;
     }
-    .guide_places, .other_charges{
+    .guide_places, .other_charges, .trip_split{
       font-size: 0.8rem;
     }
   }
@@ -734,7 +734,7 @@
       padding: 0 !important;
       font-size: 1rem;
     }
-    .guide_places, .other_charges{
+    .guide_places, .other_charges, .trip_split{
       font-size: 0.7rem;
     }
   }
@@ -798,7 +798,7 @@
       padding: 0 !important;
       font-size: 0.95rem;
     }
-    .guide_places, .other_charges{
+    .guide_places, .other_charges, .trip_split{
       font-size: 0.65rem;
     }
   }
@@ -862,7 +862,7 @@
       padding: 0 !important;
       font-size: 0.8rem;
     }
-    .guide_places, .other_charges{
+    .guide_places, .other_charges, .trip_split{
       font-size: 0.5rem;
     }
   }
@@ -926,7 +926,7 @@
       padding: 0 !important;
       font-size: 0.8rem;
     }
-    .guide_places, .other_charges{
+    .guide_places, .other_charges, .trip_split{
       font-size: 0.5rem;
     }
   }
@@ -1100,15 +1100,25 @@
                       </div>
                       <div class="subtot-item d-flex justify-content-between">
                           <div>
-                            <span>Trip Charge</span>
-                            <br>
-                            <span class="trip_breakdown">(&#8377; {{trip.fixed_charge}} as fixed charge per day upto 100KM and &#8377; {{trip.extra_charge}} extra charge per KM)</span>
+                            <span>Total Trip Charge</span>
                           </div>
                           <span><span>&#8377; </span>{{trip.trip_charge}}</span>
                       </div>
+                      {% if trip.trip_charge != 0 %}
+                      <div class="trip_split w-100 mb-2">
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>Fixed Charge(&#8377; {{trip.fixed_charge}} per day upto {{trip.max_kilometer}}KM)</span>
+                          <span>&#8377; {{trip.trip_fixed_charge}}</span>
+                        </span>
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>Extra Running Charge(&#8377; {{trip.extra_charge}} extra charge per KM for <span class="extraKM"></span> KMs )</span>
+                          <span>&#8377; {{trip.trip_extra_charge}}</span>
+                        </span>
+                      </div>
+                      {% endif %}
                       <div class="subtot-item d-flex justify-content-between">
                         <span>Permit</span>
-                        <span><span>&#8377; </span>{{trip.permit}}</span>
+                        <span><span>&#8377; </span>{{trip.permit|default:0.0}}</span>
                       </div>
                       <div class="subtot-item d-flex justify-content-between">
                           <span>Entrance Fees</span>
@@ -1310,12 +1320,24 @@
                       </div>
                       <div class="subtot-item d-flex justify-content-between">
                           <div>
-                            <span>Trip Charge</span>
+                            <span>Total Trip Charge</span>
                             <br>
-                            <span class="trip_breakdown">(&#8377; {{trip.fixed_charge}} as fixed charge per day upto 100KM and &#8377; {{trip.extra_charge}} extra charge per KM)</span>
+                            <!-- <span class="trip_breakdown">(&#8377; {{trip.fixed_charge}} as fixed charge per day upto {{trip.max_kilometer}}KM and &#8377; {{trip.extra_charge}} extra charge per KM)</span> -->
                           </div>
                           <span class="d-flex"><span>&#8377; </span>{{trip.trip_charge}}</span>
                       </div>
+                      {% if trip.trip_charge != 0 %}
+                      <div class="trip_split w-100 mb-2">
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>Fixed Charge(&#8377; {{trip.fixed_charge}} per day upto {{trip.max_kilometer}}KM)</span>
+                          <span>&#8377; {{trip.trip_fixed_charge}}</span>
+                        </span>
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>Extra Running Charge(&#8377; {{trip.extra_charge}} extra charge per KM for <span class="extraKM"></span> KMs )</span>
+                          <span>&#8377; {{trip.trip_extra_charge}}</span>
+                        </span>
+                      </div>
+                      {% endif %}
                       <div class="subtot-item d-flex justify-content-between">
                         <span>Permit</span>
                         <span><span>&#8377; </span>{{trip.permit|default:0.0}}</span>
@@ -1415,6 +1437,20 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 
       <script>
+        $(document).ready(function(){
+          var extKM = 0
+          var totKM = parseFloat(`{{trip.kilometers}}`)
+          var tripDays = parseInt(`{{trip.trip_days}}`)
+          var mxKM = parseFloat(`{{trip.max_kilometer}}`)
+
+          extKM = totKM - (tripDays * mxKM)
+          console.log(extKM)
+          if (extKM > 0){
+            $('.extraKM').text(extKM)
+          }else{
+            $('.extraKM').text(0)
+          }
+        })
         $( "#navbar ul li" ).hover(
           function() {
               $(this).find("span").stop().animate({
@@ -1531,7 +1567,7 @@
         left: 20%;
       }
 
-      .guide_places, .other_charges{
+      .guide_places, .other_charges, .trip_split{
         font-size: 0.8rem;
       }
 
