@@ -660,7 +660,7 @@
     .trip_sheet2 .subtot {
       padding: 0 !important;
     }
-    .trip_sheet2 .subtot-item{
+    .trip_sheet2 .subtot-item, .totDays{
       font-size: 1.15rem;
     }
     .trip_breakdown{
@@ -724,7 +724,7 @@
     .trip_sheet2 .subtot {
       padding: 0 !important;
     }
-    .trip_sheet2 .subtot-item{
+    .trip_sheet2 .subtot-item, .totDays{
       font-size: 1rem;
     }
     .trip_breakdown{
@@ -788,7 +788,7 @@
     .trip_sheet2 .subtot {
       padding: 0 !important;
     }
-    .trip_sheet2 .subtot-item{
+    .trip_sheet2 .subtot-item, .totDays{
       font-size: 0.85rem;
     }
     .trip_breakdown{
@@ -852,7 +852,7 @@
     .trip_sheet2 .subtot {
       padding: 0 !important;
     }
-    .trip_sheet2 .subtot-item{
+    .trip_sheet2 .subtot-item, .totDays{
       font-size: 0.6rem;
     }
     .trip_breakdown{
@@ -916,7 +916,7 @@
     .trip_sheet2 .subtot {
       padding: 0 !important;
     }
-    .trip_sheet2 .subtot-item{
+    .trip_sheet2 .subtot-item, .totDays{
       font-size: 0.6rem;
     }
     .trip_breakdown{
@@ -945,7 +945,7 @@
         <div class="logo_img">
           <img src="/static/assets/images/logo_3.png" alt="">
         </div>
-        <h1><a href="#">MILAYNA CABS</a></h1>
+        <h1><a href="#">MILAYNA CAB</a></h1>
 
       </div>
 
@@ -983,7 +983,7 @@
                     <!-- <h4>LOGO</h4> -->
                   </div>
                   <div class="company_head col-8">
-                    <h5 class=" text-center brand">MILAYNA CABS</h5>
+                    <h5 class=" text-center brand">MILAYNA CAB</h5>
                     <div class="address text-center">
                         <p>Nechoor</p>
                         <p>Ernakulam - 686664</p>
@@ -1047,7 +1047,7 @@
                         <p>Advance</p>
                       </div>
                       <div class="col-3">
-                        <span>&#8377; </span>{{trip.advance}}
+                        <span>&#8377; </span>{{trip.advance|default:'0.0'}}
                       </div>
 
                     </div>
@@ -1096,6 +1096,7 @@
   
                   <div class="px-4 subtot mt-5">
                       <div class="totDays mt-2">
+                        <p class="mb-0">Trip End date: <span>{{trip.trip_end_date}}</span></p>
                         <p class="fw-bold">Total Days: <span>{{trip.trip_days}}</span></p>
                       </div>
                       <div class="subtot-item d-flex justify-content-between">
@@ -1203,7 +1204,7 @@
                     <!-- <h4>LOGO</h4> -->
                   </div>
                   <div class="company_head col-8">
-                    <h5 class=" text-center brand">MILAYNA CABS</h5>
+                    <h5 class=" text-center brand">MILAYNA CAB</h5>
                     <div class="address text-center">
                         <p>Nechoor</p>
                         <p>Ernakulam - 686664</p>
@@ -1267,7 +1268,7 @@
                         <p>Advance</p>
                       </div>
                       <div class="col-3">
-                        <span>&#8377; </span>{{trip.advance}}
+                        <span>&#8377; </span>{{trip.advance|default:'0.0'}}
                       </div>
 
                     </div>
@@ -1316,6 +1317,7 @@
                     
                     <div class="px-4 subtot mt-5">
                       <div class="totDays mt-2">
+                        <p class="mb-0">Trip End date: <span>{{trip.trip_end_date}}</span></p>
                         <p class="fw-bold">Total Days: <span>{{trip.trip_days}}</span></p>
                       </div>
                       <div class="subtot-item d-flex justify-content-between">
