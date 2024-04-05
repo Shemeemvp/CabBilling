@@ -581,3 +581,28 @@ def deleteBill(request, id):
         return redirect(allTrips)
     else:
         return redirect('/')
+    
+def forgotPassword(request):
+    return render(request, 'forgot_password.html')
+
+def updatePassword(request):
+    if request.method == 'POST':
+        uName = request.POST['username']
+
+        if not User.objects.filter(username = uName).exists():
+            res = f'<script>alert("User name `{uName}` not found, Please try again.!");window.history.back();</script>'
+            return HttpResponse(res)
+        else:
+            user = User.objects.get(username = uName)
+            pas = request.POST['password']
+            cnfPas = request.POST['confirm_password']
+            if pas == cnfPas:
+                user.set_password(pas)
+                user.save()
+                messages.success(request, 'Password Updated successfully')
+                return redirect('/')
+            else:
+                res = f'<script>alert("Password and confirm password should be same.!");window.history.back();</script>'
+                return HttpResponse(res)
+    else:
+        return redirect('/')
