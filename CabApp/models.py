@@ -17,6 +17,10 @@ class TSC_Form(models.Model):
     guest = models.CharField(max_length = 150, null = True, blank = True)
     vehicle_no = models.CharField(max_length = 50, null = True, blank = True)
     vehicle_name = models.CharField(max_length = 150, null = True, blank = True)
+    trip_charge_type = models.CharField(max_length=20, null=True, blank=True)
+    fixed_hour_charge = models.FloatField(default = 0.0, null = True, blank = True)
+    max_hour = models.FloatField(default = 0.0, null = True, blank = True)
+    extra_hour_charge = models.FloatField(default = 0.0, null = True, blank = True)
     fixed_charge = models.FloatField(default = 0.0, null = True, blank = True)
     max_kilometer = models.FloatField(default = 0.0, null = True, blank = True)
     extra_charge = models.FloatField(default = 0.0, null = True, blank = True)
@@ -54,3 +58,10 @@ class TSC_Expenses(models.Model):
 class Customer_Feedbacks(models.Model):
     full_name = models.CharField(max_length = 150, null = True, blank = True)
     feedback = models.TextField()
+
+class TripRideHours(models.Model):
+    trip = models.ForeignKey(TSC_Form, on_delete=models.CASCADE, null=True)
+    date = models.DateField(null=True, blank=True)
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    hours = models.FloatField(default=0.0, null=True, blank=True)

@@ -238,6 +238,10 @@ def endCurrentTrip(request):
                 fixed_charge = request.POST['fixed_charge'],
                 max_kilometer = request.POST['max_kilometer'],
                 extra_charge = request.POST['extra_charge'],
+                trip_charge_type = 'kilometer',
+                fixed_hour_charge = None,
+                max_hour = None,
+                extra_hour_charge = None,
                 starting_km = request.POST['starting_kilometer'],
                 ending_km = None if request.POST['end_kilometer'] == "" else request.POST['end_kilometer'],
                 trip_end_date = None if request.POST['trip_end_date'] == "" else request.POST['trip_end_date'],
@@ -326,10 +330,19 @@ def viewTscData(request,id):
         tripData = TSC_Form.objects.get(id = id)
         guide_exp = TSC_Expenses.objects.filter(Trip = tripData, exp_type = 'Guide Fee')
         other_charge = TSC_Expenses.objects.filter(Trip = tripData, exp_type = 'Other Charge')
+        
+        hrs = TripRideHours.objects.filter(trip = tripData)
+        extHr = 0
+
+        for i in hrs:
+            hr = int(i.hours)
+            if hr > i.trip.max_hour:
+                extHr += hr - (i.trip.max_hour)
         context = {
             'trip': tripData,
             'guide_exp':guide_exp,
-            'other_charges':other_charge
+            'other_charges':other_charge,
+            'extraHr': extHr,
         }
         return render(request, 'view_tsc_data.html',context)
     else:
@@ -354,6 +367,7 @@ def getLastRideDetails(request):
             driver = None
 
         trp = TSC_Form.objects.filter(user = usr).last()
+        hrs = TripRideHours.objects.filter(trip = trp)
 
         try:
             exp = TSC_Expenses.objects.filter(Trip = trp)
@@ -361,7 +375,7 @@ def getLastRideDetails(request):
             exp = None
 
         context = {
-            'user':usr, 'driver':driver, 'trip':trp, 'expenses':exp,
+            'user':usr, 'driver':driver, 'trip':trp, 'expenses':exp, 'rideHours':hrs,
         }
 
         if not trp:
@@ -447,6 +461,7 @@ def updateRide(request, id):
                 trip.guest = request.POST['guest_name']
                 trip.vehicle_no = request.POST['vehicle_number']
                 trip.vehicle_name = request.POST['vehicle_name']
+                trip.trip_charge_type = 'Kilometer'
                 trip.fixed_charge = request.POST['fixed_charge']
                 trip.max_kilometer = request.POST['max_kilometer']
                 trip.extra_charge = request.POST['extra_charge']
@@ -604,5 +619,360 @@ def updatePassword(request):
             else:
                 res = f'<script>alert("Password and confirm password should be same.!");window.history.back();</script>'
                 return HttpResponse(res)
+    else:
+        return redirect('/')
+    
+def endHourlyBasedTrip(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            usr = User.objects.get(id = request.user.id)
+            try:
+                driver = Driver.objects.get(user = usr)
+            except:
+                driver = None
+
+            trp_no = request.POST['trip_number']
+
+            while TSC_Form.objects.filter(driver = driver, trip_no__iexact = trp_no).exists():
+                trp_no = getNextTripNumber(trp_no)
+
+            # if TSC_Form.objects.filter(trip_no__iexact = trp_no).exists():
+            #     res = f'<script>alert("Trip No. `{trp_no}` already exists.!");window.history.back();</script>'
+            #     return HttpResponse(res)
+            # else:
+            tollAmt = 0
+            parkingAmt = 0
+            entranceAmt = 0
+            guideAmt = 0
+            otherAmt = 0
+
+            toll = request.POST.getlist('toll[]')
+            parking = request.POST.getlist('parking[]')
+            entrance = request.POST.getlist('entrance[]')
+            guide_fee = request.POST.getlist('guide_fee[]')
+            guide_place = request.POST.getlist('guide_place[]')
+            other_charge = request.POST.getlist('other_charge_amount[]')
+            other_charge_desc = request.POST.getlist('other_charge[]')
+            
+            print(guide_fee, guide_place)
+            guide_fee_mapped = zip(guide_fee, guide_place)
+            guide_fee_list = list(guide_fee_mapped)
+
+            print(other_charge, other_charge_desc)
+            other_charge_mapped = zip(other_charge, other_charge_desc)
+            other_charge_list = list(other_charge_mapped)
+
+            for t in toll:
+                try:
+                    tollAmt += float(t)
+                except:
+                    pass
+
+            for p in parking:
+                try:
+                    parkingAmt += float(p)
+                except:
+                    pass
+            
+            for e in entrance:
+                try:
+                    entranceAmt += float(e)
+                except:
+                    pass
+
+            for g in guide_fee:
+                try:
+                    guideAmt += float(g)
+                except:
+                    pass
+
+            for o in other_charge:
+                try:
+                    otherAmt += float(o)
+                except:
+                    pass
+
+
+            trip = TSC_Form(
+                user = usr,
+                driver = driver,
+                trip_no = trp_no,
+                trip_date = request.POST['trip_date'],
+                driver_name = request.POST['driver_name'],
+                guest = request.POST['guest_name'],
+                vehicle_no = request.POST['vehicle_number'],
+                vehicle_name = request.POST['vehicle_name'],
+                trip_charge_type = 'Hour',
+                fixed_hour_charge = request.POST['fixed_hour_charge'],
+                max_hour = request.POST['max_hour'],
+                extra_hour_charge = request.POST['extra_hour_charge'],
+                fixed_charge = None,
+                max_kilometer = None,
+                extra_charge = None,
+                starting_km = request.POST['starting_kilometer'],
+                ending_km = None if request.POST['end_kilometer'] == "" else request.POST['end_kilometer'],
+                trip_end_date = None if request.POST['trip_end_date'] == "" else request.POST['trip_end_date'],
+                starting_place = request.POST['starting_place'],
+                starting_time = request.POST['starting_time'],
+                destination = request.POST['destination'],
+                time_of_arrival = None if request.POST['time_of_arrival'] == "" else request.POST['time_of_arrival'],
+                kilometers = request.POST['kilometer'],
+                trip_days = request.POST['trip_days'],
+                permit = None if request.POST['permit'] == "" else request.POST['permit'],
+                toll = tollAmt,
+                parking = parkingAmt,
+                entrance = entranceAmt,
+                guide_fee = guideAmt,
+                other_charges = otherAmt,
+                trip_fixed_charge = request.POST['trip_fixed_charge'],
+                trip_extra_charge = request.POST['trip_extra_charge'],
+                trip_charge = 0 if request.POST['trip_charge'] == '' else request.POST['trip_charge'],
+                total_trip_expense = request.POST['total'],
+                advance = None if request.POST['advance'] == "" else request.POST['advance'],
+                balance = request.POST['balance']
+            )
+            trip.save()
+
+            ride_dates = request.POST.getlist('ride_dates[]')
+            ride_start_time = request.POST.getlist('ride_start_time[]')
+            ride_end_time = request.POST.getlist('ride_end_time[]')
+            hrs = request.POST.getlist('ride_hours[]')
+            
+            print('Ride Hours===')
+            print(ride_dates, ride_start_time, ride_end_time, hrs)
+            if len(ride_dates) == len(ride_start_time) == len(ride_end_time) == len(hrs):
+                hr = zip(ride_dates, ride_start_time, ride_end_time, hrs)
+                hours_list = list(hr)
+
+                for ele in hours_list:
+                    TripRideHours.objects.create(trip = trip, date = ele[0], start_time = ele[1], end_time = ele[2], hours = ele[3])
+
+            for item in toll:
+                TSC_Expenses.objects.create(Trip = trip, exp_type = 'Toll', exp_desc = None, exp_amount = item, exp_date = date.today())
+
+            for item in parking:
+                TSC_Expenses.objects.create(Trip = trip, exp_type = 'Parking', exp_desc = None, exp_amount = item, exp_date = date.today())
+            
+            for item in entrance:
+                TSC_Expenses.objects.create(Trip = trip, exp_type = 'Entrance', exp_desc = None, exp_amount = item, exp_date = date.today())
+
+            for item in guide_fee_list:
+                TSC_Expenses.objects.create(Trip = trip, exp_type = 'Guide Fee', exp_desc = item[1], exp_amount = item[0], exp_date = date.today())
+
+            for item in other_charge_list:
+                TSC_Expenses.objects.create(Trip = trip, exp_type = 'Other Charge', exp_desc = item[1], exp_amount = item[0], exp_date = date.today())
+
+            # qr = qrcode.make("http://127.0.0.1:8000/trip/" + str(trip.id))
+            qr = qrcode.make("https://milaynacabservice.com/qr_details")
+
+            image_directory = os.path.join(settings.MEDIA_ROOT, "images")
+            if not os.path.exists(image_directory):
+                os.makedirs(image_directory)
+            image_path = os.path.join(settings.MEDIA_ROOT, "images", "trip" + str(trip.id) + ".png")
+            qr.save(image_path)
+            with open(image_path, "rb") as reopen:
+                djangofile = File(reopen)
+                trip.bill_qr = djangofile
+                trip.save()
+
+            messages.success(request, "Trip Saved successfully")
+            return redirect(getLastRideDetails)
+    else:
+        return redirect('/')
+    
+def updateHourlyBasedTrip(request, id):
+    if request.user.is_authenticated:
+        try:
+            if request.method == 'POST':
+                usr = User.objects.get(id = request.user.id)
+                try:
+                    driver = Driver.objects.get(user = usr)
+                except:
+                    driver = None
+
+                trip = TSC_Form.objects.get(id = id)
+                trp_no = request.POST['trip_number']
+
+                # if trip.trip_no != trp_no and TSC_Form.objects.filter(trip_no__iexact = trp_no).exists():
+                #     res = f'<script>alert("Trip No. `{trp_no}` already exists.!");window.history.back();</script>'
+                #     return HttpResponse(res)
+                # else:
+
+                tollAmt = 0
+                parkingAmt = 0
+                entranceAmt = 0
+                guideAmt = 0
+                otherAmt = 0
+
+                t_id = request.POST.getlist('toll_id[]')
+                p_id = request.POST.getlist('parking_id[]')
+                e_id = request.POST.getlist('entrance_id[]')
+                g_id = request.POST.getlist('guide_id[]')
+                o_id = request.POST.getlist('oc_id[]')
+                ids = t_id + p_id + e_id + g_id + o_id
+
+                toll = request.POST.getlist('toll[]')
+                parking = request.POST.getlist('parking[]')
+                entrance = request.POST.getlist('entrance[]')
+                guide_fee = request.POST.getlist('guide_fee[]')
+                guide_place = request.POST.getlist('guide_place[]')
+                other_charge = request.POST.getlist('other_charge_amount[]')
+                other_charge_desc = request.POST.getlist('other_charge[]')
+
+                for t in toll:
+                    try:
+                        tollAmt += float(t)
+                    except:
+                        pass
+
+                for p in parking:
+                    try:
+                        parkingAmt += float(p)
+                    except:
+                        pass
+                
+                for e in entrance:
+                    try:
+                        entranceAmt += float(e)
+                    except:
+                        pass
+
+                for g in guide_fee:
+                    try:
+                        guideAmt += float(g)
+                    except:
+                        pass
+
+                for o in other_charge:
+                    try:
+                        otherAmt += float(o)
+                    except:
+                        pass
+                
+                print('advance--',request.POST['advance'])
+                trip.trip_no = trp_no
+                trip.trip_date = request.POST['trip_date']
+                trip.driver_name = request.POST['driver_name']
+                trip.guest = request.POST['guest_name']
+                trip.vehicle_no = request.POST['vehicle_number']
+                trip.vehicle_name = request.POST['vehicle_name']
+                trip.trip_charge_type = 'Hour'
+                trip.fixed_hour_charge = request.POST['fixed_hour_charge']
+                trip.max_hour = request.POST['max_hour']
+                trip.extra_hour_charge = request.POST['extra_hour_charge']
+                trip.starting_km = request.POST['starting_kilometer']
+                trip.ending_km = None if request.POST['end_kilometer'] == "" else request.POST['end_kilometer']
+                trip.trip_end_date = None if request.POST['trip_end_date'] == "" else request.POST['trip_end_date']
+                trip.starting_place = request.POST['starting_place']
+                trip.starting_time = request.POST['starting_time']
+                trip.destination = request.POST['destination']
+                trip.time_of_arrival = None if request.POST['time_of_arrival'] == "" else request.POST['time_of_arrival']
+                trip.kilometers = request.POST['kilometer']
+                trip.trip_days = request.POST['trip_days']
+                trip.permit = None if request.POST['permit'] == "" else request.POST['permit']
+                trip.toll = tollAmt
+                trip.parking = parkingAmt
+                trip.entrance = entranceAmt
+                trip.guide_fee = guideAmt
+                trip.other_charges = otherAmt
+                trip.trip_fixed_charge = 0 if request.POST['trip_fixed_charge'] == '' else request.POST['trip_fixed_charge']
+                trip.trip_extra_charge = 0 if request.POST['trip_extra_charge'] == '' else request.POST['trip_extra_charge']
+                trip.trip_charge = 0 if request.POST['trip_charge'] == '' else request.POST['trip_charge']
+                trip.total_trip_expense = request.POST['total']
+                trip.advance = None if request.POST['advance'] == "" else request.POST['advance']
+                trip.balance = request.POST['balance']
+                trip.save()
+
+                ride_ids = request.POST.getlist('ride_ids[]')
+                rd_ids = [int(id) for id in ride_ids]
+                trip_hrs = TripRideHours.objects.filter(trip = trip)
+                obj_ids = [obj.id for obj in trip_hrs]
+                ride_ids_to_delete = [obj_id for obj_id in obj_ids if obj_id not in rd_ids]
+
+                TripRideHours.objects.filter(id__in = ride_ids_to_delete).delete()
+
+                ride_dates = request.POST.getlist('ride_dates[]')
+                ride_start_time = request.POST.getlist('ride_start_time[]')
+                ride_end_time = request.POST.getlist('ride_end_time[]')
+                hrs = request.POST.getlist('ride_hours[]')
+                
+                print('Ride Hours===')
+                print(ride_dates, ride_start_time, ride_end_time, hrs, ride_ids)
+                if len(ride_dates) == len(ride_start_time) == len(ride_end_time) == len(hrs) == len(ride_ids):
+                    hr = zip(ride_dates, ride_start_time, ride_end_time, hrs, ride_ids)
+                    hours_list = list(hr)
+
+                    for ele in hours_list:
+                        if ele[4] == "0":
+                            TripRideHours.objects.create(trip = trip, date = ele[0], start_time = ele[1], end_time = ele[2], hours = ele[3])
+                        else:
+                            TripRideHours.objects.filter(id = ele[4]).update(trip = trip, date = ele[0], start_time = ele[1], end_time = ele[2], hours = ele[3])
+
+
+                exp_ids = [int(id) for id in ids]
+
+                trip_exp = TSC_Expenses.objects.filter(Trip = trip)
+                object_ids = [obj.id for obj in trip_exp]
+
+                ids_to_delete = [obj_id for obj_id in object_ids if obj_id not in exp_ids]
+                print('ids_to_delete==',ids_to_delete)
+                TSC_Expenses.objects.filter(id__in = ids_to_delete).delete()
+                
+                toll_list_mapped = zip(t_id, toll)
+                toll_list = list(toll_list_mapped)
+
+                park_list_mapped = zip(p_id, parking)
+                parking_list = list(park_list_mapped)
+
+                entrance_list_mapped = zip(e_id, entrance)
+                entrance_list = list(entrance_list_mapped)
+
+                guide_fee_mapped = zip(g_id, guide_fee, guide_place)
+                guide_fee_list = list(guide_fee_mapped)
+
+                other_charge_mapped = zip(o_id, other_charge, other_charge_desc)
+                other_charge_list = list(other_charge_mapped)
+                print(ids)
+                print(toll_list)
+                print(parking_list)
+                print(entrance_list)
+                print(guide_fee_list)
+                print(other_charge_list)
+
+                for item in toll_list:
+                    if item[0] == "0" and item[1] != "":
+                        TSC_Expenses.objects.create(Trip = trip, exp_type = 'Toll', exp_desc = None, exp_amount = item[1], exp_date = date.today())
+                    else:
+                        TSC_Expenses.objects.filter(id = item[0]).update(Trip = trip, exp_type = 'Toll', exp_desc = None, exp_amount = item[1], exp_date = date.today())
+
+                for item in parking_list:
+                    if item[0] == "0" and item[1] != "":
+                        TSC_Expenses.objects.create(Trip = trip, exp_type = 'Parking', exp_desc = None, exp_amount = item[1], exp_date = date.today())
+                    else:
+                        TSC_Expenses.objects.filter(id = item[0]).update(Trip = trip, exp_type = 'Parking', exp_desc = None, exp_amount = item[1], exp_date = date.today())
+                
+                for item in entrance_list:
+                    if item[0] == "0" and item[1] != "":
+                        TSC_Expenses.objects.create(Trip = trip, exp_type = 'Entrance', exp_desc = None, exp_amount = item[1], exp_date = date.today())
+                    else:
+                        TSC_Expenses.objects.filter(id = item[0]).update(Trip = trip, exp_type = 'Entrance', exp_desc = None, exp_amount = item[1], exp_date = date.today())
+
+                for item in guide_fee_list:
+                    if item[0] == "0" and item[1] != "":
+                        TSC_Expenses.objects.create(Trip = trip, exp_type = 'Guide Fee', exp_desc = item[2], exp_amount = item[1], exp_date = date.today())
+                    else:
+                        TSC_Expenses.objects.filter(id = item[0]).update(Trip = trip, exp_type = 'Guide Fee', exp_desc = item[2], exp_amount = item[1], exp_date = date.today())
+
+                for item in other_charge_list:
+                    if item[0] == "0" and item[1] != "":
+                        TSC_Expenses.objects.create(Trip = trip, exp_type = 'Other Charge', exp_desc = item[2], exp_amount = item[1], exp_date = date.today())
+                    else:
+                        TSC_Expenses.objects.filter(id = item[0]).update(Trip = trip, exp_type = 'Other Charge', exp_desc = item[2], exp_amount = item[1], exp_date = date.today())
+
+                messages.success(request, "Trip Updated successfully")
+                return redirect(getLastRideDetails)
+        except Exception as e:
+            print(e)
+            return redirect(getLastRideDetails)
     else:
         return redirect('/')

@@ -21,4 +21,6 @@ urlpatterns = [
     path('delete_bill/<int:id>',views.deleteBill, name='deleteBill'),
     path('forgot_password',views.forgotPassword, name='forgotPassword'),
     path('update_password',views.updatePassword, name='updatePassword'),
+    path('end_hourly_based_trip',views.endHourlyBasedTrip, name='endHourlyBasedTrip'),
+    path('update_hourly_based_trip/<int:id>',views.updateHourlyBasedTrip, name='updateHourlyBasedTrip'),
 ]

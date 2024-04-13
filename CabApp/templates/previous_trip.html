@@ -466,6 +466,62 @@
 .navbar-mobile .dropdown > .dropdown-active {
   display: block;
 }
+
+
+  /* slider styles */
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    margin: 2px;
+  }
+
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s cubic-bezier(0,1,0.5,1);
+    border-radius: 4px;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: #6c757d;
+    -webkit-transition: .4s;
+    transition: .4s cubic-bezier(0,1,0.5,1);
+    border-radius: 3px;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  /* input:focus + .slider.blue {
+    box-shadow: 0 0 4px #424bf5;
+  } */
+
+  /* input:checked + .slider.blue {
+    background-color: #424bf5;
+  } */
   </style>
 
   <!-- ======= Header ======= -->
@@ -505,8 +561,23 @@
                         <div class="last_ride d-flex justify-content-end">
                           <button class="btn btn-secondary btn-sm" onclick="window.location.href=`{% url 'tripSheetPage' %}`">New Trip</button>
                         </div>
-                        <form action="{% url 'updateRide' trip.id %}" method="post" class="requires-validation">
-                          {% csrf_token %}
+                        <div class="d-flex justify-content-start">
+                          <div class="toggle_section d-flex align-items-center" id="formToggleBtn">
+                            <span class="text-white pe-1">KM Based</span>
+                            <label class="switch">
+                              {% if trip.trip_charge_type == 'Hour' %}
+                              <input type="checkbox" id="toggleFormBtn" name="trip_charge_type" onchange="toggleTripSheetForm()" checked>
+                              {% else %}
+                              <input type="checkbox" id="toggleFormBtn" name="trip_charge_type" onchange="toggleTripSheetForm()">
+                              {% endif %}
+                              <span class="slider blue"></span>
+                            </label>
+                            <span class="text-white ps-1">Hourly Based</span>
+                          </div>
+                        </div>
+                        <div id="km_based" style="display: block;">
+                          <form action="{% url 'updateRide' trip.id %}" method="post" class="requires-validation">
+                            {% csrf_token %}
                             <div class="row gx-2">
                               <div class="col-sm-6">
                                 <input class="form-control" type="text" name="trip_number" value="{{trip.trip_no}}" placeholder="{{trip.trip_no}}" readonly>
@@ -517,48 +588,281 @@
                                 <label for="">Date*</label>
                               </div>
                             </div>
-                              
+                                
                             <div class="col-md-12">
                               <input class="form-control" type="text" name="vehicle_name" value="{{trip.vehicle_name}}" placeholder="Vehicle Name" required>
                               <label for="">Vehicle Name*</label>
                             </div>
+                            <div class="col-md-12">
+                              <input class="form-control text-uppercase" type="text" value="{{trip.vehicle_no}}" name="vehicle_number" onblur="checkVehicleNum(this)" placeholder="Vehicle No." required>
+                              <div class="text-danger" id="vehicleNumErr"></div>
+                              <label for="">Vehicle No.*</label>
+                            </div>
+                            
+                            <div class="col-md-12">
+                              <input class="form-control" type="number" name="fixed_charge" value="{{trip.fixed_charge}}" id="fixedCharge" min="0" step="any" placeholder="Fixed charge upto 100 KM" onchange="calcTotalExpense()" required>
+                              <label for="">Fixed Charge*</label>
+                            </div>
+
+                            <div class="col-md-12">
+                              <input class="form-control" type="number" name="max_kilometer" id="maxKilometer" value="{{trip.max_kilometer}}" min="1" step="any" placeholder="Max. KM Range with Fixed charge" onchange="calcTotalExpense()" required>
+                              <label for="">Max. Kilometer*</label>
+                            </div>
+
+                            <div class="col-md-12">
+                              <input class="form-control" type="number" name="extra_charge" value="{{trip.extra_charge}}" id="extraCharge" min="0" step="any" placeholder="Extra charge per Kilo Meter" onchange="calcTotalExpense()" required>
+                              <label for="">Extra Running Charge*</label>
+                            </div>
+
+                            <div class="col-md-12">
+                              <input class="form-control" type="text" name="driver_name" value="{{trip.driver_name}}" placeholder="Diver Name" required>
+                              <label for="">Driver Name*</label>
+                            </div>
+    
+                            <div class="col-md-12">
+                              <input class="form-control" type="text" name="guest_name" value="{{trip.guest}}" placeholder="Guest Name" required>
+                              <label for="">Guest Name*</label>
+                            </div>
+                            <div class="row gx-2">
+                              <div class="col-12 col-sm-6">
+                                <input class="form-control" type="number" name="starting_kilometer" value="{{trip.starting_km}}" id="startKilometer" placeholder="0.0" required>
+                                <label for="">Starting Kilometer</label>
+                              </div>
+                              <div class="col-12 col-sm-6">
+                                <input class="form-control" type="number" name="end_kilometer" value="{{trip.ending_km}}" id="endKilometer" placeholder="0.0">
+                                <label for="">Ending Kilometer</label>
+                              </div>
+                            </div>
+        
+                            <div class="row gx-2">
+                              <div class="col-sm-6">
+                                <input class="form-control" type="text" name="starting_place" value="{{trip.starting_place}}" placeholder="Starting Place" required>
+                                <label for="">Starting Place*</label>
+                              </div>
+                              <div class="col-sm-6">
+                                <input class="form-control" type="time" value="{{trip.starting_time|time:'H:i'}}" name="starting_time" required>
+                                <label for="">Time</label>
+                              </div>
+                            </div>
+    
+                            <div class="row gx-2">
+                              <div class="col-sm-6">
+                                <input class="form-control" type="text" value="{{trip.destination}}" name="destination" placeholder="Destination">
+                                <label for="">Destination</label>
+                              </div>
+                              <div class="col-sm-6">
+                                <input class="form-control" type="time" value="{{trip.time_of_arrival|time:'H:i'}}" name="time_of_arrival">
+                                <label for="">Time of Arrival</label>
+                              </div>
+                            </div>
+                            <div class="col-12">
+                              <input class="form-control" type="date" id="endDate" onchange="countTripDays()" name="trip_end_date" value="{{trip.trip_end_date|date:'Y-m-d'}}">
+                              <label for="">Trip End Date</label>
+                            </div>
+                            <div class="col-12">
+                              <input class="form-control" id="tripDays" type="number" name="trip_days" value="{{trip.trip_days}}" min="1" step="1" onchange="calcTotalExpense()">
+                              <label for="">Trip Days</label>
+                            </div>
+                            <div class="col-12">
+                              <input class="form-control" type="number" name="kilometer" value="{{trip.kilometers}}" id="totalKilometer" placeholder="Kilometers" readonly>
+                              <label for="">Kilometers</label>
+                            </div>
+                            <div class="col-12">
+                              <input class="form-control permit" id="permitCharge" type="number" name="permit" value="{{trip.permit}}" placeholder="Permit" onchange="calcTotalExpense()">
+                              <label for="">Permit</label>
+                            </div>
+                            {% for i in expenses %}
+                            {% if i.exp_type == 'Toll' %}
+                            <div class="col-12">
+                              <input type="hidden" name="toll_id[]" value="{{i.id}}">
+                              <input class="form-control toll" type="number" name="toll[]" value="{{i.exp_amount}}" placeholder="Toll" onchange="calcTotalExpense()">
+                              <label for="">Toll</label>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            <div class="add_toll" id="addAnotherToll"></div>
+                            <div class="mt-1">
+                              <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewToll()"><i class="fa fa-plus"></i> Toll</span>
+                            </div>
+                            {% for i in expenses %}
+                            {% if i.exp_type == 'Parking' %}
+                            <div class="col-12">
+                              <input type="hidden" name="parking_id[]" value="{{i.id}}">
+                              <input class="form-control parking" type="number" name="parking[]" value="{{i.exp_amount}}" placeholder="Parking" onchange="calcTotalExpense()">
+                              <label for="">Parking</label>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            <div class="add_parking" id="addAnotherParking"></div>
+                            <div class="mt-1">
+                              <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewParking()"><i class="fa fa-plus"></i> Parking</span>
+                            </div>
+                            {% for i in expenses %}
+                            {% if i.exp_type == 'Entrance' %}
+                            <div class="col-12">
+                              <input type="hidden" name="entrance_id[]" value="{{i.id}}">
+                              <input class="form-control entrance" type="number" name="entrance[]" value="{{i.exp_amount}}" placeholder="Entrance" onchange="calcTotalExpense()">
+                              <label for="">Entrance</label>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+
+                            {% for i in expenses %}
+                            {% if i.exp_type == 'Guide Fee' %}
+                            <div class="col-12">
+                              <input type="hidden" name="guide_id[]" value="{{i.id}}">
+                              <hr class="text-white">
+                              <input class="form-control" type="text" name="guide_place[]" value="{{i.exp_desc}}" placeholder="Guide Place..">
+                              <input class="form-control guide_fee" type="number" name="guide_fee[]" value="{{i.exp_amount}}" placeholder="Guide Fee" onchange="calcTotalExpense()">
+                              <label for="">Guide Fee</label>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            <div class="add_guide_fee" id="addAnotherGuideFee"></div>
+                            <div class="mt-1">
+                              <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewGuideFee()"><i class="fa fa-plus"></i> Guide Fee</span>
+                            </div>
+                            {% for i in expenses %}
+                            {% if i.exp_type == 'Other Charge' %}
+                            <div class="col-12">
+                              <input type="hidden" name="oc_id[]" value="{{i.id}}">
+                              <hr class="text-white">
+                              <input class="form-control" type="text" name="other_charge[]" value="{{i.exp_desc}}" placeholder="Other charge description..">
+                              <input class="form-control other_charge" type="number" name="other_charge_amount[]" value="{{i.exp_amount}}" placeholder="Other charge amount." onchange="calcTotalExpense()">
+                              <label for="">Other Charge</label>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            <div class="add_other_charge" id="addAnotherOtherCharge"></div>
+                            <div class="mt-1">
+                              <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewOtherCharge()"><i class="fa fa-plus"></i> Other Charge</span>
+                            </div>
+  
+                            <div class="new_expense mt-1" id="newExpense" style="display: none;">
+                              <div class="col-12 d-flex align-items-center">
+                                <select name="" class="form-control mt-0" id="newExpenseCategory">
+                                  <option value="">Choose an expense</option>
+                                  <option value="Parking">Parking</option>
+                                  <option value="Toll">Toll</option>
+                                  <option value="Guide Fee">Guide Fee</option>
+                                  <option value="Other Charge">Other Charge</option>
+                                </select>
+                                <button type="button" class="btn btn-outline-secondary ms-1" onclick="addNewExpense()">ADD</button>
+                              </div>
+                            </div>
+                            <hr class="text-white">
+                            <div class="col-12">
+                              <input type="hidden" id="tripCharge" name="trip_charge" value={{trip.trip_charge}} >
+                              <input type="hidden" id="tripFixedCharge" name="trip_fixed_charge" value={{trip.trip_fixed_charge}} >
+                              <input type="hidden" id="tripExtraCharge" name="trip_extra_charge" value={{trip.trip_extra_charge}} >
+                              <input class="form-control" type="number" id="totalTripExpense" name="total" value="{{trip.total_trip_expense}}" placeholder="Total Trip Expense" readonly>
+                              <label for=""><b>Total Charge</b></label>
+                            </div>
+  
+                            <div class="col-12">
+                              <input class="form-control" type="number" name="advance" value="{{trip.advance}}" id="advanceAmount" placeholder="Advance" onchange="rewriteBalance()">
+                              <label for="">Advance</label>
+                            </div>
+                            <div class="col-12">
+                              <input class="form-control" type="number" name="balance" value="{{trip.balance}}" id="balanceAmount" placeholder="Balance" readonly>
+                              <label for="">Balance</label>
+                            </div>
+                            <div class="form-button d-flex justify-content-center mt-3">
+                                <!-- <button id="save" type="button" class="btn btn-primary">Save</button> -->
+                                <button id="endTrip" type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                          </form>
+                        </div>
+
+                        <div id="hr_based" style="display: none;">
+                          <form action="{% url 'updateHourlyBasedTrip' trip.id %}" method="post" class="requires-validation" id="hr_based_form">
+                            {% csrf_token %}
+                              <div class="row gx-2">
+                                <div class="col-sm-6">
+                                  <input class="form-control" type="text" name="trip_number" value="{{trip.trip_no}}" placeholder="{{tripNo}}" readonly>
+                                  <label for="">Trip No.*</label>
+                                </div>
+                                <div class="col-sm-6">
+                                  <input class="form-control" type="date" name="trip_date" id="hr_startDate" onchange="hr_countTripDays()" value="{{trip.trip_date|date:'Y-m-d'}}" required>
+                                  <label for="">Date*</label>
+                                </div>
+                              </div>
+                                
                               <div class="col-md-12">
-                                <input class="form-control text-uppercase" type="text" value="{{trip.vehicle_no}}" name="vehicle_number" onblur="checkVehicleNum(this)" placeholder="Vehicle No." required>
-                                <div class="text-danger" id="vehicleNumErr"></div>
+                                <input class="form-control" type="text" name="vehicle_name" value="{{trip.vehicle_name}}" placeholder="Vehicle Name" required>
+                                <label for="">Vehicle Name*</label>
+                              </div>
+                              <div class="col-md-12">
+                                <input class="form-control text-uppercase" type="text" name="vehicle_number" value="{{trip.vehicle_no}}" onblur="hr_checkVehicleNum(this)" placeholder="Vehicle No." required>
+                                <div class="text-danger" id="hr_vehicleNumErr"></div>
                                 <label for="">Vehicle No.*</label>
                               </div>
                               
                               <div class="col-md-12">
-                                <input class="form-control" type="number" name="fixed_charge" value="{{trip.fixed_charge}}" id="fixedCharge" min="0" step="any" placeholder="Fixed charge upto 100 KM" onchange="calcTotalExpense()" required>
+                                <input class="form-control" type="number" name="fixed_hour_charge" id="fixedHourCharge" value="{{trip.fixed_hour_charge}}" min="0" step="any" placeholder="Fixed charge" onchange="calcTotalExpense()" required>
                                 <label for="">Fixed Charge*</label>
                               </div>
 
                               <div class="col-md-12">
-                                <input class="form-control" type="number" name="max_kilometer" id="maxKilometer" value="{{trip.max_kilometer}}" min="1" step="any" placeholder="Max. KM Range with Fixed charge" onchange="calcTotalExpense()" required>
-                                <label for="">Max. Kilometer*</label>
+                                <input class="form-control" type="number" name="max_hour" id="maxHours" min="1" step="any" value="{{trip.max_hour}}" placeholder="Max. Hours with Fixed charge" onchange="calcTotalExpense()" required>
+                                <label for="">Max. Hours*</label>
                               </div>
 
                               <div class="col-md-12">
-                                <input class="form-control" type="number" name="extra_charge" value="{{trip.extra_charge}}" id="extraCharge" min="0" step="any" placeholder="Extra charge per Kilo Meter" onchange="calcTotalExpense()" required>
-                                <label for="">Extra Running Charge*</label>
+                                <input class="form-control" type="number" name="extra_hour_charge" id="extraHourCharge" min="0" step="any" value="{{trip.extra_hour_charge}}" placeholder="Extra charge per Hour" onchange="calcTotalExpense()" required>
+                                <label for="">Extra Hour Charge*</label>
                               </div>
 
+                              <hr class="text-white">
+                              <center><h6 class="text-white">Ride Hours</h6></center>
+                              <div class="rideHours" id="rideHours">
+                                {% for i in rideHours %}
+                                <div id="rideDate{{forloop.counter}}" class="ride_date">
+                                  <hr class="text-white">
+                                  <input type="hidden" name="ride_ids[]" value="{{i.id}}">
+                                  <div class="col-md-12">
+                                    <input class="form-control date" id="date{{forloop.counter}}" type="date" name="ride_dates[]" value="{{i.date|date:'Y-m-d'}}" required>
+                                    <label for="">Date*</label>
+                                  </div>
+
+                                  <div class="col-12">
+                                    <input class="form-control startTime" onchange="getHours('{{forloop.counter}}')" type="time" value="{{i.start_time|time:'H:i'}}" name="ride_start_time[]" id="startTime{{forloop.counter}}" required>
+                                    <label for="">Start</label>
+                                  </div>
+                                  <div class="col-12">
+                                    <input class="form-control endTime" onchange="getHours('{{forloop.counter}}')" type="time" value="{{i.end_time|time:'H:i'}}" name="ride_end_time[]" id="endTime{{forloop.counter}}" required>
+                                    <label for="">End</label>
+                                  </div>
+                                  <div class="col-12">
+                                    <input class="form-control hours" type="number" name="ride_hours[]" id="hours{{forloop.counter}}" value="{{i.hours}}" readonly>
+                                    <label for="">Hours</label>
+                                  </div>
+                                </div>
+                                {% endfor%}
+                              </div>
+
+                              <div class="mt-1">
+                                <span class="text-white" style="cursor: pointer;" id="addHour" onclick="addNewHour()"><i class="fa fa-plus"></i> Hour</span>
+                              </div>
+                              
+                              <hr class="text-white">
                               <div class="col-md-12">
                                 <input class="form-control" type="text" name="driver_name" value="{{trip.driver_name}}" placeholder="Diver Name" required>
                                 <label for="">Driver Name*</label>
                               </div>
       
                               <div class="col-md-12">
-                                <input class="form-control" type="text" name="guest_name" value="{{trip.guest}}" placeholder="Guest Name" required>
+                                <input class="form-control" type="text" value="{{trip.guest}}" name="guest_name" placeholder="Guest Name" required>
                                 <label for="">Guest Name*</label>
                               </div>
+
                               <div class="row gx-2">
                                 <div class="col-12 col-sm-6">
-                                  <input class="form-control" type="number" name="starting_kilometer" value="{{trip.starting_km}}" id="startKilometer" placeholder="0.0" required>
+                                  <input class="form-control" type="number" name="starting_kilometer" value="{{trip.starting_km}}" id="hr_startKilometer" placeholder="0.0" required>
                                   <label for="">Starting Kilometer</label>
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                  <input class="form-control" type="number" name="end_kilometer" value="{{trip.ending_km}}" id="endKilometer" placeholder="0.0">
+                                  <input class="form-control" type="number" name="end_kilometer" id="hr_endKilometer" value="{{trip.ending_km}}" placeholder="0.0">
                                   <label for="">Ending Kilometer</label>
                                 </div>
                               </div>
@@ -585,52 +889,52 @@
                                 </div>
                               </div>
                               <div class="col-12">
-                                <input class="form-control" type="date" id="endDate" onchange="countTripDays()" name="trip_end_date" value="{{trip.trip_end_date|date:'Y-m-d'}}">
+                                <input class="form-control" type="date" name="trip_end_date" onchange="hr_countTripDays()" id="hr_endDate" value="{{trip.trip_end_date|date:'Y-m-d'}}">
                                 <label for="">Trip End Date</label>
                               </div>
                               <div class="col-12">
-                                <input class="form-control" id="tripDays" type="number" name="trip_days" value="{{trip.trip_days}}" min="1" step="1" onchange="calcTotalExpense()">
+                                <input class="form-control" id="hr_tripDays" value="{{trip.trip_days}}" type="number" name="trip_days" min="1" step="1" onchange="calcTotalHourExpense()">
                                 <label for="">Trip Days</label>
                               </div>
                               <div class="col-12">
-                                <input class="form-control" type="number" name="kilometer" value="{{trip.kilometers}}" id="totalKilometer" placeholder="Kilometers" readonly>
+                                <input class="form-control" type="number" name="kilometer" value="{{trip.kilometers}}" id="hr_totalKilometer" placeholder="Kilometers" readonly>
                                 <label for="">Kilometers</label>
                               </div>
                               <div class="col-12">
-                                <input class="form-control permit" id="permitCharge" type="number" name="permit" value="{{trip.permit}}" placeholder="Permit" onchange="calcTotalExpense()">
+                                <input class="form-control permit" id="hr_permitCharge" type="number" value="{{trip.permit}}" name="permit" placeholder="Permit" onchange="calcTotalHourExpense()">
                                 <label for="">Permit</label>
                               </div>
                               {% for i in expenses %}
                               {% if i.exp_type == 'Toll' %}
                               <div class="col-12">
                                 <input type="hidden" name="toll_id[]" value="{{i.id}}">
-                                <input class="form-control toll" type="number" name="toll[]" value="{{i.exp_amount}}" placeholder="Toll" onchange="calcTotalExpense()">
+                                <input class="form-control toll" type="number" name="toll[]" value="{{i.exp_amount}}" placeholder="Toll" onchange="calcTotalHourExpense()">
                                 <label for="">Toll</label>
                               </div>
                               {% endif %}
                               {% endfor %}
-                              <div class="add_toll" id="addAnotherToll"></div>
+                              <div class="add_toll" id="hr_addAnotherToll"></div>
                               <div class="mt-1">
-                                <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewToll()"><i class="fa fa-plus"></i> Toll</span>
+                                <span class="text-white" style="cursor: pointer;" id="hr_addExpense" onclick="hr_addNewToll()"><i class="fa fa-plus"></i> Toll</span>
                               </div>
                               {% for i in expenses %}
                               {% if i.exp_type == 'Parking' %}
                               <div class="col-12">
                                 <input type="hidden" name="parking_id[]" value="{{i.id}}">
-                                <input class="form-control parking" type="number" name="parking[]" value="{{i.exp_amount}}" placeholder="Parking" onchange="calcTotalExpense()">
+                                <input class="form-control parking" type="number" name="parking[]" value="{{i.exp_amount}}" placeholder="Parking" onchange="calcTotalHourExpense()">
                                 <label for="">Parking</label>
                               </div>
                               {% endif %}
                               {% endfor %}
-                              <div class="add_parking" id="addAnotherParking"></div>
+                              <div class="add_parking" id="hr_addAnotherParking"></div>
                               <div class="mt-1">
-                                <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewParking()"><i class="fa fa-plus"></i> Parking</span>
+                                <span class="text-white" style="cursor: pointer;" id="hr_addExpense" onclick="hr_addNewParking()"><i class="fa fa-plus"></i> Parking</span>
                               </div>
                               {% for i in expenses %}
                               {% if i.exp_type == 'Entrance' %}
                               <div class="col-12">
                                 <input type="hidden" name="entrance_id[]" value="{{i.id}}">
-                                <input class="form-control entrance" type="number" name="entrance[]" value="{{i.exp_amount}}" placeholder="Entrance" onchange="calcTotalExpense()">
+                                <input class="form-control entrance" type="number" name="entrance[]" value="{{i.exp_amount}}" placeholder="Entrance" onchange="calcTotalHourExpense()">
                                 <label for="">Entrance</label>
                               </div>
                               {% endif %}
@@ -642,15 +946,16 @@
                                 <input type="hidden" name="guide_id[]" value="{{i.id}}">
                                 <hr class="text-white">
                                 <input class="form-control" type="text" name="guide_place[]" value="{{i.exp_desc}}" placeholder="Guide Place..">
-                                <input class="form-control guide_fee" type="number" name="guide_fee[]" value="{{i.exp_amount}}" placeholder="Guide Fee" onchange="calcTotalExpense()">
+                                <input class="form-control guide_fee" type="number" name="guide_fee[]" value="{{i.exp_amount}}" placeholder="Guide Fee" onchange="calcTotalHourExpense()">
                                 <label for="">Guide Fee</label>
                               </div>
                               {% endif %}
                               {% endfor %}
-                              <div class="add_guide_fee" id="addAnotherGuideFee"></div>
+                              <div class="add_guide_fee" id="hr_addAnotherGuideFee"></div>
                               <div class="mt-1">
-                                <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewGuideFee()"><i class="fa fa-plus"></i> Guide Fee</span>
+                                <span class="text-white" style="cursor: pointer;" id="hr_addExpense" onclick="hr_addNewGuideFee()"><i class="fa fa-plus"></i> Guide Fee</span>
                               </div>
+
                               {% for i in expenses %}
                               {% if i.exp_type == 'Other Charge' %}
                               <div class="col-12">
@@ -662,67 +967,36 @@
                               </div>
                               {% endif %}
                               {% endfor %}
-                              <div class="add_other_charge" id="addAnotherOtherCharge"></div>
+                              <div class="add_other_charge" id="hr_addAnotherOtherCharge"></div>
                               <div class="mt-1">
-                                <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewOtherCharge()"><i class="fa fa-plus"></i> Other Charge</span>
+                                <span class="text-white" style="cursor: pointer;" id="hr_addExpense" onclick="hr_addNewOtherCharge()"><i class="fa fa-plus"></i> Other Charge</span>
                               </div>
 
-                              <!-- <div class="another_exp" id="anotherExpenses"></div>
-                              <div class="add_exp mt-3">
-                                <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="toggleNewExpense('add')"><i class="fa fa-plus"></i> Another Expense</span>
-                                <span class="text-white" style="cursor: pointer; display: none;" id="removeExpense" onclick="toggleNewExpense('remove')"><i class="fa fa-trash"></i> Remove</span>
-                              </div> -->
-
-                              <div class="new_expense mt-1" id="newExpense" style="display: none;">
-                                <div class="col-12 d-flex align-items-center">
-                                  <select name="" class="form-control mt-0" id="newExpenseCategory">
-                                    <option value="">Choose an expense</option>
-                                    <option value="Parking">Parking</option>
-                                    <option value="Toll">Toll</option>
-                                    <option value="Guide Fee">Guide Fee</option>
-                                    <option value="Other Charge">Other Charge</option>
-                                  </select>
-                                  <button type="button" class="btn btn-outline-secondary ms-1" onclick="addNewExpense()">ADD</button>
-                                </div>
-                              </div>
                               <hr class="text-white">
                               <div class="col-12">
-                                <input type="hidden" id="tripCharge" name="trip_charge" value={{trip.trip_charge}} >
-                                <input type="hidden" id="tripFixedCharge" name="trip_fixed_charge" value={{trip.trip_fixed_charge}} >
-                                <input type="hidden" id="tripExtraCharge" name="trip_extra_charge" value={{trip.trip_extra_charge}} >
-                                <input class="form-control" type="number" id="totalTripExpense" name="total" value="{{trip.total_trip_expense}}" placeholder="Total Trip Expense" readonly>
+                                <input type="hidden" id="hr_tripCharge" name="trip_charge" value={{trip.trip_charge}} >
+                                <input type="hidden" id="hr_tripFixedCharge" name="trip_fixed_charge" value={{trip.trip_fixed_charge}} >
+                                <input type="hidden" id="hr_tripExtraCharge" name="trip_extra_charge" value={{trip.trip_extra_charge}} >
+                                <input class="form-control" type="number" id="hr_totalTripExpense" name="total" value="{{trip.total_trip_expense}}" placeholder="Total Trip Expense" readonly>
                                 <label for=""><b>Total Charge</b></label>
                               </div>
 
                               <div class="col-12">
-                                <input class="form-control" type="number" name="advance" value="{{trip.advance}}" id="advanceAmount" placeholder="Advance" onchange="rewriteBalance()">
+                                <input class="form-control" type="number" name="advance" value="{{trip.advance}}" id="hr_advanceAmount" placeholder="Advance" onchange="hr_rewriteBalance()">
                                 <label for="">Advance</label>
                               </div>
-                              <!-- <div class="col-12">
-                                <input class="form-control" type="number" name="debit" value="0.0" placeholder="Debit" required>
-                                <label for="">Debit</label>
-                              </div> -->
+                             
                               <div class="col-12">
-                                <input class="form-control" type="number" name="balance" value="{{trip.balance}}" id="balanceAmount" placeholder="Balance" readonly>
+                                <input class="form-control" type="number" name="balance" value="{{trip.balance}}" id="hr_balanceAmount" placeholder="Balance" readonly>
                                 <label for="">Balance</label>
                               </div>
       
-      
-                              
-      
-      
-                              <!-- <div class="form-check my-2 mt-4">
-                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                                <label class="form-check-label">I confirm that all data are correct</label>
-                                <div class="invalid-feedback">Please confirm that the entered data are all correct!</div>
-                              </div> -->
-                    
-      
                               <div class="form-button d-flex justify-content-center mt-3">
                                   <!-- <button id="save" type="button" class="btn btn-primary">Save</button> -->
-                                  <button id="endTrip" type="submit" class="btn btn-primary">Update</button>
+                                  <button id="hr_endTrip" type="submit" class="btn btn-primary">Update</button>
                               </div>
                           </form>
+                        </div>
                       </div>
                   </div>
               </div>
@@ -767,6 +1041,17 @@
       $(this).hasClass('bi-list') ? $(this).removeClass('bi-list') : $(this).addClass('bi-list');
       $(this).hasClass('bi-x') ? $(this).removeClass('bi-x') : $(this).addClass('bi-x');
     })
+  })
+
+  $(document).ready(function(){
+    var rideType = `{{trip.trip_charge_type}}`
+    if(rideType == 'Hour'){
+      $('#hr_based').show()
+      $('#km_based').hide()
+    }else{
+      $('#hr_based').hide()
+      $('#km_based').show()
+    }
   })
 
   function checkVehicleNum(element) {
@@ -1075,7 +1360,318 @@
   });
 
 
+// Hourly based calculations
 
+function addNewHour(){
+  var section = $('#rideHours');
+  var dy = $('#rideHours').children().length
+  dy++
+
+  var element =
+    `
+    <div id="rideDate${dy}" class="ride_date">
+      <input type="hidden" name="ride_ids[]" value=0 >
+      <hr class="text-white">
+      <div class="col-md-12">
+        <input class="form-control date" id="date${dy}" type="date" name="ride_dates[]" value="{% now 'Y-m-d' %}" required>
+        <label for="">Date*</label><span class='text-danger float-end' style='cursor: pointer;' onclick="removeNewHour('rideDate${dy}')">Remove</span>
+      </div>
+
+      <div class="col-12">
+        <input class="form-control startTime" onchange="getHours('${dy}')" type="time" name="ride_start_time[]" id="startTime${dy}" required>
+        <label for="">Start</label>
+      </div>
+      <div class="col-12">
+        <input class="form-control endTime" onchange="getHours('${dy}')" type="time" name="ride_end_time[]" id="endTime${dy}" required>
+        <label for="">End</label>
+      </div>
+      <div class="col-12">
+        <input class="form-control hours" type="number" name="ride_hours[]" id="hours${dy}" readonly>
+        <label for="">Hours</label>
+      </div>
+    </div>
+    `
+    section.append(element)
+}
+
+function removeNewHour(element){
+  $('#'+element).remove();
+  calcTotalHourExpense();
+}
+
+function hr_rewriteBalance(){
+  var adv = parseFloat($('#hr_advanceAmount').val() || 0)
+  var tot = parseFloat($('#hr_totalTripExpense').val() || 0)
+
+  $('#hr_balanceAmount').val(tot - adv)
+
+}
+
+
+  function calcHoursTripCharge(){
+    var totTripCharge = 0
+    var tripFxCharge = 0
+    var totHr = 0
+    var extraHr = 0
+    var extraCharge = 0
+    var tripDays = parseInt($('#hr_tripDays').val()||1)
+    var fxCharge = parseFloat($('#fixedHourCharge').val() || 0)
+    var exCharge = parseFloat($('#extraHourCharge').val() || 0)
+    var maxHr = parseFloat($('#maxHours').val() || 0)
+
+    var dates = $('#rideHours').children()
+    // if(tripDays != dates.length){
+    //   alert('Trip Days and Daily Ride Hours entries are not equal.!')
+    //   return 0
+    // }
+    $.each(dates, function(){
+      var startHr = $(this).find('.startTime').val();
+      var endHr = $(this).find('.endTime').val();
+      var totHr = getTimeDifferenceInHours(startHr, endHr)
+
+      if(totHr > 0 && fxCharge > 0 && maxHr > 0){
+        tripFxCharge += fxCharge
+
+        extraHr = totHr - maxHr
+        if(extraHr > 0){
+          extraCharge += extraHr * exCharge
+        }
+
+      }
+
+    
+    })
+    totTripCharge = tripFxCharge + extraCharge
+    console.log(tripFxCharge, extraCharge, totTripCharge)
+    $('#hr_tripFixedCharge').val(tripFxCharge)
+    $('#hr_tripExtraCharge').val(extraCharge)
+    $('#hr_tripCharge').val(parseFloat(totTripCharge))
+    return totTripCharge
+
+  }
+
+  function calcTotalHourExpense(){
+    var tripCharge = calcHoursTripCharge()
+    var permit = 0
+    var totToll = 0
+    var totParking = 0
+    var totEntrance = 0
+    var totGuideFee = 0
+    var totOtherCharge = 0
+
+    permit = parseFloat($('#hr_permitCharge').val() || 0);
+    
+    $('#hr_based_form input.toll').each(function () {
+      totToll += parseFloat($(this).val() || 0);
+    });
+
+    $('#hr_based_form input.parking').each(function () {
+      totParking += parseFloat($(this).val() || 0);
+    });
+
+    $('#hr_based_form input.entrance').each(function () {
+      totEntrance += parseFloat($(this).val() || 0);
+    });
+
+    $('#hr_based_form input.guide_fee').each(function () {
+      totGuideFee += parseFloat($(this).val() || 0);
+    });
+
+    $('#hr_based_form input.other_charge').each(function () {
+      totOtherCharge += parseFloat($(this).val() || 0);
+    });
+    
+    var total = permit + parseFloat(tripCharge) + parseFloat(totToll) + parseFloat(totParking) + parseFloat(totEntrance) + parseFloat(totGuideFee) + parseFloat(totOtherCharge)
+    console.log(tripCharge, total)
+    $('#hr_totalTripExpense').val(total)
+    hr_rewriteBalance();
+
+  }
+
+  $('#hr_endKilometer').change(function(){
+    var startKm = parseFloat($('#hr_startKilometer').val() || 0)
+    var endKm = parseFloat($(this).val() || 0)
+    if(endKm != ""){
+      if(endKm < startKm){
+        alert('Ending kilometer should be greater than starting kilometer.!')
+        $(this).val("")
+      }
+    }
+    hr_rewriteKM();
+    calcTotalHourExpense();
+  })
+  $('#hr_startKilometer').change(function(){
+    var startKm = parseFloat($(this).val() || 0)
+    var endKm = parseFloat($('#hr_endKilometer').val() || 0)
+    if(startKm != "" && endKm !=""){
+      if(startKm > endKm){
+        alert('Starting kilometer should be less than End kilometer.!')
+        $(this).val("")
+      }
+    }
+    hr_rewriteKM();
+    calcTotalHourExpense();
+  })
+
+  function hr_rewriteKM(){
+    var totKm = 0
+    if($('#hr_endKilometer').val() != ""){
+      totKm = parseFloat($('#hr_endKilometer').val() || 0) - parseFloat($('#hr_startKilometer').val() || 0)
+      if (!(totKm < 0)) {
+        $('#hr_totalKilometer').val(totKm);
+      }
+    }
+
+  }
+
+  $(document).ready(function(){
+    var strt = $('#hr_startDate').val();
+    var end = $('#hr_endDate').val();
+    $('#hr_startDate').prop('max',end)
+    $('#hr_endDate').prop('min',strt)
+    var date1 = new Date($('#hr_startDate').val());
+    var date2 = new Date($('#hr_endDate').val());
+
+    var diff = date2 - date1
+
+    diffInDays = diff / (1000 * 60 * 60 * 24);
+    $('#hr_tripDays').val(diffInDays + 1)
+
+  });
+
+  function hr_countTripDays(){
+    var date1 = new Date($('#hr_startDate').val());
+    var date2 = new Date($('#hr_endDate').val());
+
+    var diff = date2 - date1
+
+    diffInDays = diff / (1000 * 60 * 60 * 24);
+    $('#hr_tripDays').val(diffInDays + 1)
+    calcTotalHourExpense();
+  }
+
+  $(document).ready(function(){
+      var date1 = "";
+      $('#hr_startDate').on('change',function(){
+          date1 = $(this).val()
+          $('#hr_endDate').prop('min',date1)
+      })
+  });
+  $(document).ready(function(){
+      var date2 = "";
+      $('#hr_endDate').on('change',function(){
+          date2 = $(this).val()
+          $('#hr_startDate').prop('max',date2)
+      })
+  });
+
+  function getTimeDifferenceInHours(startTime, endTime) {
+    var startParts = startTime.split(':');
+    var endParts = endTime.split(':');
+
+    var startDate = new Date(0, 0, 0, startParts[0], startParts[1]);
+    var endDate = new Date(0, 0, 0, endParts[0], endParts[1]);
+
+    var timeDifference = endDate - startDate;
+
+    // Convert milliseconds to hours
+    var hoursDifference = timeDifference / 1000 / 60 / 60;
+
+    return hoursDifference;
+  }
+
+  function getHours(id){
+    var strt = $('#startTime'+id).val()
+    var end = $('#endTime'+id).val()
+    if(strt != "" && end != ""){
+      var hrs = getTimeDifferenceInHours(strt, end)
+        $('#hours'+id).val(hrs.toFixed(2))
+    }
+
+  }
+
+  function toggleTripSheetForm(){
+    if($('#toggleFormBtn').prop('checked')){
+      $('#km_based').hide();
+      $('#hr_based').show();
+    }else{
+      $('#hr_based').hide();
+      $('#km_based').show();
+    }
+  }
+
+  function hr_checkVehicleNum(element) {
+    var v_number = element.value.toUpperCase();
+    var v_numregexp = /^[A-Z]{2}[ -][0-9]{1,2} [A-Z]{1,2} [0-9]{4}$/;
+    if (v_number.match(v_numregexp)) {
+        document.getElementById('hr_vehicleNumErr').innerHTML = '';
+    } else {
+        document.getElementById('hr_vehicleNumErr').innerHTML = 'Invalid format, Ex: "XX 1 X 1111", "XX 11 XX 1111"';
+    }
+  }
+
+  function hr_addNewToll(){
+    var section = $('#hr_addAnotherToll')
+    var element =
+      `
+      <div class="col-12">
+        <input class="form-control toll" type="number" name="toll[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <label for="">Toll</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+  }
+
+  function hr_addNewParking(){
+    var section = $('#hr_addAnotherParking')
+    var element =
+      `
+      <div class="col-12">
+        <input class="form-control parking" type="number" name="parking[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <label for="">Parking</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+  }
+
+  function hr_addNewGuideFee(){
+    var section = $('#hr_addAnotherGuideFee')
+    var element =
+      `
+      <div class="col-12">
+        <hr class="text-white">
+        <input class="form-control" type="text" name="guide_place[]" placeholder="Guide Place..">
+        <input class="form-control guide_fee" type="number" name="guide_fee[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <label for="">Guide Fee</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+  }
+
+  function hr_addNewOtherCharge(){
+    var section = $('#hr_addAnotherOtherCharge')
+    var element =
+      `
+      <div class="col-12">
+        <hr class="text-white">
+        <input class="form-control" type="text" name="other_charge[]" placeholder="Other charge description..">
+        <input class="form-control other_charge" type="number" name="other_charge_amount[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <label for="">Other Charge</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
+      </div>
+      `
+      section.append(element)
+  }
+
+  $('input.endTime').blur(function(){
+    calcTotalHourExpense();
+  });
+  $('input.startTime').blur(function(){
+    calcTotalHourExpense();
+  });
+
+  $('#hr_based_form input').on('change', function(){
+    calcTotalHourExpense();
+  })
 </script>
   
       {%if messages%} {%for message in messages%} {%if message.tags == "success"%}

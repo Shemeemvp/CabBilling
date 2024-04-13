@@ -1105,6 +1105,7 @@
                           </div>
                           <span><span>&#8377; </span>{{trip.trip_charge}}</span>
                       </div>
+                      {% if trip.trip_charge_type != 'Hour' %}
                       {% if trip.trip_charge != 0 %}
                       <div class="trip_split w-100 mb-2">
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
@@ -1116,6 +1117,20 @@
                           <span>&#8377; {{trip.trip_extra_charge}}</span>
                         </span>
                       </div>
+                      {% endif %}
+                      {% else %}
+                      {% if trip.trip_charge != 0 %}
+                      <div class="trip_split w-100 mb-2">
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>Fixed Charge(&#8377; {{trip.fixed_hour_charge}} per day upto {{trip.max_hour}}Hours)</span>
+                          <span>&#8377; {{trip.trip_fixed_charge}}</span>
+                        </span>
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>Extra Hour Charge(&#8377; {{trip.extra_hour_charge}} extra charge per Hour for <span class="extraHR">{{extraHr|default:'0'}}</span> Hrs )</span>
+                          <span>&#8377; {{trip.trip_extra_charge}}</span>
+                        </span>
+                      </div>
+                      {% endif %}
                       {% endif %}
                       <div class="subtot-item d-flex justify-content-between">
                         <span>Permit</span>
@@ -1328,6 +1343,7 @@
                           </div>
                           <span class="d-flex"><span>&#8377; </span>{{trip.trip_charge}}</span>
                       </div>
+                      {% if trip.trip_charge_type != 'Hour' %}
                       {% if trip.trip_charge != 0 %}
                       <div class="trip_split w-100 mb-2">
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
@@ -1339,6 +1355,20 @@
                           <span>&#8377; {{trip.trip_extra_charge}}</span>
                         </span>
                       </div>
+                      {% endif %}
+                      {% else %}
+                      {% if trip.trip_charge != 0 %}
+                      <div class="trip_split w-100 mb-2">
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>Fixed Charge(&#8377; {{trip.fixed_hour_charge}} per day upto {{trip.max_hour}}Hours)</span>
+                          <span>&#8377; {{trip.trip_fixed_charge}}</span>
+                        </span>
+                        <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
+                          <span>Extra Hour Charge(&#8377; {{trip.extra_hour_charge}} extra charge per Hour for <span class="extraHR">{{extraHr|default:'0'}}</span> Hrs )</span>
+                          <span>&#8377; {{trip.trip_extra_charge}}</span>
+                        </span>
+                      </div>
+                      {% endif %}
                       {% endif %}
                       <div class="subtot-item d-flex justify-content-between">
                         <span>Permit</span>
@@ -1453,6 +1483,7 @@
             $('.extraKM').text(0)
           }
         })
+
         $( "#navbar ul li" ).hover(
           function() {
               $(this).find("span").stop().animate({
