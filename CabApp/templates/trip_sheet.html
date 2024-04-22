@@ -826,7 +826,7 @@ input:checked + .slider:before {
                                     <label for="">End</label>
                                   </div>
                                   <div class="col-12">
-                                    <input class="form-control hours" type="number" name="ride_hours[]" id="hours1" readonly>
+                                    <input class="form-control hours" type="text" name="ride_hours[]" id="hours1" readonly>
                                     <label for="">Hours</label>
                                   </div>
                                 </div>
@@ -1336,7 +1336,7 @@ function addNewHour(){
         <label for="">End</label>
       </div>
       <div class="col-12">
-        <input class="form-control hours" type="number" name="ride_hours[]" id="hours${dy}" readonly>
+        <input class="form-control hours" type="text" name="ride_hours[]" id="hours${dy}" readonly>
         <label for="">Hours</label>
       </div>
     </div>
@@ -1377,7 +1377,16 @@ function hr_rewriteBalance(){
     $.each(dates, function(){
       var startHr = $(this).find('.startTime').val();
       var endHr = $(this).find('.endTime').val();
-      var totHr = getTimeDifferenceInHours(startHr, endHr)
+      var totHrs = getTimeDifferenceInHours(startHr, endHr)
+      console.log(totHrs)
+      var hr = totHrs.hours
+      var min = totHrs.minutes
+      if(min != 0){
+        var totHr = hr + (min / 60)
+      }else{
+        var totHr = hr
+      }
+      
 
       if(totHr > 0 && fxCharge > 0 && maxHr > 0){
         tripFxCharge += fxCharge
@@ -1515,27 +1524,60 @@ function hr_rewriteBalance(){
       })
   });
 
+  // function getTimeDifferenceInHours(startTime, endTime) {
+  //   var startParts = startTime.split(':');
+  //   var endParts = endTime.split(':');
+
+  //   var startDate = new Date(0, 0, 0, startParts[0], startParts[1]);
+  //   var endDate = new Date(0, 0, 0, endParts[0], endParts[1]);
+
+  //   var timeDifference = endDate - startDate;
+
+  //   // Convert milliseconds to hours
+  //   var hoursDifference = timeDifference / 1000 / 60 / 60;
+
+  //   // var hrs = parseInt(hoursDifference)
+  //   // var min = hoursDifference - hrs
+  //   // if(min != 0){
+  //   //   var mins = (min * 60)
+  //   // }else{
+  //   //   var mins = 0
+  //   // }
+
+  //   // console.log(hrs, min, mins)
+
+  //   // return hrs+':'+mins
+  //   return hoursDifference;
+  // }
+
   function getTimeDifferenceInHours(startTime, endTime) {
     var startParts = startTime.split(':');
     var endParts = endTime.split(':');
 
-    var startDate = new Date(0, 0, 0, startParts[0], startParts[1]);
-    var endDate = new Date(0, 0, 0, endParts[0], endParts[1]);
+    var startHours = parseInt(startParts[0]);
+    var startMinutes = parseInt(startParts[1]);
+    var endHours = parseInt(endParts[0]);
+    var endMinutes = parseInt(endParts[1]);
 
-    var timeDifference = endDate - startDate;
+    var totalStartMinutes = startHours * 60 + startMinutes;
+    var totalEndMinutes = endHours * 60 + endMinutes;
 
-    // Convert milliseconds to hours
-    var hoursDifference = timeDifference / 1000 / 60 / 60;
+    var timeDifferenceInMinutes = totalEndMinutes - totalStartMinutes;
 
-    return hoursDifference;
-  }
+    var hoursDifference = Math.floor(timeDifferenceInMinutes / 60);
+    var minutesDifference = timeDifferenceInMinutes % 60;
+
+    return { hours: hoursDifference, minutes: minutesDifference };
+}
+
 
   function getHours(id){
     var strt = $('#startTime'+id).val()
     var end = $('#endTime'+id).val()
     if(strt != "" && end != ""){
       var hrs = getTimeDifferenceInHours(strt, end)
-        $('#hours'+id).val(hrs.toFixed(2))
+        // $('#hours'+id).val(hrs.toFixed(2))
+        $('#hours'+id).val(hrs.hours+':'+hrs.minutes)
     }
 
   }

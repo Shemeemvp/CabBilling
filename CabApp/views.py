@@ -335,9 +335,14 @@ def viewTscData(request,id):
         extHr = 0
 
         for i in hrs:
-            hr = int(i.hours)
+            hr = int(i.hours.split(':')[0])
+            mint = float(i.hours.split(':')[1])
+            minute = mint/60
             if hr > i.trip.max_hour:
-                extHr += hr - (i.trip.max_hour)
+                extHr += (hr - i.trip.max_hour)
+            if mint > 0:
+                extHr += (mint / 60)
+            print('extrahrs', hr, mint, minute)
         context = {
             'trip': tripData,
             'guide_exp':guide_exp,
