@@ -668,7 +668,7 @@ input:checked + .slider:before {
                                 <label for="">Permit</label>
                               </div>
                               <div class="col-12">
-                                <input class="form-control toll" type="number" name="toll[]" placeholder="Toll" onchange="calcTotalExpense()">
+                                <input class="form-control km_toll" type="number" name="toll[]" placeholder="Toll" onchange="calcTotalExpense()">
                                 <label for="">Toll</label>
                               </div>
                               <div class="add_toll" id="addAnotherToll"></div>
@@ -676,7 +676,7 @@ input:checked + .slider:before {
                                 <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewToll()"><i class="fa fa-plus"></i> Toll</span>
                               </div>
                               <div class="col-12">
-                                <input class="form-control parking" type="number" name="parking[]" placeholder="Parking" onchange="calcTotalExpense()">
+                                <input class="form-control km_parking" type="number" name="parking[]" placeholder="Parking" onchange="calcTotalExpense()">
                                 <label for="">Parking</label>
                               </div>
                               <div class="add_parking" id="addAnotherParking"></div>
@@ -684,14 +684,14 @@ input:checked + .slider:before {
                                 <span class="text-white" style="cursor: pointer;" id="addExpense" onclick="addNewParking()"><i class="fa fa-plus"></i> Parking</span>
                               </div>
                               <div class="col-12">
-                                <input class="form-control entrance" type="number" name="entrance[]" placeholder="Entrance" onchange="calcTotalExpense()">
+                                <input class="form-control km_entrance" type="number" name="entrance[]" placeholder="Entrance" onchange="calcTotalExpense()">
                                 <label for="">Entrance</label>
                               </div>
 
                               <div class="col-12">
                                 <hr class="text-white">
                                 <input class="form-control" type="text" name="guide_place[]" placeholder="Guide Place..">
-                                <input class="form-control guide_fee" type="number" name="guide_fee[]" placeholder="Guide Fee" onchange="calcTotalExpense()">
+                                <input class="form-control km_guide_fee" type="number" name="guide_fee[]" placeholder="Guide Fee" onchange="calcTotalExpense()">
                                 <label for="">Guide Fee</label>
                                 <!-- <hr class="text-white"> -->
                               </div>
@@ -703,7 +703,7 @@ input:checked + .slider:before {
                               <div class="col-12">
                                 <hr class="text-white">
                                 <input class="form-control" type="text" name="other_charge[]" placeholder="Other charge description..">
-                                <input class="form-control other_charge" type="number" name="other_charge_amount[]" placeholder="Other charge amount." onchange="calcTotalExpense()">
+                                <input class="form-control km_other_charge" type="number" name="other_charge_amount[]" placeholder="Other charge amount." onchange="calcTotalExpense()">
                                 <label for="">Other Charge</label>
                                 <!-- <hr class="text-white"> -->
                               </div>
@@ -1099,7 +1099,7 @@ input:checked + .slider:before {
     var element =
       `
       <div class="col-12">
-        <input class="form-control toll" type="number" name="toll[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <input class="form-control km_toll" type="number" name="toll[]" placeholder="0.0" onchange="calcTotalExpense()">
         <label for="">Toll</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
       </div>
       `
@@ -1111,7 +1111,7 @@ input:checked + .slider:before {
     var element =
       `
       <div class="col-12">
-        <input class="form-control parking" type="number" name="parking[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <input class="form-control km_parking" type="number" name="parking[]" placeholder="0.0" onchange="calcTotalExpense()">
         <label for="">Parking</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
       </div>
       `
@@ -1125,7 +1125,7 @@ input:checked + .slider:before {
       <div class="col-12">
         <hr class="text-white">
         <input class="form-control" type="text" name="guide_place[]" placeholder="Guide Place..">
-        <input class="form-control guide_fee" type="number" name="guide_fee[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <input class="form-control km_guide_fee" type="number" name="guide_fee[]" placeholder="0.0" onchange="calcTotalExpense()">
         <label for="">Guide Fee</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
       </div>
       `
@@ -1139,7 +1139,7 @@ input:checked + .slider:before {
       <div class="col-12">
         <hr class="text-white">
         <input class="form-control" type="text" name="other_charge[]" placeholder="Other charge description..">
-        <input class="form-control other_charge" type="number" name="other_charge_amount[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <input class="form-control km_other_charge" type="number" name="other_charge_amount[]" placeholder="0.0" onchange="calcTotalExpense()">
         <label for="">Other Charge</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
       </div>
       `
@@ -1177,7 +1177,9 @@ input:checked + .slider:before {
       // if(extraKm != 0){
       //   totTripCharge += parseFloat(extraKm * exCharge)
       // }
-      console.log(tripFxCharge, extraCharge, totTripCharge)
+      console.log('==========TRIP CHARGE========')
+      console.log('TripDays->', tripDays)
+      console.log('fixed charge->',tripFxCharge, 'extracharge->',extraCharge, 'totaltrip->',totTripCharge)
       $('#tripFixedCharge').val(tripFxCharge)
       $('#tripExtraCharge').val(extraCharge)
       $('#tripCharge').val(parseFloat(totTripCharge))
@@ -1195,28 +1197,35 @@ input:checked + .slider:before {
     var totGuideFee = 0
     var totOtherCharge = 0
 
+    console.log('===========TOTAL EXPENSE=========')
+
     permit = parseFloat($('#permitCharge').val() || 0);
     
-    $('input.toll').each(function () {
+    $('input.km_toll').each(function () {
       totToll += parseFloat($(this).val() || 0);
     });
 
-    $('input.parking').each(function () {
+    $('input.km_parking').each(function () {
       totParking += parseFloat($(this).val() || 0);
     });
 
-    $('input.entrance').each(function () {
+    $('input.km_entrance').each(function () {
       totEntrance += parseFloat($(this).val() || 0);
     });
 
-    $('input.guide_fee').each(function () {
+    $('input.km_guide_fee').each(function () {
       totGuideFee += parseFloat($(this).val() || 0);
     });
 
-    $('input.other_charge').each(function () {
+    $('input.km_other_charge').each(function () {
       totOtherCharge += parseFloat($(this).val() || 0);
     });
-    
+    console.log('permit==', permit)
+    console.log('toll==',totToll)
+    console.log('parking==',totParking)
+    console.log('Entrance==',totEntrance)
+    console.log('GuideFee==',totGuideFee)
+    console.log('otherCHarges==',totOtherCharge)
     var total = permit + parseFloat(tripCharge) + parseFloat(totToll) + parseFloat(totParking) + parseFloat(totEntrance) + parseFloat(totGuideFee) + parseFloat(totOtherCharge)
     $('#totalTripExpense').val(total)
     rewriteBalance();

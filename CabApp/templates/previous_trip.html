@@ -675,7 +675,7 @@
                             {% if i.exp_type == 'Toll' %}
                             <div class="col-12">
                               <input type="hidden" name="toll_id[]" value="{{i.id}}">
-                              <input class="form-control toll" type="number" name="toll[]" value="{{i.exp_amount}}" placeholder="Toll" onchange="calcTotalExpense()">
+                              <input class="form-control km_toll" type="number" name="toll[]" value="{{i.exp_amount}}" placeholder="Toll" onchange="calcTotalExpense()">
                               <label for="">Toll</label>
                             </div>
                             {% endif %}
@@ -688,7 +688,7 @@
                             {% if i.exp_type == 'Parking' %}
                             <div class="col-12">
                               <input type="hidden" name="parking_id[]" value="{{i.id}}">
-                              <input class="form-control parking" type="number" name="parking[]" value="{{i.exp_amount}}" placeholder="Parking" onchange="calcTotalExpense()">
+                              <input class="form-control km_parking" type="number" name="parking[]" value="{{i.exp_amount}}" placeholder="Parking" onchange="calcTotalExpense()">
                               <label for="">Parking</label>
                             </div>
                             {% endif %}
@@ -701,7 +701,7 @@
                             {% if i.exp_type == 'Entrance' %}
                             <div class="col-12">
                               <input type="hidden" name="entrance_id[]" value="{{i.id}}">
-                              <input class="form-control entrance" type="number" name="entrance[]" value="{{i.exp_amount}}" placeholder="Entrance" onchange="calcTotalExpense()">
+                              <input class="form-control km_entrance" type="number" name="entrance[]" value="{{i.exp_amount}}" placeholder="Entrance" onchange="calcTotalExpense()">
                               <label for="">Entrance</label>
                             </div>
                             {% endif %}
@@ -713,7 +713,7 @@
                               <input type="hidden" name="guide_id[]" value="{{i.id}}">
                               <hr class="text-white">
                               <input class="form-control" type="text" name="guide_place[]" value="{{i.exp_desc}}" placeholder="Guide Place..">
-                              <input class="form-control guide_fee" type="number" name="guide_fee[]" value="{{i.exp_amount}}" placeholder="Guide Fee" onchange="calcTotalExpense()">
+                              <input class="form-control km_guide_fee" type="number" name="guide_fee[]" value="{{i.exp_amount}}" placeholder="Guide Fee" onchange="calcTotalExpense()">
                               <label for="">Guide Fee</label>
                             </div>
                             {% endif %}
@@ -728,7 +728,7 @@
                               <input type="hidden" name="oc_id[]" value="{{i.id}}">
                               <hr class="text-white">
                               <input class="form-control" type="text" name="other_charge[]" value="{{i.exp_desc}}" placeholder="Other charge description..">
-                              <input class="form-control other_charge" type="number" name="other_charge_amount[]" value="{{i.exp_amount}}" placeholder="Other charge amount." onchange="calcTotalExpense()">
+                              <input class="form-control km_other_charge" type="number" name="other_charge_amount[]" value="{{i.exp_amount}}" placeholder="Other charge amount." onchange="calcTotalExpense()">
                               <label for="">Other Charge</label>
                             </div>
                             {% endif %}
@@ -1147,7 +1147,7 @@
       `
       <div class="col-12">
         <input type="hidden" name="toll_id[]" value=0 >
-        <input class="form-control toll" type="number" name="toll[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <input class="form-control km_toll" type="number" name="toll[]" placeholder="0.0" onchange="calcTotalExpense()">
         <label for="">Toll</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
       </div>
       `
@@ -1160,7 +1160,7 @@
       `
       <div class="col-12">
         <input type="hidden" name="parking_id[]" value=0 >
-        <input class="form-control parking" type="number" name="parking[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <input class="form-control km_parking" type="number" name="parking[]" placeholder="0.0" onchange="calcTotalExpense()">
         <label for="">Parking</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
       </div>
       `
@@ -1175,7 +1175,7 @@
         <input type="hidden" name="guide_id[]" value=0 >
         <hr class="text-white">
         <input class="form-control" type="text" name="guide_place[]" placeholder="Guide Place..">
-        <input class="form-control guide_fee" type="number" name="guide_fee[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <input class="form-control km_guide_fee" type="number" name="guide_fee[]" placeholder="0.0" onchange="calcTotalExpense()">
         <label for="">Guide Fee</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
       </div>
       `
@@ -1190,7 +1190,7 @@
         <input type="hidden" name="oc_id[]" value=0 >
         <hr class="text-white">
         <input class="form-control" type="text" name="other_charge[]" placeholder="Other charge description..">
-        <input class="form-control other_charge" type="number" name="other_charge_amount[]" placeholder="0.0" onchange="calcTotalExpense()">
+        <input class="form-control km_other_charge" type="number" name="other_charge_amount[]" placeholder="0.0" onchange="calcTotalExpense()">
         <label for="">Other Charge</label><span class='text-danger float-end' style='cursor: pointer;' onclick='removeNewExpense(this)'>Remove</span>
       </div>
       `
@@ -1228,6 +1228,10 @@
       // if(extraKm != 0){
       //   totTripCharge += parseFloat(extraKm * exCharge)
       // }
+
+      console.log('==========TRIP CHARGE========')
+      console.log('TripDays->', tripDays)
+      console.log('fixed charge->',tripFxCharge, 'extracharge->',extraCharge, 'totaltrip->',totTripCharge)
       
       $('#tripFixedCharge').val(tripFxCharge)
       $('#tripExtraCharge').val(extraCharge)
@@ -1248,25 +1252,34 @@
 
     permit = parseFloat($('#permitCharge').val() || 0);
     
-    $('input.toll').each(function () {
+    $('input.km_toll').each(function () {
       totToll += parseFloat($(this).val() || 0);
     });
 
-    $('input.parking').each(function () {
+    $('input.km_parking').each(function () {
       totParking += parseFloat($(this).val() || 0);
     });
 
-    $('input.entrance').each(function () {
+    $('input.km_entrance').each(function () {
       totEntrance += parseFloat($(this).val() || 0);
     });
 
-    $('input.guide_fee').each(function () {
+    $('input.km_guide_fee').each(function () {
       totGuideFee += parseFloat($(this).val() || 0);
     });
 
-    $('input.other_charge').each(function () {
+    $('input.km_other_charge').each(function () {
       totOtherCharge += parseFloat($(this).val() || 0);
     });
+
+    console.log('===========TOTAL EXPENSE=========')
+
+    console.log('permit==', permit)
+    console.log('toll==',totToll)
+    console.log('parking==',totParking)
+    console.log('Entrance==',totEntrance)
+    console.log('GuideFee==',totGuideFee)
+    console.log('otherCHarges==',totOtherCharge)
     
     var total = permit + parseFloat(tripCharge) + parseFloat(totToll) + parseFloat(totParking) + parseFloat(totEntrance) + parseFloat(totGuideFee) + parseFloat(totOtherCharge)
     $('#totalTripExpense').val(total)
