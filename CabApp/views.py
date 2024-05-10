@@ -738,19 +738,17 @@ def endHourlyBasedTrip(request):
             )
             trip.save()
 
-            ride_dates = request.POST.getlist('ride_dates[]')
+            # ride_dates = request.POST.getlist('ride_dates[]')
             ride_start_time = request.POST.getlist('ride_start_time[]')
             ride_end_time = request.POST.getlist('ride_end_time[]')
             hrs = request.POST.getlist('ride_hours[]')
             
-            print('Ride Hours===')
-            print(ride_dates, ride_start_time, ride_end_time, hrs)
-            if len(ride_dates) == len(ride_start_time) == len(ride_end_time) == len(hrs):
-                hr = zip(ride_dates, ride_start_time, ride_end_time, hrs)
+            if len(ride_start_time) == len(ride_end_time) == len(hrs):
+                hr = zip(ride_start_time, ride_end_time, hrs)
                 hours_list = list(hr)
 
                 for ele in hours_list:
-                    TripRideHours.objects.create(trip = trip, date = ele[0], start_time = ele[1], end_time = ele[2], hours = ele[3])
+                    TripRideHours.objects.create(trip = trip, start_time = ele[0], end_time = ele[1], hours = ele[2])
 
             for item in toll:
                 TSC_Expenses.objects.create(Trip = trip, exp_type = 'Toll', exp_desc = None, exp_amount = item, exp_date = date.today())
@@ -896,22 +894,20 @@ def updateHourlyBasedTrip(request, id):
 
                 TripRideHours.objects.filter(id__in = ride_ids_to_delete).delete()
 
-                ride_dates = request.POST.getlist('ride_dates[]')
+                # ride_dates = request.POST.getlist('ride_dates[]')
                 ride_start_time = request.POST.getlist('ride_start_time[]')
                 ride_end_time = request.POST.getlist('ride_end_time[]')
                 hrs = request.POST.getlist('ride_hours[]')
                 
-                print('Ride Hours===')
-                print(ride_dates, ride_start_time, ride_end_time, hrs, ride_ids)
-                if len(ride_dates) == len(ride_start_time) == len(ride_end_time) == len(hrs) == len(ride_ids):
-                    hr = zip(ride_dates, ride_start_time, ride_end_time, hrs, ride_ids)
+                if len(ride_start_time) == len(ride_end_time) == len(hrs) == len(ride_ids):
+                    hr = zip(ride_start_time, ride_end_time, hrs, ride_ids)
                     hours_list = list(hr)
 
                     for ele in hours_list:
-                        if ele[4] == "0":
-                            TripRideHours.objects.create(trip = trip, date = ele[0], start_time = ele[1], end_time = ele[2], hours = ele[3])
+                        if ele[3] == "0":
+                            TripRideHours.objects.create(trip = trip, start_time = ele[0], end_time = ele[1], hours = ele[2])
                         else:
-                            TripRideHours.objects.filter(id = ele[4]).update(trip = trip, date = ele[0], start_time = ele[1], end_time = ele[2], hours = ele[3])
+                            TripRideHours.objects.filter(id = ele[3]).update(trip = trip, start_time = ele[0], end_time = ele[1], hours = ele[2])
 
 
                 exp_ids = [int(id) for id in ids]

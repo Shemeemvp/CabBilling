@@ -1107,18 +1107,18 @@
                           <div>
                             <span>Total Trip Charge</span>
                           </div>
-                          <span><span>&#8377; </span>{{trip.trip_charge}}</span>
+                          <span><span>&#8377; </span>{{trip.trip_charge|floatformat:2}}</span>
                       </div>
                       {% if trip.trip_charge_type != 'Hour' %}
                       {% if trip.trip_charge != 0 %}
                       <div class="trip_split w-100 mb-2">
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
-                          <span>Fixed Charge(&#8377; {{trip.fixed_charge}} per day upto {{trip.max_kilometer}}KM)</span>
-                          <span>&#8377; {{trip.trip_fixed_charge}}</span>
+                          <span>Fixed Charge(&#8377; {{trip.fixed_charge|floatformat:2}} per day upto {{trip.max_kilometer}}KM)</span>
+                          <span>&#8377; {{trip.trip_fixed_charge|floatformat:2}}</span>
                         </span>
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
-                          <span>Extra Running Charge(&#8377; {{trip.extra_charge}} extra charge per KM for <span class="extraKM"></span> KMs )</span>
-                          <span>&#8377; {{trip.trip_extra_charge}}</span>
+                          <span>Extra Running Charge(&#8377; {{trip.extra_charge|floatformat:2}} extra charge per KM for <span class="extraKM"></span> KMs )</span>
+                          <span>&#8377; {{trip.trip_extra_charge|floatformat:2}}</span>
                         </span>
                       </div>
                       {% endif %}
@@ -1126,12 +1126,12 @@
                       {% if trip.trip_charge != 0 %}
                       <div class="trip_split w-100 mb-2">
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
-                          <span>Fixed Charge(&#8377; {{trip.fixed_hour_charge}} per day upto {{trip.max_hour}}Hours)</span>
-                          <span>&#8377; {{trip.trip_fixed_charge}}</span>
+                          <span>Fixed Charge(&#8377; {{trip.fixed_hour_charge|floatformat:2}} per day upto {{trip.max_hour}}Hours)</span>
+                          <span>&#8377; {{trip.trip_fixed_charge|floatformat:2}}</span>
                         </span>
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
-                          <span>Extra Hour Charge(&#8377; {{trip.extra_hour_charge}} extra charge per Hour for <span class="extraHR">{{extraHr|default:'0'}}</span> Hrs )</span>
-                          <span>&#8377; {{trip.trip_extra_charge}}</span>
+                          <span>Extra Hour Charge(&#8377; {{trip.extra_hour_charge|floatformat:2}} extra charge per Hour for <span class="extraHR">{{extraHr|floatformat:2|default:'0'}}</span> Hrs )</span>
+                          <span>&#8377; {{trip.trip_extra_charge|floatformat:2}}</span>
                         </span>
                       </div>
                       {% endif %}
@@ -1349,18 +1349,18 @@
                             <br>
                             <!-- <span class="trip_breakdown">(&#8377; {{trip.fixed_charge}} as fixed charge per day upto {{trip.max_kilometer}}KM and &#8377; {{trip.extra_charge}} extra charge per KM)</span> -->
                           </div>
-                          <span class="d-flex"><span>&#8377; </span>{{trip.trip_charge}}</span>
+                          <span class="d-flex"><span>&#8377; </span>{{trip.trip_charge|floatformat:2}}</span>
                       </div>
                       {% if trip.trip_charge_type != 'Hour' %}
                       {% if trip.trip_charge != 0 %}
                       <div class="trip_split w-100 mb-2">
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
-                          <span>Fixed Charge(&#8377; {{trip.fixed_charge}} per day upto {{trip.max_kilometer}}KM)</span>
-                          <span>&#8377; {{trip.trip_fixed_charge}}</span>
+                          <span>Fixed Charge(&#8377; {{trip.fixed_charge|floatformat:2}} per day upto {{trip.max_kilometer|floatformat:2}}KM)</span>
+                          <span>&#8377; {{trip.trip_fixed_charge|floatformat:2}}</span>
                         </span>
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
-                          <span>Extra Running Charge(&#8377; {{trip.extra_charge}} extra charge per KM for <span class="extraKM"></span> KMs )</span>
-                          <span>&#8377; {{trip.trip_extra_charge}}</span>
+                          <span>Extra Running Charge(&#8377; {{trip.extra_charge|floatformat:2}} extra charge per KM for <span class="extraKM"></span> KMs )</span>
+                          <span>&#8377; {{trip.trip_extra_charge|floatformat:2}}</span>
                         </span>
                       </div>
                       {% endif %}
@@ -1368,12 +1368,12 @@
                       {% if trip.trip_charge != 0 %}
                       <div class="trip_split w-100 mb-2">
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
-                          <span>Fixed Charge(&#8377; {{trip.fixed_hour_charge}} per day upto {{trip.max_hour}}Hours)</span>
-                          <span>&#8377; {{trip.trip_fixed_charge}}</span>
+                          <span>Fixed Charge(&#8377; {{trip.fixed_hour_charge|floatformat:2}} per day upto {{trip.max_hour}}Hours)</span>
+                          <span>&#8377; {{trip.trip_fixed_charge|floatformat:2}}</span>
                         </span>
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
-                          <span>Extra Hour Charge(&#8377; {{trip.extra_hour_charge}} extra charge per Hour for <span class="extraHR">{{extraHr|default:'0'}}</span> Hrs )</span>
-                          <span>&#8377; {{trip.trip_extra_charge}}</span>
+                          <span>Extra Hour Charge(&#8377; {{trip.extra_hour_charge|floatformat:2}} extra charge per Hour for <span class="extraHR">{{extraHr|floatformat:2|default:'0'}}</span> Hrs )</span>
+                          <span>&#8377; {{trip.trip_extra_charge|floatformat:2}}</span>
                         </span>
                       </div>
                       {% endif %}

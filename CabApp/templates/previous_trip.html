@@ -820,17 +820,17 @@
                                 <div id="rideDate{{forloop.counter}}" class="ride_date">
                                   <hr class="text-white">
                                   <input type="hidden" name="ride_ids[]" value="{{i.id}}">
-                                  <div class="col-md-12">
+                                  <!-- <div class="col-md-12">
                                     <input class="form-control date" id="date{{forloop.counter}}" type="date" name="ride_dates[]" value="{{i.date|date:'Y-m-d'}}" required>
                                     <label for="">Date*</label>
-                                  </div>
+                                  </div> -->
 
                                   <div class="col-12">
-                                    <input class="form-control startTime" onchange="getHours('{{forloop.counter}}')" type="time" value="{{i.start_time|time:'H:i'}}" name="ride_start_time[]" id="startTime{{forloop.counter}}" required>
+                                    <input class="form-control startTime" onchange="checkStartEndTime('start', this)" type="datetime-local" value="{{i.start_time|date:'Y-m-d\TH:i'}}" name="ride_start_time[]" id="startTime{{forloop.counter}}" required>
                                     <label for="">Start</label>
                                   </div>
                                   <div class="col-12">
-                                    <input class="form-control endTime" onchange="getHours('{{forloop.counter}}')" type="time" value="{{i.end_time|time:'H:i'}}" name="ride_end_time[]" id="endTime{{forloop.counter}}" required>
+                                    <input class="form-control endTime" onchange="checkStartEndTime('end', this)" type="datetime-local" value="{{i.end_time|date:'Y-m-d\TH:i'}}" name="ride_end_time[]" id="endTime{{forloop.counter}}" required>
                                     <label for="">End</label>
                                   </div>
                                   <div class="col-12">
@@ -1385,17 +1385,17 @@ function addNewHour(){
     <div id="rideDate${dy}" class="ride_date">
       <input type="hidden" name="ride_ids[]" value=0 >
       <hr class="text-white">
-      <div class="col-md-12">
+      <!-- <div class="col-md-12">
         <input class="form-control date" id="date${dy}" type="date" name="ride_dates[]" value="{% now 'Y-m-d' %}" required>
-        <label for="">Date*</label><span class='text-danger float-end' style='cursor: pointer;' onclick="removeNewHour('rideDate${dy}')">Remove</span>
-      </div>
+        <label for="">Date*</label>
+      </div> -->
 
       <div class="col-12">
-        <input class="form-control startTime" onchange="getHours('${dy}')" type="time" name="ride_start_time[]" id="startTime${dy}" required>
-        <label for="">Start</label>
+        <input class="form-control startTime" onchange="checkStartEndTime('start', this)" type="datetime-local" name="ride_start_time[]" id="startTime${dy}" required>
+        <label for="">Start</label><span class='text-danger float-end' style='cursor: pointer;' onclick="removeNewHour('rideDate${dy}')">Remove</span>
       </div>
       <div class="col-12">
-        <input class="form-control endTime" onchange="getHours('${dy}')" type="time" name="ride_end_time[]" id="endTime${dy}" required>
+        <input class="form-control endTime" onchange="checkStartEndTime('end', this)" type="datetime-local" name="ride_end_time[]" id="endTime${dy}" required>
         <label for="">End</label>
       </div>
       <div class="col-12">
@@ -1601,23 +1601,33 @@ function hr_rewriteBalance(){
   // }
 
   function getTimeDifferenceInHours(startTime, endTime) {
-    var startParts = startTime.split(':');
-    var endParts = endTime.split(':');
+      var startDate = new Date(startTime);
+      var endDate = new Date(endTime);
+      
+      var timeDifference = endDate.getTime() - startDate.getTime();
+      
+      var hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+      var minutesDifference = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
 
-    var startHours = parseInt(startParts[0]);
-    var startMinutes = parseInt(startParts[1]);
-    var endHours = parseInt(endParts[0]);
-    var endMinutes = parseInt(endParts[1]);
 
-    var totalStartMinutes = startHours * 60 + startMinutes;
-    var totalEndMinutes = endHours * 60 + endMinutes;
 
-    var timeDifferenceInMinutes = totalEndMinutes - totalStartMinutes;
+      // var startParts = startTime.split(':');
+      // var endParts = endTime.split(':');
 
-    var hoursDifference = Math.floor(timeDifferenceInMinutes / 60);
-    var minutesDifference = timeDifferenceInMinutes % 60;
+      // var startHours = parseInt(startParts[0]);
+      // var startMinutes = parseInt(startParts[1]);
+      // var endHours = parseInt(endParts[0]);
+      // var endMinutes = parseInt(endParts[1]);
 
-    return { hours: hoursDifference, minutes: minutesDifference };
+      // var totalStartMinutes = startHours * 60 + startMinutes;
+      // var totalEndMinutes = endHours * 60 + endMinutes;
+
+      // var timeDifferenceInMinutes = totalEndMinutes - totalStartMinutes;
+
+      // var hoursDifference = Math.floor(timeDifferenceInMinutes / 60);
+      // var minutesDifference = timeDifferenceInMinutes % 60;
+
+      return { hours: hoursDifference, minutes: minutesDifference };
   }
 
   function getHours(id){
@@ -1712,6 +1722,68 @@ function hr_rewriteBalance(){
   $('#hr_based_form input').on('change', function(){
     calcTotalHourExpense();
   })
+
+  function checkStartEndTime(type, input) {
+    if (type === 'start'){
+      var id = input.id.slice(9)
+    }else{
+      var id = input.id.slice(7)
+    }
+    var startInput = document.getElementById('startTime'+id);
+    var endInput = document.getElementById('endTime'+id);
+    
+    var startDateTime = new Date(startInput.value);
+    var endDateTime = new Date(endInput.value);
+
+    if (type === 'start'){
+      endInput.min = formatDate(startDateTime)
+      if (startDateTime != "" && endDateTime != ""){
+        if (startDateTime > endDateTime) {
+          alert('Start date and time should be lesser than end date and time.!')
+          startInput.value = formatDate(endDateTime);
+        }
+      }
+    }else{
+      startInput.max = formatDate(endDateTime)
+      if (startDateTime != "" && endDateTime != ""){
+        if (endDateTime < startDateTime) {
+          alert('End date and time should be greater than start date and time.!')
+          endInput.value = formatDate(startDateTime);
+        }
+      }
+    }
+    getHours(id)
+  }
+
+  function formatDate(inputString) {
+    var date = new Date(inputString);
+
+    var year = date.getFullYear();
+    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, '0');
+    var hours = String(date.getHours()).padStart(2, '0');
+    var minutes = String(date.getMinutes()).padStart(2, '0');
+
+    var formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    return formattedDate;
+  }
+
+  function refreshIndex(){
+    var slNo = 1;
+    var $rows = $("#rideHours").children();
+
+    for (var i = 0; i < $rows.length; i++) {
+      $rows.eq(i).attr('id', 'rideDate'+slNo)
+      $rows.eq(i).find('[id]').each(function() {
+        var oldId = $(this).attr('id');
+        var newId = oldId.replace(/\d+/, slNo);
+        $(this).attr('id', newId );
+      });
+      slNo++;
+    }
+  }
+
 </script>
   
       {%if messages%} {%for message in messages%} {%if message.tags == "success"%}

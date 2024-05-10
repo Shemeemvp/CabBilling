@@ -812,17 +812,17 @@ input:checked + .slider:before {
                               <center><h6 class="text-white">Ride Hours</h6></center>
                               <div class="rideHours" id="rideHours">
                                 <div id="rideDate1" class="ride_date">
-                                  <div class="col-md-12">
+                                  <!-- <div class="col-md-12">
                                     <input class="form-control date" id="date1" type="date" name="ride_dates[]" value="{% now 'Y-m-d' %}" required>
                                     <label for="">Date*</label>
-                                  </div>
+                                  </div> -->
 
                                   <div class="col-12">
-                                    <input class="form-control startTime" onchange="getHours('1')" type="time" name="ride_start_time[]" id="startTime1" required>
+                                    <input class="form-control startTime" onchange="checkStartEndTime('start', this)" type="datetime-local" name="ride_start_time[]" id="startTime1" required>
                                     <label for="">Start</label>
                                   </div>
                                   <div class="col-12">
-                                    <input class="form-control endTime" onchange="getHours('1')" type="time" name="ride_end_time[]" id="endTime1" required>
+                                    <input class="form-control endTime" onchange="checkStartEndTime('end',this)" type="datetime-local" name="ride_end_time[]" id="endTime1" required>
                                     <label for="">End</label>
                                   </div>
                                   <div class="col-12">
@@ -1331,17 +1331,17 @@ function addNewHour(){
     `
     <div id="rideDate${dy}" class="ride_date">
       <hr class="text-white">
-      <div class="col-md-12">
+      <!-- <div class="col-md-12">
         <input class="form-control date" id="date${dy}" type="date" name="ride_dates[]" value="{% now 'Y-m-d' %}" required>
-        <label for="">Date*</label><span class='text-danger float-end' style='cursor: pointer;' onclick="removeNewHour('rideDate${dy}')">Remove</span>
-      </div>
+        <label for="">Date*</label>
+      </div> -->
 
       <div class="col-12">
-        <input class="form-control startTime" onchange="getHours('${dy}')" type="time" name="ride_start_time[]" id="startTime${dy}" required>
-        <label for="">Start</label>
+        <input class="form-control startTime" onchange="checkStartEndTime('start', this)" type="datetime-local" name="ride_start_time[]" id="startTime${dy}" required>
+        <label for="">Start</label><span class='text-danger float-end' style='cursor: pointer;' onclick="removeNewHour('rideDate${dy}')">Remove</span>
       </div>
       <div class="col-12">
-        <input class="form-control endTime" onchange="getHours('${dy}')" type="time" name="ride_end_time[]" id="endTime${dy}" required>
+        <input class="form-control endTime" onchange="checkStartEndTime('end', this)" type="datetime-local" name="ride_end_time[]" id="endTime${dy}" required>
         <label for="">End</label>
       </div>
       <div class="col-12">
@@ -1355,6 +1355,7 @@ function addNewHour(){
 
 function removeNewHour(element){
   $('#'+element).remove();
+  refreshIndex();
   calcTotalHourExpense();
 }
 
@@ -1387,7 +1388,7 @@ function hr_rewriteBalance(){
       var startHr = $(this).find('.startTime').val();
       var endHr = $(this).find('.endTime').val();
       var totHrs = getTimeDifferenceInHours(startHr, endHr)
-      console.log(totHrs)
+      // console.log(totHrs)
       var hr = totHrs.hours
       var min = totHrs.minutes
       if(min != 0){
@@ -1410,7 +1411,7 @@ function hr_rewriteBalance(){
     
     })
     totTripCharge = tripFxCharge + extraCharge
-    console.log(tripFxCharge, extraCharge, totTripCharge)
+    // console.log(tripFxCharge, extraCharge, totTripCharge)
     $('#hr_tripFixedCharge').val(tripFxCharge)
     $('#hr_tripExtraCharge').val(extraCharge)
     $('#hr_tripCharge').val(parseFloat(totTripCharge))
@@ -1450,7 +1451,7 @@ function hr_rewriteBalance(){
     });
     
     var total = permit + parseFloat(tripCharge) + parseFloat(totToll) + parseFloat(totParking) + parseFloat(totEntrance) + parseFloat(totGuideFee) + parseFloat(totOtherCharge)
-    console.log(tripCharge, total)
+    // console.log(tripCharge, total)
     $('#hr_totalTripExpense').val(total)
     hr_rewriteBalance();
 
@@ -1560,21 +1561,31 @@ function hr_rewriteBalance(){
   // }
 
   function getTimeDifferenceInHours(startTime, endTime) {
-    var startParts = startTime.split(':');
-    var endParts = endTime.split(':');
+    var startDate = new Date(startTime);
+    var endDate = new Date(endTime);
+    
+    var timeDifference = endDate.getTime() - startDate.getTime();
+    
+    var hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+    var minutesDifference = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
 
-    var startHours = parseInt(startParts[0]);
-    var startMinutes = parseInt(startParts[1]);
-    var endHours = parseInt(endParts[0]);
-    var endMinutes = parseInt(endParts[1]);
 
-    var totalStartMinutes = startHours * 60 + startMinutes;
-    var totalEndMinutes = endHours * 60 + endMinutes;
 
-    var timeDifferenceInMinutes = totalEndMinutes - totalStartMinutes;
+    // var startParts = startTime.split(':');
+    // var endParts = endTime.split(':');
 
-    var hoursDifference = Math.floor(timeDifferenceInMinutes / 60);
-    var minutesDifference = timeDifferenceInMinutes % 60;
+    // var startHours = parseInt(startParts[0]);
+    // var startMinutes = parseInt(startParts[1]);
+    // var endHours = parseInt(endParts[0]);
+    // var endMinutes = parseInt(endParts[1]);
+
+    // var totalStartMinutes = startHours * 60 + startMinutes;
+    // var totalEndMinutes = endHours * 60 + endMinutes;
+
+    // var timeDifferenceInMinutes = totalEndMinutes - totalStartMinutes;
+
+    // var hoursDifference = Math.floor(timeDifferenceInMinutes / 60);
+    // var minutesDifference = timeDifferenceInMinutes % 60;
 
     return { hours: hoursDifference, minutes: minutesDifference };
 }
@@ -1583,6 +1594,7 @@ function hr_rewriteBalance(){
   function getHours(id){
     var strt = $('#startTime'+id).val()
     var end = $('#endTime'+id).val()
+    console.log(strt, end)
     if(strt != "" && end != ""){
       var hrs = getTimeDifferenceInHours(strt, end)
         // $('#hours'+id).val(hrs.toFixed(2))
@@ -1685,6 +1697,67 @@ function hr_rewriteBalance(){
   $('#hr_based_form input').on('change', function(){
     calcTotalHourExpense();
   })
+
+  function checkStartEndTime(type, input) {
+    if (type === 'start'){
+      var id = input.id.slice(9)
+    }else{
+      var id = input.id.slice(7)
+    }
+    var startInput = document.getElementById('startTime'+id);
+    var endInput = document.getElementById('endTime'+id);
+    
+    var startDateTime = new Date(startInput.value);
+    var endDateTime = new Date(endInput.value);
+
+    if (type === 'start'){
+      endInput.min = formatDate(startDateTime)
+      if (startDateTime != "" && endDateTime != ""){
+        if (startDateTime > endDateTime) {
+          alert('Start date and time should be lesser than end date and time.!')
+          startInput.value = formatDate(endDateTime);
+        }
+      }
+    }else{
+      startInput.max = formatDate(endDateTime)
+      if (startDateTime != "" && endDateTime != ""){
+        if (endDateTime < startDateTime) {
+          alert('End date and time should be greater than start date and time.!')
+          endInput.value = formatDate(startDateTime);
+        }
+      }
+    }
+    getHours(id)
+  }
+
+  function formatDate(inputString) {
+    var date = new Date(inputString);
+
+    var year = date.getFullYear();
+    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, '0');
+    var hours = String(date.getHours()).padStart(2, '0');
+    var minutes = String(date.getMinutes()).padStart(2, '0');
+
+    var formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    return formattedDate;
+  }
+
+  function refreshIndex(){
+    var slNo = 1;
+    var $rows = $("#rideHours").children();
+
+    for (var i = 0; i < $rows.length; i++) {
+      $rows.eq(i).attr('id', 'rideDate'+slNo)
+      $rows.eq(i).find('[id]').each(function() {
+        var oldId = $(this).attr('id');
+        var newId = oldId.replace(/\d+/, slNo);
+        $(this).attr('id', newId );
+      });
+      slNo++;
+    }
+  }
 
 </script>
   
