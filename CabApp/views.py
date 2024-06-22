@@ -347,11 +347,17 @@ def viewTscData(request,id):
             'trip': tripData,
             'guide_exp':guide_exp,
             'other_charges':other_charge,
-            'extraHr': extHr,
+            'extraHr': formatTime(extHr),
         }
         return render(request, 'view_tsc_data.html',context)
     else:
         return redirect('/')
+
+def formatTime(time):
+    parts = str(time).split('.')
+    hours = int(parts[0])
+    minutes = int(float('0.' + parts[1]) * 60) if len(parts) > 1 else 0
+    return f"{hours}:{minutes:02d}"
     
 def qrDetails(request):
     return render(request, 'qr_landing.html')

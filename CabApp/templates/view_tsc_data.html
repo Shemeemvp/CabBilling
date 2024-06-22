@@ -1130,7 +1130,7 @@
                           <span>&#8377; {{trip.trip_fixed_charge|floatformat:2}}</span>
                         </span>
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
-                          <span>Extra Hour Charge(&#8377; {{trip.extra_hour_charge|floatformat:2}} extra charge per Hour for <span class="extraHR">{{extraHr|floatformat:2|default:'0'}}</span> Hrs )</span>
+                          <span>Extra Hour Charge(&#8377; {{trip.extra_hour_charge|floatformat:2}} extra charge per Hour for <span class="extraHR">{{extraHr}}</span> Hrs )</span>
                           <span>&#8377; {{trip.trip_extra_charge|floatformat:2}}</span>
                         </span>
                       </div>
@@ -1186,11 +1186,11 @@
 
                     <div class="debit fw-bold d-flex justify-content-between">
                         <span><strong>TOTAL</strong></span>
-                        <span><strong><span>&#8377; </span>{{trip.total_trip_expense}}</strong></span>
+                        <span><strong><span>&#8377; </span>{{trip.total_trip_expense|floatformat:2}}</strong></span>
                     </div>
                     <div class="balance fw-bold d-flex justify-content-between">
                       <span><strong>BALANCE</strong></span>
-                      <span><strong><span>&#8377; </span>{{trip.balance}}</strong></span>
+                      <span><strong><span>&#8377; </span>{{trip.balance|floatformat:2}}</strong></span>
                     </div>
                   </div>
                   <div class="divider"></div>
@@ -1372,7 +1372,7 @@
                           <span>&#8377; {{trip.trip_fixed_charge|floatformat:2}}</span>
                         </span>
                         <span class="w-100 ps-3 pe-2 d-flex justify-content-between">
-                          <span>Extra Hour Charge(&#8377; {{trip.extra_hour_charge|floatformat:2}} extra charge per Hour for <span class="extraHR">{{extraHr|floatformat:2|default:'0'}}</span> Hrs )</span>
+                          <span>Extra Hour Charge(&#8377; {{trip.extra_hour_charge|floatformat:2}} extra charge per Hour for <span class="extraHR">{{extraHr}}</span> Hrs )</span>
                           <span>&#8377; {{trip.trip_extra_charge|floatformat:2}}</span>
                         </span>
                       </div>
@@ -1432,11 +1432,11 @@
 
                     <div class="debit fw-bold d-flex justify-content-between">
                         <span><strong>TOTAL</strong></span>
-                        <span><strong><span>&#8377; </span>{{trip.total_trip_expense}}</strong></span>
+                        <span><strong><span>&#8377; </span>{{trip.total_trip_expense|floatformat:2}}</strong></span>
                     </div>
                     <div class="balance fw-bold d-flex justify-content-between">
                       <span><strong>BALANCE</strong></span>
-                      <span><strong><span>&#8377; </span>{{trip.balance}}</strong></span>
+                      <span><strong><span>&#8377; </span>{{trip.balance|floatformat:2}}</strong></span>
                     </div>
                   </div>
                   <div class="divider"></div>

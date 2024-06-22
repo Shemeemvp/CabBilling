@@ -517,7 +517,7 @@
                       <td class="text-center" style="vertical-align: middle;">{{t.driver_name}}</td>
                       <td class="text-center" style="vertical-align: middle;">{{t.guest}}</td>
                       <td class="text-center" style="vertical-align: middle;">{{t.kilometers}}</td>
-                      <td class="text-center" style="vertical-align: middle;">{{t.total_trip_expense}}</td>
+                      <td class="text-center" style="vertical-align: middle;">{{t.total_trip_expense|floatformat:2}}</td>
                       <td class="text-center" style="vertical-align: middle;">
                         <a class="btn btn-secondary btn-sm w-100" href="{% url 'viewTscData' t.id %}">VIEW</a>
                         <br>
